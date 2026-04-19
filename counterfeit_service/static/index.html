@@ -310,6 +310,11 @@
           <label for="seller_time_alive">Возраст продавца (дни)</label>
           <input type="number" id="seller_time_alive" name="seller_time_alive" value="0" min="0" step="1">
         </div>
+
+        <div class="form-group">
+          <label for="seller_id">ID продавца (необязательно)</label>
+          <input type="text" id="seller_id" name="seller_id" placeholder="Например: seller_12345">
+        </div>
       </div>
 
       <button type="submit" class="btn" id="submitBtn">Проверить товар</button>
@@ -354,6 +359,7 @@
     resultCard.style.display = 'none';
 
     const formData = new FormData(this);
+    if (!formData.get('seller_id')) formData.delete('seller_id');
 
     try {
       const resp = await fetch('/predict', { method: 'POST', body: formData });
