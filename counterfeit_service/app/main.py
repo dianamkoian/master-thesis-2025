@@ -128,11 +128,17 @@ async def predict(
     if seller_id:
         profile = await db.get(SellerProfile, seller_id)
         if profile is None:
-            profile = SellerProfile(seller_id=seller_id)
+            profile = SellerProfile(
+                seller_id=seller_id,
+                total_predictions=0,
+                flagged_count=0,
+                avg_probability=0.0,
+                confirmed_counterfeit_count=0,
+            )
             db.add(profile)
-        new_total = profile.total_predictions + 1
+        new_total = (profile.total_predictions or 0) + 1
         profile.avg_probability = (
-            profile.avg_probability * profile.total_predictions + result["probability"]
+            (profile.avg_probability or 0.0) * (profile.total_predictions or 0) + result["probability"]
         ) / new_total
         profile.total_predictions = new_total
         profile.last_seen = datetime.utcnow()
