@@ -67,7 +67,7 @@ counterfeit_service/
 
 ## Запуск
 
-### Docker (рекомендуется)
+### Docker 
 
 ```bash
 docker compose up --build
