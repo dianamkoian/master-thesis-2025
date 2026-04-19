@@ -1,17 +1,39 @@
 version: "3.9"
 
 services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: counterfeit
+      POSTGRES_PASSWORD: counterfeit
+      POSTGRES_DB: counterfeit
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U counterfeit"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   counterfeit-api:
     build: .
     ports:
       - "8000:8000"
     volumes:
-      # Mount the artifacts directory from host into the container.
-      # Put your model files here: catboost_model.cbm, img_scaler.pkl,
-      # feature_cols.pkl, cat_cols.pkl, and optionally d2v_model.pkl
       - ./artifacts:/app/artifacts:ro
     environment:
       ARTIFACTS_DIR: /app/artifacts
       COUNTERFEIT_THRESHOLD: "0.5"
+      DATABASE_URL: postgresql+asyncpg://counterfeit:counterfeit@postgres:5432/counterfeit
     restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+
     # CPU-only — no GPU resources needed for demo
