@@ -88,7 +88,7 @@ p_HCDM = 0,875·p_social + 0,075·p_mobile + 0,025·p_realestate + 0,025·p_fint
 
 ### Подсистема хранения
 
-Таблицы: `predictions` (с покомпонентной декомпозицией `p_social`, `p_mobile`, `p_realestate`, `p_fintech`), `feedback`, `seller_profiles` (LOO-кодирование), `model_versions`, `processing_log`. Композитные и частичные индексы оптимизируют типичные запросы модерационного дашборда.
+Таблицы: `predictions` (с покомпонентной декомпозицией `p_social`, `p_mobile`, `p_realestate`, `p_fintech`), `feedback`, `seller_profiles` (LOO-кодирование), `model_versions`, `processing_log`. 
 
 ### Характеристики прототипа
 
