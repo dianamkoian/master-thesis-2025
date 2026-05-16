@@ -1,0 +1,4 @@
+model,features,roc_auc,pr_auc,recall_at_p90,notes
+CatBoost_E0_canon (reference),all (incl. text + SellerID),0.9208,0.6587,0.1721,baseline from FIX-1 (E0 on canon train)
+LightGBM,numeric + SellerID (drop 4 text),0.7384,0.1967,0.0005,"class_weight=balanced, defaults, single run, no HP tuning"
+LogReg,numeric only (drop text + SellerID),0.7451,0.2117,0.0,"class_weight=balanced, max_iter=1000, StandardScaler, no HP tuning"

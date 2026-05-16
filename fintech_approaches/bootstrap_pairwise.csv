@@ -1,0 +1,11 @@
+comparison,metric,point_delta,ci_low,ci_high,significant,n_iter_effective,label,delta
+E5_CLIP_PCA_25 vs E0_canon,recall_p90,0.1024,0.007,0.2026,True,1000.0,E5 vs E0_canon (R@P90) — main thesis claim,
+E5_CLIP_PCA_25 vs E6_spw=15,recall_p90,0.0767,-0.0044,0.1429,False,1000.0,E5 vs E6_spw=15 (R@P90) — isolate CLIP contribution,
+E0_canon vs E0_old,recall_p90,-0.0114,-0.1066,0.0687,False,1000.0,E0_canon vs E0_old (R@P90) — high-precision regression,
+E3 vs E0_canon,pr_auc,-0.0058,-0.009,-0.0026,True,1000.0,E3 vs E0_canon (PR-AUC) — weak gain check,
+E7 vs e0_canon,recall_p90,,0.0363001892870268,0.2389361750340773,True,,,0.1332186760240764
+E7 vs e0_canon,pr_auc,,-0.0026559787897096,0.0169977278356757,False,,,0.0073130818362469
+E7 vs e5,recall_p90,,-0.0136427348625188,0.0745925391223754,False,,,0.0308311414353912
+E7 vs e5,pr_auc,,-0.0121657603936817,8.550610654011407e-05,False,,,-0.0063625782936028
+E7 vs e6_spw15,recall_p90,,0.0306411058583611,0.1741255554126841,True,,,0.1075026291556425
+E7 vs e6_spw15,pr_auc,,0.0041790832361307,0.0187054258065212,True,,,0.0118187789692982
