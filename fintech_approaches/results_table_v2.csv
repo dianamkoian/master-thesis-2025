@@ -1,0 +1,14 @@
+experiment,train_size,roc_auc,pr_auc,recall_at_p90_oracle,source,notes,delta_r_at_p90_vs_e0_canon
+E0_old,110970,0.9116,0.6421,0.2196,results_table.csv:recall_at_p90_curve,Baseline CatBoost on re-split train (Cell 4); legacy reference,0.0475
+E0_canon,135626,0.9208,0.6587,0.1721,FIX-1 (this session),Like-for-like baseline for E2-E6 на canon train (135k),0.0
+E1,110970,0.9116,0.6421,0.2196,results_table.csv:recall_at_p90_prcurve,Threshold optimization on val (E0_old probs reused); R@P90_oracle == E0_old by construction,0.0475
+E2,135626,0.9166,0.648,0.1725,results_table.csv:recall_at_p90_prcurve,RandomUnderSampler (0.1) + Dal Pozzolo-style calibration on canon train,0.0004
+E3,135626,0.919,0.653,0.1225,results_table.csv:recall_at_p90_prcurve,"+3 deviation features (dev_return_rate_30, dev_fake_return_rate_30, dev_seller_velocity)",-0.0496
+E4_TFIDF,135626,0.9025,0.4535,0.0,results_table.csv:recall_at_p90_prcurve,"TF-IDF (300 feat, ngram=(1,2), min_df=3) replaces text-like columns",-0.1721
+E4b_CLIP_naive,135626,0.8821,0.5825,0.0206,results_table.csv:recall_at_p90_curve,CatBoost on tabular + raw CLIP-512 (no PCA),-0.1515
+E5_CLIP_PCA_25,135626,0.9232,0.6724,0.2956,notebook:Cell28,CLIP-512 → PCA-25 (57.9% var) + tabular; best_iteration=498/500 (модель не сошлась — см. FIX-5),0.1235
+E6_spw=15,135626,0.9192,0.6541,0.2078,notebook:Cell28,CatBoost (no CLIP) с scale_pos_weight=15,0.0357
+E6_spw=25,135626,0.918,0.6529,0.1941,notebook:Cell28,CatBoost (no CLIP) с scale_pos_weight=25,0.022
+E6_spw=35,135626,0.9129,0.6507,0.1794,notebook:Cell28,CatBoost (no CLIP) с scale_pos_weight=35,0.0073
+E6_spw=50,135626,0.9074,0.6338,0.0985,notebook:Cell28,CatBoost (no CLIP) с scale_pos_weight=50,-0.0736
+E7_text_e5small_PCA25,135626,0.9285266379840792,0.6659850646566832,0.3299019607843137,,,0.1578019607843137
