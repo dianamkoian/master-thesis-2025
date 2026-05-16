@@ -1,0 +1,39 @@
+# Полные сырые данные (>50 MB) хранятся на Яндекс.Диске, не в репозитории.
+# См. README.md → раздел "Воспроизведение"
+
+raw/
+*.parquet
+*.pkl
+*.bin
+
+# Большие CSV (>10 MB), кроме сэмплов
+ozon_train.csv
+ozon_test.csv
+image_embeddings.csv
+
+# Изображения товаров (от Ozon eCup 2025) — >1 GB, только на Я.Диске
+ml_ozon_counterfeit_test_images/
+ml_ozon_counterfeit_train_images/
+images/
+*.png
+*.jpg
+*.jpeg
+*.webp
+
+# Кэши и временные файлы препроцессинга
+cache/
+tmp/
+__pycache__/
+*.pyc
+
+# Артефакты обучения (модели хранятся в artifacts/, не в data/)
+*.cbm
+*.cbmodel
+*.joblib
+
+# Системные
+.DS_Store
+Thumbs.db
+
+# !!! НЕ игнорим демо-сэмплы (важно для воспроизводимости)
+!sample/*.csv
