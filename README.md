@@ -75,11 +75,11 @@ p_HCDM = 0,875·p_social + 0,075·p_mobile + 0,025·p_realestate + 0,025·p_fint
 | --- | --- | --- |
 | REST API | FastAPI (ASGI, Pydantic, OpenAPI) | Азимова |
 | Очередь задач | RabbitMQ (AMQP, dead-letter exchange) | Мкоян |
-| Хранилище | PostgreSQL 15 + SQLAlchemy 2.x (asyncpg) + Alembic | — |
+| Хранилище | PostgreSQL 15 + SQLAlchemy 2.x (asyncpg) + Alembic | Бахтиарова |
 | Веб-интерфейс | HTML + JavaScript (без фреймворков), деплой на Timeweb | Красовская |
-| Инференс | CatBoost (4 модели) + CLIP ViT-B/32 + ruBERT | — |
-| Оркестрация | Docker Compose | — |
-| Мониторинг | Prometheus-метрики (latency, throughput, error rate) | — |
+| Инференс | CatBoost (4 модели) + CLIP ViT-B/32 + ruBERT | 
+| Оркестрация | Docker Compose | 
+
 
 ### Эндпойнты API
 
