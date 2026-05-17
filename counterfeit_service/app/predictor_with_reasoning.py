@@ -2,7 +2,7 @@
 ReasoningPredictor — predictor-agnostic wrapper, добавляющий LLM-канал
 explanation поверх любого зарегистрированного primary predictor'а.
 
-Архитектура (§ 4.4.9.7 ВКР):
+Архитектура:
   inner_predictor.predict(...)  →  (is_counterfeit, probability, signals)
        │
        ▼
