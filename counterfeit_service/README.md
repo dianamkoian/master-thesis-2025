@@ -1,12 +1,12 @@
 # Counterfeit Detection Service
 
-Прототип сервиса мультимодальной детекции контрафактных товаров на маркетплейсе Ozon. Часть магистерской ВКР Д. Мкоян (Глава 5 «Реализация»).
+Прототип сервиса мультимодальной детекции контрафактных товаров на маркетплейсе Ozon.
 
 **Ключевые возможности:**
-- **Pluggable predictor** (§ 5.2): любая исследовательская модель подключается через `PREDICTOR_TYPE` без правок API. Реализовано: `d2v_catboost` (deployed baseline), `reasoning_pipeline` (LLM-обёртка), `stub_borderline` (для тестов/демо). Заглушки: `m2_fe_plus`, `m2_fe_plus_mainline_ensemble` (см. `MODELS.md`).
+- **Pluggable predictor**: любая исследовательская модель подключается через `PREDICTOR_TYPE` без правок API. Реализовано: `d2v_catboost` (deployed baseline), `reasoning_pipeline` (LLM-обёртка), `stub_borderline` (для тестов/демо). Заглушки: `m2_fe_plus`, `m2_fe_plus_mainline_ensemble` (см. `MODELS.md`).
 - **Verdict-conditioned LLM-канал** (§ 3.4.9.7): Qwen2.5-1.5B-Instruct поверх любого primary predictor'а; четыре режима — `blocking_explanation` (≥ 0,85, для уведомления селлера), `confident_positive_no_block` (0,75–0,85, для QA), `borderline_explanation` (0,25–0,75, для модератора), `confident_negative` (≤ 0,25, без LLM).
-- **Async-пайплайн** (§ 5.4, индивидуальный вклад автора): RabbitMQ durable + DLQ + PostgreSQL для batch-нагрузок.
-- **Audit log** (§ 5.6): таблица `prediction_requests` фиксирует каждый входной запрос и ссылку на сохранённое изображение для дебага и retraining.
+- **Async-пайплайн**: RabbitMQ durable + DLQ + PostgreSQL для batch-нагрузок.
+- **Audit log**: таблица `prediction_requests` фиксирует каждый входной запрос и ссылку на сохранённое изображение для дебага и retraining.
 - **Расширенный `/health`**: статус всех компонентов (predictor + артефакты + БД + RabbitMQ + LLM) одним JSON.
 - **Pytest smoke-набор**: 11 функциональных тестов (`test_smoke.py`) + 5 HCDM-сценариев (`test_hcdm_smoke.py`), без внешних зависимостей.
 
@@ -135,7 +135,7 @@ docker compose up --build
 - `counterfeit-api` — FastAPI
 - `counterfeit-worker` — async consumer (можно масштабировать)
 
-**Health-check (расширенный, § 5.6.2):**
+**Health-check (расширенный):**
 ```bash
 curl http://localhost:8000/health | jq .
 ```
@@ -234,7 +234,7 @@ curl http://localhost:8000/result/3f8a...
 # Через ~2 секунды → {"status":"done","is_counterfeit":true,"probability":0.87, ...}
 ```
 
-## LLM-канал и persistence (§ 3.4.9.7)
+## LLM-канал и persistence
 
 Активация:
 ```bash
@@ -262,7 +262,7 @@ WHERE reasoning_mode = 'blocking_explanation'
 
 Подробности — `MODELS.md`, раздел «Reasoning pipeline».
 
-## Audit log (§ 5.6)
+## Audit log 
 
 Каждый запрос к `/predict` и `/predict-async` фиксируется в таблице
 `prediction_requests` ДО инференса; изображение сохраняется в директории
@@ -275,7 +275,7 @@ WHERE reasoning_mode = 'blocking_explanation'
 Audit-сохранение реализовано как best-effort: сбой БД не ломает inference,
 ошибка логируется, response клиенту не зависит от состояния `prediction_requests`.
 
-## Тесты (§ 5.6.2)
+## Тесты 
 
 ```bash
 PYTHONPATH=. pytest tests/ -v
@@ -301,18 +301,4 @@ parquet, загрузка 58 410 probas, бит-точное сравнение,
 
 ## Развёртывание в облаке
 
-Production-копия сервиса развёрнута в облачной среде Timeweb по адресу `http://5.129.242.72:8000` (Ubuntu 22.04 LTS, 4 ГБ RAM). См. § 5.6.4 ВКР для деталей деплоя.
-
-## Распределение зон ответственности
-
-| Компонент | Автор | Раздел ВКР |
-|---|---|---|
-| `app/main.py` (sync /predict, UI mount, CORS) | К. Азимова | § 5.2 |
-| `app/predictor.py` (Feature Fusion inference) | К. Азимова | § 5.2 |
-| `app/main.py` (async /predict-async + /result/{id}) | **Д. Мкоян** | **§ 5.4** |
-| `app/worker.py` (aio_pika consumer) | **Д. Мкоян** | **§ 5.4** |
-| `app/db/session.py`, `models.py`, `crud.py` | **Д. Мкоян** (на базе async SQLAlchemy от А. Бахтиаровой) | **§ 5.4** + § 5.3 |
-| `Dockerfile.worker`, `docker-compose.yml` (rabbitmq + worker) | **Д. Мкоян** | **§ 5.4** |
-| `static/index.html` (UI) | С. Красовская | § 5.5 |
-| Деплой в Timeweb | С. Красовская | § 5.6.4 |
-| Функциональное и нагрузочное тестирование | **Д. Мкоян** | **§ 5.6** |
+Production-копия сервиса развёрнута в облачной среде Timeweb по адресу `https://marketplace-fraud.ru` . 
