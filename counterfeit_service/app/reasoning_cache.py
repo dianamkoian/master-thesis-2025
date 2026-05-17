@@ -1,5 +1,4 @@
 """
-In-memory кеш для deferred LLM-объяснений (§ 4.4.9.7 + § 7.4).
 
 Архитектурное обоснование. Pattern progressive disclosure: фронтенд получает
 быстрый verdict (~1 c) и опрашивает reasoning отдельным GET-запросом
