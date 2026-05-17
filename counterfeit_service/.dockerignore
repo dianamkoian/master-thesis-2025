@@ -1,6 +1,3 @@
-# Не отправлять в Docker build context — экономит 1 ГБ на каждом билде.
-# Артефакты модели монтируются через volume в docker-compose.yml.
-
 # ML-артефакты (≈ 1 ГБ) — приходят через volume `./artifacts:/app/artifacts`
 artifacts/
 audit_images/
