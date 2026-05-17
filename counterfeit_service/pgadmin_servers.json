@@ -1,0 +1,14 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "counterfeit (local)",
+      "Group": "Servers",
+      "Host": "postgres",
+      "Port": 5432,
+      "MaintenanceDB": "counterfeit",
+      "Username": "counterfeit",
+      "PassFile": "/pgpassfile",
+      "SSLMode": "prefer"
+    }
+  }
+}

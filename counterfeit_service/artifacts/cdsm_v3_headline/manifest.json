@@ -1,0 +1,47 @@
+{
+  "model": "baseline_v3_4ch (canonical для текста Гл.5: §§ 5.4.6.6, 5.4.7, 5.4.10, 5.6.1, 5.7.2 — везде PR=0,7579)",
+  "source_formula_canonical_for_text": "p_FINAL = sigmoid(0,368·z(p_CDSM) + 0,110·z(p_RMM) + 0,552·z(p_FT-MFF) + 0,835·z(p_AMM) − 1,549),  C = 0,1, GroupShuffleSplit(test_size=0.5, random_state=42)",
+  "NOTE_about_text_in_5_4_6_6": "В § 5.4.6.6 ВКР записана ОШИБОЧНАЯ формула с coefs (0,374, 0,157, 0,541, 0,778) — это coefs другой модели ensemble_cdsm_4ch (C=0,01, best_PR_eval). Она даёт PR=0,7600, R@P=0,2251, что НЕ соответствует таблице \"(итог)\" в том же разделе (0,7579/0,2078/0,9603). Текущий deploy следует ИТОГ-таблице (baseline_v3_4ch); формулу в дипломе нужно править.",
+  "coefs": {
+    "cdsm": 0.36760232783476876,
+    "rmm": 0.11015995853632249,
+    "ftmff": 0.551895812191278,
+    "amm": 0.834668808931904
+  },
+  "intercept": -1.5495,
+  "scaler": {
+    "mean": [
+      0.1683,
+      0.1013,
+      0.1604,
+      0.1368
+    ],
+    "std": [
+      0.2933,
+      0.2519,
+      0.283,
+      0.2627
+    ]
+  },
+  "best_C": 0.1,
+  "channel_order": [
+    "cdsm (Synthesis-канал, § 5.4.6)",
+    "rmm (Diana M2-FE+ ≡ test_proba_diana_team)",
+    "ftmff (Sonya Fusion)",
+    "amm (Albina MMD-Thinker v4)"
+  ],
+  "group_split": "GroupShuffleSplit(n_splits=1, test_size=0.5, random_state=42) по SellerID",
+  "metrics_full_test": {
+    "ROC": 0.9603042468551969,
+    "PR": 0.7579274699376558,
+    "R@P": 0.20783975877665303
+  },
+  "source_canonical_probas": {
+    "p_cdsm": "Глава_5_финал/artifacts/p_cdsm_v3.npy (PR_standalone=0,7136)",
+    "p_diana": "packages/package_diana/3_probas_team_split/test_proba_diana_team.npy (M2-FE+, PR=0,7375)",
+    "p_soni": "packages/package_soni/3_probas_team_split/test_proba_fusion_team.npy (FT-MFF, PR=0,7284)",
+    "p_albina": "packages/package_albina/3_probas_team_split/test_proba_albina_team.npy (MMD-Thinker v4, PR=0,7084)"
+  },
+  "note_for_defense": "Метрики 0,7579/0,2078/0,9603 — \"ИТОГ\" по тексту Гл.5 ВКР и таблицам 5.4.6.д, 5.4.7, 5.4.10. Multi-seed устойчивость (5 повторов): PR=0,7608±0,0022, R@P=0,2123±0,0050, ROC=0,9606±0,0003 (см. § 5.4.6.6 «Multi-seed устойчивость headline-метрик»).",
+  "rebuilt_at": "2026-05-12"
+}

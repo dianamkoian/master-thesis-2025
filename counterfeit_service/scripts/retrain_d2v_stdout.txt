@@ -1,0 +1,16 @@
+15:49:47 ============================================================
+15:49:47 Retrain Doc2Vec 200-dim для counterfeit_service
+15:49:48 data: (197198, 46)
+15:49:48 train texts: 144967
+15:49:48 Токенизация (lower().split())...
+15:49:48 documents: 144967
+15:49:48 Обучение Doc2Vec (vector_size=200, window=5, min_count=2, workers=4, epochs=20)...
+15:49:50   vocabulary built: 207930 токенов
+Exception ignored in: 'gensim.models.word2vec_inner.our_dot_float'
+15:51:11   обучен за 1.4 мин
+15:51:11 sample infer_vector shape: (200,), mean=-0.0113, std=0.3967
+15:51:11 старая модель → d2v_model.pkl.legacy_backup
+15:51:12 Saved: /Users/diana/master-thesis-2025/Диана_ВКР_финал/counterfeit_service/artifacts/d2v_model.pkl (437.1 MB)
+15:51:12 control reload: shape=(200,), совпадает с обученной = False
+15:51:12 Всего: 1.4 мин
+15:51:12 ============================================================

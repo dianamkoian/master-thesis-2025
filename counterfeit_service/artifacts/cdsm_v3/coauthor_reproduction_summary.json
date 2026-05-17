@@ -1,0 +1,77 @@
+{
+  "rebuilt_at": "2026-05-12T16:18",
+  "by": "Diana Mkoian — reproduction-обучение в собственной зоне для разблокировки live-CDSM v3",
+  "context": "Артефакты соавторов (Сонин Fusion, Альбинин MMD-Thinker v4) и их препроцессоры (PCA-25 на CLIP/e5) не переданы в общекомандный репозиторий — есть только сохранённые probas на test=58410 в packages/package_*/3_probas_team_split/test_proba_*.npy. Reproduction-обучение в зоне Diana Mkoian было выполнено для попытки разблокировать live-инференс CDSM v3 4-channel ensemble на новых ItemID > 220 804 (вне канонического теста).",
+  "artifacts": {
+    "clip_pca.pkl": {
+      "status": "USABLE",
+      "type": "sklearn.PCA(n_components=25)",
+      "trained_on": "CLIP train+val 138 788 × 512",
+      "canonical_source": "packages/package_soni/2_notebooks/03_multimodal_colab.ipynb cell 4",
+      "note": "PCA на embedded representations — не зависит от Сониного feature engineering, приемлемая reproduction."
+    },
+    "e5_pca.pkl": {
+      "status": "USABLE",
+      "type": "sklearn.PCA(n_components=25)",
+      "trained_on": "multilingual-e5-small train+val 138 788 × 384",
+      "canonical_source": "packages/package_soni/2_notebooks/03_multimodal_colab.ipynb cell 4",
+      "note": "PCA на embeddings — приемлемая reproduction."
+    },
+    "ftmff_catboost.cbm": {
+      "status": "DEGRADED_R_AT_P",
+      "type": "CatBoostClassifier(iterations=1000, depth=6, lr=0.05, scale_pos_weight=15.5, seed=42)",
+      "features": "92-dim (42 MY_FEATURES + 25 clip_pca + 25 t_pca)",
+      "metrics_test_reproduction": {
+        "ROC": 0.9506,
+        "PR": 0.7108,
+        "R_at_P_geq_0.9": 0.0261
+      },
+      "metrics_test_canonical_Sonya": {
+        "ROC": 0.9522,
+        "PR": 0.7284,
+        "R_at_P_geq_0.9": 0.1077
+      },
+      "delta_vs_canonical": {
+        "ROC": -0.0016,
+        "PR": -0.0176,
+        "R_at_P_geq_0.9": -0.0816
+      },
+      "verdict": "ROC и PR практически совпадают с canonical (Δ<0.02), но R@P деградирован в 4 раза. Причина — отсутствует точное воспроизведение Сониного использования текстового поля `text` (concatenated brand+description+name) как cat-feature через CatBoost target stats. Применим для ранжирования (PR/ROC), но НЕ для precision-режима (R@P)."
+    },
+    "amm_thinker.pkl": {
+      "status": "ARCHIVED_DEEPLY_DEGRADED",
+      "current_location": "_archive_degraded_reproduction/amm_thinker.pkl",
+      "type": "dict with 3 CatBoostClassifier + meta-LR + sample_weights",
+      "metrics_test_reproduction": {
+        "ROC": 0.9086,
+        "PR": 0.5202,
+        "R_at_P_geq_0.9": 0.0002
+      },
+      "metrics_test_canonical_Albina": {
+        "ROC": 0.9545,
+        "PR": 0.7084,
+        "R_at_P_geq_0.9": 0.0276
+      },
+      "delta_vs_canonical": {
+        "ROC": -0.0459,
+        "PR": -0.1882,
+        "R_at_P_geq_0.9": -0.0274
+      },
+      "verdict": "Глубокая деградация всех трёх метрик. Причина — Альбинина AMM-Thinker v4 содержит feature engineering (вероятно target encoding, brand aggregates, специфичные text features), который не извлекается из cell 18+ её ноута без полного прохода. Reproduction не использовать в production. Артефакт перемещён в архив."
+    }
+  },
+  "production_deploy_architecture": {
+    "default_predictor": "cdsm_v3_4channel (CDSMV3HeadlinePredictor)",
+    "routing": {
+      "ItemID_known_in_canonical_test (id ≤ 220804)": "frozen headline lookup → PR=0.7579, R@P=0.2078, ROC=0.9603",
+      "ItemID_new (id > 220804)": "graceful fallback → D2VCatBoostPredictor (Дианин baseline M2, PR≈0.72)"
+    },
+    "experimental_live_CDSM_v3": {
+      "predictor_type": "cdsm_v3_4channel_live (CDSMV3Predictor)",
+      "status": "BLOCKED",
+      "blocker": "Требует canonical артефактов соавторов: ftmff_catboost (Sonya), amm_thinker (Albina). Reproduction-вариант недостаточно качественен (см. выше).",
+      "alternative_3_channel": "Возможен 3-channel live (CDSM + RMM + Fusion-reproduction без AMM): по domain_lodo_full.json no_albina ablation даёт canonical PR=0.7614, R@P=0.1353, ROC=0.9574 (выше headline по PR, ниже по R@P). Не реализован в текущем deploy — ждём решение Diana."
+    }
+  },
+  "_disclaimer": "Эти reproduction-артефакты НЕ заменяют canonical соавторские модели. Канонические probas из packages/*/3_probas_team_split/test_proba_*.npy — это единственный source-of-truth для дипломных headline-метрик (0.7579/0.2078/0.9603). Live-CDSM v3 на новых данных требует canonical-артефактов от Сони и Альбины."
+}

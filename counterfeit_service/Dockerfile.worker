@@ -1,0 +1,32 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Те же системные зависимости, что и в API-контейнере: Pillow и torch.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libglib2.0-0 \
+    libgl1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# CPU-only torch wheel — без CUDA-runtime; экономит ~1,5 ГБ образа.
+COPY requirements.txt .
+RUN pip install --no-cache-dir \
+        --extra-index-url https://download.pytorch.org/whl/cpu \
+        -r requirements.txt
+
+# CLIP weights — закешируем при сборке, чтобы первая задача не качала их.
+RUN python -c "\
+from transformers import CLIPModel, CLIPProcessor; \
+CLIPModel.from_pretrained('openai/clip-vit-base-patch32'); \
+CLIPProcessor.from_pretrained('openai/clip-vit-base-patch32'); \
+print('CLIP cached')"
+
+# artifacts/ НЕ копируем в image — приходит через volume mount.
+COPY app/ ./app/
+
+ENV ARTIFACTS_DIR=/app/artifacts
+ENV COUNTERFEIT_THRESHOLD=0.5
+ENV WORKER_PREFETCH=1
+
+# Worker запускается как отдельный процесс.
+CMD ["python", "-m", "app.worker"]

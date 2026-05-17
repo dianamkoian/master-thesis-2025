@@ -1,15 +1,36 @@
-fastapi==0.115.5
-uvicorn[standard]==0.32.1
-python-multipart==0.0.17
-pydantic==2.10.3
-catboost==1.2.7
-scikit-learn==1.5.2
-joblib==1.4.2
-numpy==1.26.4
-pandas==2.2.3
-Pillow==11.0.0
-transformers==4.46.3
-torch==2.5.1
-sqlalchemy[asyncio]==2.0.36
-asyncpg==0.30.0
+# Production-зависимости сервиса. Версии указаны как минимальные совместимые
+# для одновременной работы на Python 3.11/3.12 (docker-образ) и Python 3.13
+# (локальный dev на macOS). Жёсткое pin-ование (`==`) применяется только к
+# пакетам с известными несовместимостями между минорными версиями.
 
+fastapi>=0.115.5,<0.120
+uvicorn[standard]>=0.32.1,<0.34
+python-multipart>=0.0.17
+pydantic>=2.10.3,<3
+# catboost: wheels для Python 3.13 появились начиная с 1.2.8.
+# Минимально совместимая deployed-версия: 1.2.7 (Python 3.11/3.12 в Docker).
+catboost>=1.2.7
+scikit-learn>=1.5.2
+joblib>=1.4.2
+# numpy < 2: artifacts/d2v_model.pkl сериализован gensim под numpy 1.x;
+# numpy 2.0 ломает unpickling MT19937 random-state (см. NEP 50 / changelog).
+numpy>=1.26.4,<2
+pandas>=2.2.3
+# pyarrow: чтение parquet-артефактов (HCDM headline lookup, brand_stats и др.)
+pyarrow>=18.0.0
+Pillow>=11.0.0
+transformers>=4.46.3
+torch>=2.5.1
+gensim>=4.3.3
+
+# Async pipeline (RabbitMQ + PostgreSQL) — индивидуальный вклад § 7.3
+aio-pika>=9.5.5
+sqlalchemy[asyncio]>=2.0.36
+asyncpg>=0.30.0
+aiosqlite>=0.20.0  # для тестов (in-memory SQLite через TestClient)
+
+# Test extras: pytest и плагины. Локально устанавливаются через
+#   pip install -r requirements.txt -r requirements-test.txt
+# если выделены в отдельный файл. Здесь оставлены для простоты.
+pytest>=8.0
+httpx>=0.27

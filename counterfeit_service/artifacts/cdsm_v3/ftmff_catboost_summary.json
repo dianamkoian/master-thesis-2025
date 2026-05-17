@@ -1,0 +1,26 @@
+{
+  "context": "Local retrain of Fusion_team for ftmff_catboost.cbm",
+  "date": "2026-05-12",
+  "best_iteration": 627,
+  "fit_seconds": 28.0,
+  "spw": 15.395892351274787,
+  "feature_count": 92,
+  "metrics_new_local": {
+    "roc": 0.957177284293028,
+    "pr_auc": 0.7279143831037009,
+    "r_at_p90": 0.10295067844066337
+  },
+  "metrics_canonical": {
+    "roc": 0.9522044610278503,
+    "pr_auc": 0.7283718879869715,
+    "r_at_p90": 0.10768899418479431
+  },
+  "probas_pearson_corr_with_canonical": 0.9889255516675074,
+  "probas_max_abs_diff": 0.45122069120407104,
+  "artifacts": {
+    "model": "team_runs/artifacts/ftmff_catboost.cbm",
+    "pca_clip": "team_runs/artifacts/ftmff_pca_clip.pkl",
+    "pca_text": "team_runs/artifacts/ftmff_pca_text.pkl",
+    "probas_local": "team_runs/artifacts/test_proba_fusion_team_LOCAL_retrain.npy"
+  }
+}
