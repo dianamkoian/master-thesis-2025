@@ -9,19 +9,19 @@
 
 ## Файлы для скачивания
 
-| Путь в проекте | Размер | Назначение | Ссылка |
-|----------------|--------|-----------|--------|
-| `artifacts/d2v_model.pkl` | ~437 МБ | Doc2Vec-модель для baseline `D2VCatBoostPredictor` | <!-- TODO: вставить ссылку --> |
-| `artifacts/cdsm_v3/amm_thinker.pkl` | ~136 МБ | AMM MMD-Thinker v4 (канал p_AMM) | <!-- TODO: вставить ссылку --> |
-| `artifacts/cdsm_v3/ftmff_catboost.cbm` | ~23 МБ | FT-MFF Fusion CatBoost (канал p_FT-MFF) | <!-- TODO: вставить ссылку --> |
-| `artifacts/cdsm_v3/rmm_catboost.cbm` | ~5 МБ | RMM CatBoost (канал p_RMM) | <!-- TODO: вставить ссылку --> |
-| `artifacts/cdsm_v3/rmm_catboost_typosquat.cbm` | ~5 МБ | RMM CatBoost (typosquat-вариант) | <!-- TODO: вставить ссылку --> |
+| Путь в проекте | Размер | Назначение |
+|----------------|--------|-----------|
+| `artifacts/d2v_model.pkl` | ~437 МБ | Doc2Vec-модель для baseline `D2VCatBoostPredictor` | 
+| `artifacts/cdsm_v3/amm_thinker.pkl` | ~136 МБ | AMM MMD-Thinker v4 (канал p_AMM) |
+| `artifacts/cdsm_v3/ftmff_catboost.cbm` | ~23 МБ | FT-MFF Fusion CatBoost (канал p_FT-MFF) |
+| `artifacts/cdsm_v3/rmm_catboost.cbm` | ~5 МБ | RMM CatBoost (канал p_RMM) |
+| `artifacts/cdsm_v3/rmm_catboost_typosquat.cbm` | ~5 МБ | RMM CatBoost (typosquat-вариант) | 
 
 ## Опционально
 
-| Путь в проекте | Размер | Назначение | Ссылка |
-|----------------|--------|-----------|--------|
-| `artifacts/d2v_model.pkl.legacy_backup` | ~529 МБ | Резервная копия предыдущей версии Doc2Vec; для работы сервиса не требуется | <!-- TODO: вставить ссылку (при необходимости) --> |
+| Путь в проекте | Размер | Назначение |
+|----------------|--------|-----------|
+| `artifacts/d2v_model.pkl.legacy_backup` | ~529 МБ | Резервная копия предыдущей версии Doc2Vec; для работы сервиса не требуется | 
 
 ## Как использовать
 
