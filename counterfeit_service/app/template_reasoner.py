@@ -1,18 +1,17 @@
 """
-Rule-based explainer для verdict-conditioned reasoning (§ 4.4.9.7 + § 7.4).
+Rule-based explainer для verdict-conditioned reasoning
 
-Архитектурное обоснование. Эмпирически зафиксировано (§ 4.4.9.3, § 4.4.9.4,
-§ 4.4.9.6), что foundation-LLM в zero-shot режиме на маркетплейс-borderline
+Архитектурное обоснование. Эмпирически зафиксировано, что foundation-LLM в zero-shot режиме на маркетплейс-borderline
 демонстрируют отрицательный перенос как по proba (Qwen2.5/CLIP/Qwen2-VL
 ROC ≈ 0,5), так и по практическому качеству генерации (Qwen2.5-1.5B/0.5B
 склонны к echo-input на коротких промптах с малым контекстом). В связи с
 этим в production-конфигурации сервиса используется детерминированный
 rule-based explainer, формирующий объяснения на основе правил-эвристик,
-выведенных из SHAP top-15 признаков финальной модели (§ 4.4.7) и
-counterfactual-анализа (§ 4.4.7.2).
+выведенных из SHAP top-15 признаков финальной модели  и
+counterfactual-анализа.
 
 LLM-канал реализован в `llm_explainer.py` и сохранён как опциональный
-feature flag (`USE_LLM_REASONING=1`); полностью документирован в § 4.4.9.7
+feature flag (`USE_LLM_REASONING=1`); полностью документирован в 
 ВКР с эмпирическим разбором 50 borderline-объектов командного теста.
 """
 from __future__ import annotations
