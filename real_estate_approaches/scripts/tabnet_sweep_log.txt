@@ -1,0 +1,79 @@
+===== 14:03:13 TabNet sweep старт =====
+14:03:13 ==================================================
+14:03:13 ==================================================
+14:03:13 TabNet hyperparameter sweep: 10 стратегических конфигов
+14:03:13 TabNet hyperparameter sweep: 10 стратегических конфигов
+14:03:14 tab features: 38
+14:03:14 tab features: 38
+14:03:16 device: mps
+14:03:16 device: mps
+14:03:16 ============================================================
+14:03:16 ============================================================
+14:03:16 config                  ROC   PR-AUC    R@P09  time, мин
+14:03:16 config                  ROC   PR-AUC    R@P09  time, мин
+14:03:16 ------------------------------------------------------------
+14:03:16 ------------------------------------------------------------
+
+Early stopping occurred at epoch 22 with best_epoch = 7 and best_val_0_auc = 0.83225
+14:05:12 default              0.7805   0.2578   0.0000        1.9
+14:05:12 default              0.7805   0.2578   0.0000        1.9
+
+Early stopping occurred at epoch 23 with best_epoch = 8 and best_val_0_auc = 0.8693
+14:07:13 small                0.7494   0.2733   0.0002        2.0
+14:07:13 small                0.7494   0.2733   0.0002        2.0
+
+Early stopping occurred at epoch 32 with best_epoch = 17 and best_val_0_auc = 0.81682
+14:10:01 large                0.7779   0.3197   0.0000        2.8
+14:10:01 large                0.7779   0.3197   0.0000        2.8
+
+Early stopping occurred at epoch 41 with best_epoch = 26 and best_val_0_auc = 0.85642
+14:14:42 more_steps           0.7560   0.2324   0.0075        4.7
+14:14:42 more_steps           0.7560   0.2324   0.0075        4.7
+
+Early stopping occurred at epoch 23 with best_epoch = 8 and best_val_0_auc = 0.80779
+14:16:04 fewer_steps          0.7044   0.2143   0.0013        1.4
+14:16:04 fewer_steps          0.7044   0.2143   0.0013        1.4
+
+Early stopping occurred at epoch 25 with best_epoch = 10 and best_val_0_auc = 0.84673
+14:18:31 high_gamma           0.8111   0.3763   0.0000        2.4
+14:18:31 high_gamma           0.8111   0.3763   0.0000        2.4
+
+Early stopping occurred at epoch 18 with best_epoch = 3 and best_val_0_auc = 0.84594
+14:20:21 low_lr               0.7307   0.2524   0.0000        1.8
+14:20:21 low_lr               0.7307   0.2524   0.0000        1.8
+
+Early stopping occurred at epoch 20 with best_epoch = 5 and best_val_0_auc = 0.82406
+14:22:26 high_lr              0.6811   0.1536   0.0002        2.1
+14:22:26 high_lr              0.6811   0.1536   0.0002        2.1
+
+Early stopping occurred at epoch 65 with best_epoch = 50 and best_val_0_auc = 0.8543
+14:26:23 big_batch            0.7317   0.2636   0.0004        4.0
+14:26:23 big_batch            0.7317   0.2636   0.0004        4.0
+
+Early stopping occurred at epoch 24 with best_epoch = 9 and best_val_0_auc = 0.83217
+14:32:17 small_batch          0.7168   0.3012   0.0420        5.9
+14:32:17 small_batch          0.7168   0.3012   0.0420        5.9
+14:32:17 ============================================================
+14:32:17 ============================================================
+14:32:17 
+Лучший TabNet по PR-AUC: high_gamma с PR=0.3763
+14:32:17 
+Лучший TabNet по PR-AUC: high_gamma с PR=0.3763
+14:32:17 Лучший TabNet по R@P:    small_batch с R@P=0.0420
+14:32:17 Лучший TabNet по R@P:    small_batch с R@P=0.0420
+14:32:17 
+Для справки CatBoost M2: PR=0.7175  R@P09=0.0099
+14:32:17 
+Для справки CatBoost M2: PR=0.7175  R@P09=0.0099
+14:32:17 Для справки M2-FE+:      PR=0.7375  R@P09=0.1154
+14:32:17 Для справки M2-FE+:      PR=0.7375  R@P09=0.1154
+14:32:17 
+ЗАКЛЮЧЕНИЕ: даже после sweep лучший TabNet PR-AUC = 0.3763, что хуже CatBoost.
+14:32:17 
+ЗАКЛЮЧЕНИЕ: даже после sweep лучший TabNet PR-AUC = 0.3763, что хуже CatBoost.
+14:32:17 TabNet negative transfer (NT4) остаётся валидным после полной hyperparameter оптимизации.
+14:32:17 TabNet negative transfer (NT4) остаётся валидным после полной hyperparameter оптимизации.
+14:32:17 Всего: 29.1 мин
+14:32:17 Всего: 29.1 мин
+14:32:17 ==================================================
+14:32:17 ==================================================

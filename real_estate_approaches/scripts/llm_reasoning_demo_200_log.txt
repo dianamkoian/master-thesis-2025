@@ -1,0 +1,57 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+======================================================================
+Verdict-conditioned reasoning demo (§ 4.4.9.7)
+======================================================================
+ensemble proba: n=58410, mean=0.1210, borderline (0.3,0.7): 2716 objects
+selected 200 borderline objects across 5 proba-bins
+loaded card features for 200 objects
+
+loading Qwen2.5-1.5B-Instruct ...
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 6152.59it/s]
+The following generation flags are not valid and may be ignored: ['temperature', 'top_p', 'top_k']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+  [ 1/200]  elapsed= 19.1s  ETA=3800.1s  proba=0.432
+  [ 5/200]  elapsed= 48.6s  ETA=1897.1s  proba=0.427
+  [10/200]  elapsed= 71.9s  ETA=1366.4s  proba=0.350
+  [15/200]  elapsed= 88.1s  ETA=1086.1s  proba=0.613
+  [20/200]  elapsed=103.3s  ETA=929.3s  proba=0.507
+  [25/200]  elapsed=134.0s  ETA=938.3s  proba=0.475
+  [30/200]  elapsed=159.6s  ETA=904.4s  proba=0.513
+  [35/200]  elapsed=180.3s  ETA=849.8s  proba=0.491
+  [40/200]  elapsed=196.9s  ETA=787.7s  proba=0.395
+  [45/200]  elapsed=216.5s  ETA=745.7s  proba=0.567
+  [50/200]  elapsed=239.6s  ETA=718.7s  proba=0.392
+  [55/200]  elapsed=261.6s  ETA=689.6s  proba=0.654
+  [60/200]  elapsed=284.9s  ETA=664.9s  proba=0.578
+  [65/200]  elapsed=303.7s  ETA=630.8s  proba=0.470
+  [70/200]  elapsed=324.2s  ETA=602.0s  proba=0.501
+  [75/200]  elapsed=340.7s  ETA=567.8s  proba=0.652
+  [80/200]  elapsed=364.4s  ETA=546.6s  proba=0.353
+  [85/200]  elapsed=393.9s  ETA=532.9s  proba=0.383
+  [90/200]  elapsed=418.1s  ETA=511.0s  proba=0.634
+  [95/200]  elapsed=444.7s  ETA=491.5s  proba=0.511
+  [100/200]  elapsed=463.1s  ETA=463.1s  proba=0.603
+  [105/200]  elapsed=478.5s  ETA=432.9s  proba=0.406
+  [110/200]  elapsed=496.4s  ETA=406.1s  proba=0.680
+  [115/200]  elapsed=518.9s  ETA=383.6s  proba=0.624
+  [120/200]  elapsed=542.9s  ETA=361.9s  proba=0.496
+  [125/200]  elapsed=565.9s  ETA=339.6s  proba=0.574
+  [130/200]  elapsed=591.2s  ETA=318.4s  proba=0.330
+  [135/200]  elapsed=612.5s  ETA=294.9s  proba=0.523
+  [140/200]  elapsed=640.0s  ETA=274.3s  proba=0.327
+  [145/200]  elapsed=657.8s  ETA=249.5s  proba=0.677
+  [150/200]  elapsed=682.2s  ETA=227.4s  proba=0.344
+  [155/200]  elapsed=707.3s  ETA=205.3s  proba=0.617
+  [160/200]  elapsed=733.6s  ETA=183.4s  proba=0.402
+  [165/200]  elapsed=757.9s  ETA=160.8s  proba=0.409
+  [170/200]  elapsed=782.1s  ETA=138.0s  proba=0.369
+  [175/200]  elapsed=810.8s  ETA=115.8s  proba=0.332
+  [180/200]  elapsed=826.5s  ETA= 91.8s  proba=0.640
+  [185/200]  elapsed=842.3s  ETA= 68.3s  proba=0.645
+  [190/200]  elapsed=869.6s  ETA= 45.8s  proba=0.667
+  [195/200]  elapsed=893.4s  ETA= 22.9s  proba=0.310
+  [200/200]  elapsed=912.4s  ETA=  0.0s  proba=0.587
+
+saved csv: /Users/diana/master-thesis-2025/Диана_ВКР_финал/notebooks/artifacts_lmm/verdict_conditioned_reasoning_200.csv
+saved stats: /Users/diana/master-thesis-2025/Диана_ВКР_финал/notebooks/artifacts_lmm/verdict_conditioned_reasoning_200_stats.md
+saved md:  /Users/diana/master-thesis-2025/Диана_ВКР_финал/notebooks/artifacts_lmm/verdict_conditioned_reasoning_200.md
+total runtime: 912.4s

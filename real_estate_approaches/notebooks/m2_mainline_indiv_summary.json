@@ -1,0 +1,37 @@
+{
+  "sizes": {
+    "train": 144967,
+    "val": 25904,
+    "test": 26327
+  },
+  "features": {
+    "tab": 54,
+    "clip": 512,
+    "svd": 50,
+    "total": 616
+  },
+  "hyperparams": {
+    "iterations": 1500,
+    "depth": 7,
+    "lr": 0.05,
+    "scale_pos_weight": 14.036510735400892,
+    "best_iter": 1375
+  },
+  "m2_mainline_indiv_raw": {
+    "ROC": 0.9617795557684695,
+    "PR": 0.742141909681537,
+    "RAP09": 0.23298589822194973
+  },
+  "m2_mainline_indiv_calibrated": {
+    "ROC": 0.9612282535273314,
+    "PR": 0.7227666987634632,
+    "RAP09": 0.1600245248313918
+  },
+  "old_in_diploma": {
+    "ROC": 0.9612,
+    "PR": 0.7228,
+    "RAP09": 0.16,
+    "on_split": "старый off-by-4%"
+  },
+  "fraud_cluster_rate": 0.0665052495067809
+}

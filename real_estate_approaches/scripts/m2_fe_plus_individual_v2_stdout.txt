@@ -1,0 +1,97 @@
+15:01:01 ============================================================
+15:01:01 M2-FE+ INDIVIDUAL v2: split в точности как в ноуте 02
+15:01:02 data: (197198, 49), positive 6.62%
+15:01:02 Воспроизведение split (точно как в ноуте 02):
+15:01:02   train sellers=7816, val sellers=1675, test sellers=1676
+15:01:02   объекты: train=144967, val=25904, test=26327
+15:01:02   expected from паспорт: (144967, 25904, 26327)
+15:01:02   got:                    (144967, 25904, 26327)
+15:01:02   OK: размеры совпадают с паспортом
+15:01:02   seller-disjoint: OK
+15:01:02   positive в test: 1631 (6.20%)
+15:01:02   сохранены: y_test_indiv.npy, {train,val,test}_idx_indiv.npy
+15:01:02 Подсчёт FE групп...
+15:01:13 CLIP...
+15:01:29 TF-IDF SVD-50 на индив train...
+15:01:46   tab признаков из team_split_meta: 38
+15:01:46 итого признаков: 637
+15:01:46 X_tr=(144967, 637), X_va=(25904, 637), X_te=(26327, 637)
+15:01:47 ==================================================
+15:01:47 Обучение M2-FE+ INDIVIDUAL v2...
+0:	test: 0.9034383	best: 0.9034383 (0)	total: 239ms	remaining: 9m 57s
+200:	test: 0.9591647	best: 0.9592649 (199)	total: 27.7s	remaining: 5m 16s
+400:	test: 0.9637778	best: 0.9638391 (392)	total: 54.2s	remaining: 4m 43s
+600:	test: 0.9656945	best: 0.9657002 (599)	total: 1m 19s	remaining: 4m 12s
+Stopped by overfitting detector  (100 iterations wait)
+
+bestTest = 0.9658926772
+bestIteration = 666
+
+Shrink model to first 667 iterations.
+15:03:29   обучен за 1.7 мин, best iter 667
+15:03:29   M2-FE+ INDIV v2: ROC=0.9661  PR=0.7399  R@P09=0.2213
+15:03:29   M2-FE+ INDIV v2 val proba: сохранён (25904 объектов)
+15:03:29 SHAP топ-15 M2-FE+ INDIV v2:
+15:03:29    1. CommercialTypeName4                 6.668
+15:03:29    2. brand_std_price                     3.082
+15:03:29    3. price_per_age                       2.305
+15:03:29    4. brand_n_sellers                     2.206
+15:03:29    5. brand_n_items                       1.801
+15:03:29    6. PriceDiscounted                     1.744
+15:03:29    7. brand_mean_price                    1.642
+15:03:29    8. clip_diff_to_pos_neg                1.616
+15:03:29    9. brand_seller_concentration          1.513
+15:03:29   10. GmvTotal90                          1.496
+15:03:29   11. ItemVarietyCount                    1.462
+15:03:29   12. svd_15                              1.312
+15:03:29   13. svd_28                              1.244
+15:03:29   14. cat_x_null_brand                    1.237
+15:03:29   15. svd_2                               1.088
+15:03:29 ==================================================
+15:03:29 Обучение M2 BASELINE INDIVIDUAL v2 для ансамбля...
+0:	test: 0.9032931	best: 0.9032931 (0)	total: 165ms	remaining: 6m 53s
+200:	test: 0.9456200	best: 0.9456200 (200)	total: 25.8s	remaining: 4m 55s
+400:	test: 0.9507162	best: 0.9507162 (400)	total: 50.1s	remaining: 4m 22s
+600:	test: 0.9533751	best: 0.9533751 (600)	total: 1m 14s	remaining: 3m 53s
+800:	test: 0.9546604	best: 0.9547459 (785)	total: 1m 38s	remaining: 3m 28s
+1000:	test: 0.9550797	best: 0.9550866 (998)	total: 2m 1s	remaining: 3m 1s
+1200:	test: 0.9559232	best: 0.9559408 (1181)	total: 2m 24s	remaining: 2m 36s
+Stopped by overfitting detector  (100 iterations wait)
+
+bestTest = 0.9559408412
+bestIteration = 1181
+
+Shrink model to first 1182 iterations.
+15:06:04   обучен за 2.6 мин, best iter 1182
+15:06:04   M2 BASE INDIV v2: ROC=0.9508  PR=0.6527  R@P09=0.2330
+15:06:04   M2 BASE INDIV v2 val proba: сохранён (25904 объектов)
+15:06:04 ==================================================
+15:06:04 Ансамбли на ИНДИВИДУАЛЬНОМ test:
+15:06:04   0.5*M2-FE+ + 0.5*M2 (default): ROC=0.9645  PR=0.7246  R@P09=0.2716
+15:06:04   Grid w_FE+ ∈ {0.1..0.9}:
+15:06:04     w_FE+=0.10: PR=0.6742  R@P09=0.2318
+15:06:04     w_FE+=0.15: PR=0.6829  R@P09=0.2348
+15:06:04     w_FE+=0.20: PR=0.6904  R@P09=0.2483
+15:06:04     w_FE+=0.25: PR=0.6976  R@P09=0.2526
+15:06:04     w_FE+=0.30: PR=0.7039  R@P09=0.2538
+15:06:04     w_FE+=0.35: PR=0.7097  R@P09=0.2655
+15:06:04     w_FE+=0.40: PR=0.7152  R@P09=0.2698
+15:06:04     w_FE+=0.45: PR=0.7202  R@P09=0.2728
+15:06:05     w_FE+=0.50: PR=0.7246  R@P09=0.2716
+15:06:05     w_FE+=0.55: PR=0.7285  R@P09=0.2661
+15:06:05     w_FE+=0.60: PR=0.7319  R@P09=0.2612
+15:06:05     w_FE+=0.65: PR=0.7347  R@P09=0.2649
+15:06:05     w_FE+=0.70: PR=0.7372  R@P09=0.2594
+15:06:05     w_FE+=0.75: PR=0.7392  R@P09=0.2618
+15:06:05     w_FE+=0.80: PR=0.7409  R@P09=0.2587
+15:06:05     w_FE+=0.85: PR=0.7420  R@P09=0.2600
+15:06:05     w_FE+=0.90: PR=0.7422  R@P09=0.2495
+15:06:05     w_FE+=0.95: PR=0.7418  R@P09=0.2373
+15:06:05 
+ЛУЧШИЙ ВЕС M2-FE+ по PR-AUC: w=0.90, PR=0.7422, R@P=0.2495
+15:06:05 ЛУЧШИЙ ВЕС M2-FE+ по R@P09: w=0.45, PR=0.7202, R@P=0.2728
+15:06:05 
+Summary JSON сохранён: /Users/diana/master-thesis-2025/Диана_ВКР_финал/notebooks/m2_fe_plus_indiv_v2_summary.json
+15:06:05 
+Всего: 5.1 мин
+15:06:05 ============================================================

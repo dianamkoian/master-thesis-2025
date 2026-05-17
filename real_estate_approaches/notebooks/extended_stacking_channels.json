@@ -1,0 +1,5 @@
+{
+  "pr_channel": "L1_logreg",
+  "rap_channel": "L1_logreg",
+  "note": "L1 LR одновременно лидирует и по PR-AUC, и по R@P>=0.9 на meta-eval; разделение на два канала не оправдано данными"
+}

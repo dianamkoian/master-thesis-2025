@@ -1,0 +1,6 @@
+Model,ROC-AUC,PR-AUC,R@P≥0.9
+M2 — Multimodal CatBoost (Sulistio 2025 idea),0.9612,0.7228,0.16
+M5 — OOF Stacking (LR meta on tab+multi),0.9561,0.7167,0.2109
+M4 — FADAML-style weighted ensemble (Nguyen 2025),0.9595,0.716,0.1392
+"M3 — Dual-Level Fusion (Mohd Amin 2025, α=0.30)",0.9582,0.68,0.0006
+M1 — K-means + Random Forest (Mohd Amin 2024),0.9566,0.6462,0.0012

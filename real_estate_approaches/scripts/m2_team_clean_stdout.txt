@@ -1,0 +1,63 @@
+Loading data...
+Loaded: (197198, 46), positive 0.0662
+Train 69453, Val 69335, Test 58410
+
+Feature engineering...
+  basic done in 0.7s
+
+Loading CLIP embeddings...
+  CLIP shapes: (69453, 512), (69335, 512), (58410, 512)
+  K-means clustering...
+
+TF-IDF SVD-100...
+  TF-IDF SVD done in 12.3s. shape (69453, 100)
+
+Tabular features: 53
+Final shape: (69453, 665), (69335, 665), (58410, 665)
+
+Training CatBoost...
+  scale_pos_weight ≈ 15.40
+0:	test: 0.8939912	best: 0.8939912 (0)	total: 103ms	remaining: 4m 17s
+200:	test: 0.9550331	best: 0.9550331 (200)	total: 6.29s	remaining: 1m 11s
+400:	test: 0.9574919	best: 0.9574919 (400)	total: 12.4s	remaining: 1m 4s
+600:	test: 0.9582691	best: 0.9583524 (561)	total: 18.1s	remaining: 57.2s
+800:	test: 0.9588962	best: 0.9588986 (792)	total: 23.8s	remaining: 50.6s
+1000:	test: 0.9593200	best: 0.9593439 (991)	total: 29.4s	remaining: 44.1s
+1200:	test: 0.9598283	best: 0.9598490 (1181)	total: 34.8s	remaining: 37.6s
+1400:	test: 0.9598572	best: 0.9600439 (1273)	total: 40.1s	remaining: 31.4s
+Stopped by overfitting detector  (150 iterations wait)
+
+bestTest = 0.9600438621
+bestIteration = 1273
+
+Shrink model to first 1274 iterations.
+
+Training done in 41s, best iter = 1274
+
+=== Метрики на team_test (58 410 объектов) ===
+Raw          ROC-AUC=0.9548  PR-AUC=0.7111  R@P≥0.9=0.0222
+Calibrated   ROC-AUC=0.9549  PR-AUC=0.7050  R@P≥0.9=0.0205
+
+Bootstrap 95% CI:
+  ROC-AUC  mean=0.9548  CI=[0.9517, 0.9577]
+  PR-AUC   mean=0.7052  CI=[0.6904, 0.7200]
+  R@P≥0.9  mean=0.0140  CI=[0.0004, 0.0260]
+
+✓ Saved test probas: /Users/diana/master-thesis-2025/Диана_ВКР_финал/notebooks/test_proba_diana_team_clean.npy
+
+Top-15 features:
+  category_target_mean                     14.448
+  brand_target_mean                        12.794
+  item_time_alive                          1.658
+  brand_name_len                           1.335
+  dist_centroid                            1.315
+  description_len                          0.916
+  PriceDiscounted                          0.904
+  svd_0                                    0.870
+  name_rus_len                             0.863
+  seller_time_alive                        0.850
+  ItemVarietyCount                         0.763
+  ExemplarReturnedCountTotal90             0.625
+  OrderAcceptedCountTotal90                0.614
+  svd_47                                   0.597
+  ItemAvailableCount                       0.526

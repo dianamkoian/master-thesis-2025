@@ -1,0 +1,147 @@
+
+===== 11:47:57 m2_e5_variant (patched, with CLIP expand) старт =====
+11:47:58 ==================================================
+11:47:58 ==================================================
+11:47:58 M2 e5-variant: старт
+11:47:58 M2 e5-variant: старт
+11:47:58 Загрузка train.csv...
+11:47:58 Загрузка train.csv...
+11:47:59   (197198, 45), positive 0.0662
+11:47:59   (197198, 45), positive 0.0662
+11:47:59   train=69453, val=69335, test=58410
+11:47:59   train=69453, val=69335, test=58410
+11:47:59 Загрузка clip_embeddings.parquet...
+11:47:59 Загрузка clip_embeddings.parquet...
+11:48:00   CLIP parquet: (187604, 2), columns=['ItemID', 'embedding']
+11:48:00   CLIP parquet: (187604, 2), columns=['ItemID', 'embedding']
+11:48:00   CLIP matrix shape: (187604, 512)
+11:48:00   CLIP matrix shape: (187604, 512)
+11:48:00   CLIP столбцов после expand: 512
+11:48:00   CLIP столбцов после expand: 512
+11:48:01 Загрузка multilingual-e5-base...
+11:48:01 Загрузка multilingual-e5-base...
+11:48:05   device: mps
+11:48:05   device: mps
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 12642.25it/s]
+[1mXLMRobertaModel LOAD REPORT[0m from: intfloat/multilingual-e5-base
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+11:52:04   модель загружена; max_seq_length=512
+11:52:04   модель загружена; max_seq_length=512
+11:52:04   всего текстов: 197198
+11:52:04   всего текстов: 197198
+11:53:19   e5 progress: 6400/197198 (3.2%), 84.5 txt/s, ETA 37.6 min
+11:53:19   e5 progress: 6400/197198 (3.2%), 84.5 txt/s, ETA 37.6 min
+11:54:31   e5 progress: 12800/197198 (6.5%), 86.9 txt/s, ETA 35.4 min
+11:54:31   e5 progress: 12800/197198 (6.5%), 86.9 txt/s, ETA 35.4 min
+11:55:38   e5 progress: 19200/197198 (9.7%), 89.5 txt/s, ETA 33.1 min
+11:55:38   e5 progress: 19200/197198 (9.7%), 89.5 txt/s, ETA 33.1 min
+11:56:52   e5 progress: 25600/197198 (13.0%), 88.7 txt/s, ETA 32.2 min
+11:56:52   e5 progress: 25600/197198 (13.0%), 88.7 txt/s, ETA 32.2 min
+11:58:05   e5 progress: 32000/197198 (16.2%), 88.5 txt/s, ETA 31.1 min
+11:58:05   e5 progress: 32000/197198 (16.2%), 88.5 txt/s, ETA 31.1 min
+11:59:18   e5 progress: 38400/197198 (19.5%), 88.4 txt/s, ETA 30.0 min
+11:59:18   e5 progress: 38400/197198 (19.5%), 88.4 txt/s, ETA 30.0 min
+12:00:28   e5 progress: 44800/197198 (22.7%), 88.7 txt/s, ETA 28.6 min
+12:00:28   e5 progress: 44800/197198 (22.7%), 88.7 txt/s, ETA 28.6 min
+12:01:46   e5 progress: 51200/197198 (26.0%), 87.9 txt/s, ETA 27.7 min
+12:01:46   e5 progress: 51200/197198 (26.0%), 87.9 txt/s, ETA 27.7 min
+12:03:02   e5 progress: 57600/197198 (29.2%), 87.5 txt/s, ETA 26.6 min
+12:03:02   e5 progress: 57600/197198 (29.2%), 87.5 txt/s, ETA 26.6 min
+12:04:24   e5 progress: 64000/197198 (32.5%), 86.4 txt/s, ETA 25.7 min
+12:04:24   e5 progress: 64000/197198 (32.5%), 86.4 txt/s, ETA 25.7 min
+12:05:45   e5 progress: 70400/197198 (35.7%), 85.7 txt/s, ETA 24.6 min
+12:05:45   e5 progress: 70400/197198 (35.7%), 85.7 txt/s, ETA 24.6 min
+12:07:07   e5 progress: 76800/197198 (38.9%), 85.0 txt/s, ETA 23.6 min
+12:07:07   e5 progress: 76800/197198 (38.9%), 85.0 txt/s, ETA 23.6 min
+12:08:24   e5 progress: 83200/197198 (42.2%), 84.8 txt/s, ETA 22.4 min
+12:08:24   e5 progress: 83200/197198 (42.2%), 84.8 txt/s, ETA 22.4 min
+12:09:44   e5 progress: 89600/197198 (45.4%), 84.5 txt/s, ETA 21.2 min
+12:09:44   e5 progress: 89600/197198 (45.4%), 84.5 txt/s, ETA 21.2 min
+12:11:01   e5 progress: 96000/197198 (48.7%), 84.4 txt/s, ETA 20.0 min
+12:11:01   e5 progress: 96000/197198 (48.7%), 84.4 txt/s, ETA 20.0 min
+12:12:22   e5 progress: 102400/197198 (51.9%), 84.1 txt/s, ETA 18.8 min
+12:12:22   e5 progress: 102400/197198 (51.9%), 84.1 txt/s, ETA 18.8 min
+12:13:41   e5 progress: 108800/197198 (55.2%), 83.9 txt/s, ETA 17.6 min
+12:13:41   e5 progress: 108800/197198 (55.2%), 83.9 txt/s, ETA 17.6 min
+12:14:55   e5 progress: 115200/197198 (58.4%), 84.0 txt/s, ETA 16.3 min
+12:14:55   e5 progress: 115200/197198 (58.4%), 84.0 txt/s, ETA 16.3 min
+12:15:59   e5 progress: 121600/197198 (61.7%), 84.7 txt/s, ETA 14.9 min
+12:15:59   e5 progress: 121600/197198 (61.7%), 84.7 txt/s, ETA 14.9 min
+12:17:06   e5 progress: 128000/197198 (64.9%), 85.2 txt/s, ETA 13.5 min
+12:17:06   e5 progress: 128000/197198 (64.9%), 85.2 txt/s, ETA 13.5 min
+12:18:13   e5 progress: 134400/197198 (68.2%), 85.7 txt/s, ETA 12.2 min
+12:18:13   e5 progress: 134400/197198 (68.2%), 85.7 txt/s, ETA 12.2 min
+12:19:17   e5 progress: 140800/197198 (71.4%), 86.2 txt/s, ETA 10.9 min
+12:19:17   e5 progress: 140800/197198 (71.4%), 86.2 txt/s, ETA 10.9 min
+12:20:29   e5 progress: 147200/197198 (74.6%), 86.3 txt/s, ETA 9.7 min
+12:20:29   e5 progress: 147200/197198 (74.6%), 86.3 txt/s, ETA 9.7 min
+12:21:46   e5 progress: 153600/197198 (77.9%), 86.2 txt/s, ETA 8.4 min
+12:21:46   e5 progress: 153600/197198 (77.9%), 86.2 txt/s, ETA 8.4 min
+12:22:48   e5 progress: 160000/197198 (81.1%), 86.8 txt/s, ETA 7.1 min
+12:22:48   e5 progress: 160000/197198 (81.1%), 86.8 txt/s, ETA 7.1 min
+12:23:53   e5 progress: 166400/197198 (84.4%), 87.1 txt/s, ETA 5.9 min
+12:23:53   e5 progress: 166400/197198 (84.4%), 87.1 txt/s, ETA 5.9 min
+12:24:56   e5 progress: 172800/197198 (87.6%), 87.6 txt/s, ETA 4.6 min
+12:24:56   e5 progress: 172800/197198 (87.6%), 87.6 txt/s, ETA 4.6 min
+12:26:05   e5 progress: 179200/197198 (90.9%), 87.8 txt/s, ETA 3.4 min
+12:26:05   e5 progress: 179200/197198 (90.9%), 87.8 txt/s, ETA 3.4 min
+12:27:07   e5 progress: 185600/197198 (94.1%), 88.3 txt/s, ETA 2.2 min
+12:27:07   e5 progress: 185600/197198 (94.1%), 88.3 txt/s, ETA 2.2 min
+12:28:14   e5 progress: 192000/197198 (97.4%), 88.5 txt/s, ETA 1.0 min
+12:28:14   e5 progress: 192000/197198 (97.4%), 88.5 txt/s, ETA 1.0 min
+12:29:08   e5 готово за 37.1 мин
+12:29:08   e5 готово за 37.1 мин
+12:29:08 PCA-25 на e5 embeddings...
+12:29:08 PCA-25 на e5 embeddings...
+12:29:09   PCA explained variance: 0.4105
+12:29:09   PCA explained variance: 0.4105
+12:29:10   tab колонок: 38
+12:29:10   tab колонок: 38
+12:29:10   итого признаков: 575 (tab=38 + clip=512 + e5=25)
+12:29:10   итого признаков: 575 (tab=38 + clip=512 + e5=25)
+12:29:10   X_train=(69453, 575)  X_val=(69335, 575)  X_test=(58410, 575)
+12:29:10   X_train=(69453, 575)  X_val=(69335, 575)  X_test=(58410, 575)
+12:29:10 Обучение CatBoost...
+12:29:10 Обучение CatBoost...
+0:	test: 0.8904722	best: 0.8904722 (0)	total: 162ms	remaining: 6m 46s
+200:	test: 0.9470514	best: 0.9470855 (195)	total: 17.9s	remaining: 3m 25s
+400:	test: 0.9521203	best: 0.9521203 (400)	total: 34.8s	remaining: 3m 2s
+600:	test: 0.9538368	best: 0.9538368 (600)	total: 51.4s	remaining: 2m 42s
+800:	test: 0.9548221	best: 0.9548221 (800)	total: 1m 8s	remaining: 2m 24s
+1000:	test: 0.9555264	best: 0.9555810 (977)	total: 1m 24s	remaining: 2m 6s
+1200:	test: 0.9560186	best: 0.9560450 (1196)	total: 1m 41s	remaining: 1m 49s
+1400:	test: 0.9563144	best: 0.9563285 (1390)	total: 1m 57s	remaining: 1m 32s
+Stopped by overfitting detector  (100 iterations wait)
+
+bestTest = 0.9564487779
+bestIteration = 1467
+
+Shrink model to first 1468 iterations.
+12:31:23   CatBoost обучен за 2.2 мин, best iter 1468
+12:31:23   CatBoost обучен за 2.2 мин, best iter 1468
+12:31:23 ==================================================
+12:31:23 ==================================================
+12:31:23 Метрики на team test (истинные метки):
+12:31:23 Метрики на team test (истинные метки):
+12:31:23   RAW:        ROC=0.9475  PR-AUC=0.6797  R@P>=0.9=0.0594
+12:31:23   RAW:        ROC=0.9475  PR-AUC=0.6797  R@P>=0.9=0.0594
+12:31:23   Calibrated: ROC=0.9471  PR-AUC=0.6689  R@P>=0.9=0.0575
+12:31:23   Calibrated: ROC=0.9471  PR-AUC=0.6689  R@P>=0.9=0.0575
+12:31:23   M2 (current headline) для справки: ROC=0.9561  PR-AUC=0.7175
+12:31:23   M2 (current headline) для справки: ROC=0.9561  PR-AUC=0.7175
+12:31:23   Прирост от e5: ΔPR-AUC = -0.0379, ΔROC = -0.0087
+12:31:23   Прирост от e5: ΔPR-AUC = -0.0379, ΔROC = -0.0087
+12:31:23   Ансамбль 0.5×M2 + 0.5×M2-e5: ROC=0.9620  PR=0.7401  R@P>=0.9=0.0838
+12:31:23   Ансамбль 0.5×M2 + 0.5×M2-e5: ROC=0.9620  PR=0.7401  R@P>=0.9=0.0838
+12:31:23 Saved → /Users/diana/master-thesis-2025/Диана_ВКР_финал/notebooks/test_proba_diana_m2_e5.npy
+12:31:23 Saved → /Users/diana/master-thesis-2025/Диана_ВКР_финал/notebooks/test_proba_diana_m2_e5.npy
+12:31:23 Всего: 43.4 мин
+12:31:23 Всего: 43.4 мин
+12:31:23 ==================================================
+12:31:23 ==================================================
