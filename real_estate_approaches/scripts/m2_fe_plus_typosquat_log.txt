@@ -1,0 +1,59 @@
+21:11:32 ==================================================
+21:11:32 M2-FE+ : расширенный feature engineering
+21:11:33 Группа №1: text statistics
+21:11:42   text statistics готово (18 признаков)
+21:11:42 Группа №2: brand-level aggregates
+21:11:42   brand aggregates готово (5 признаков)
+21:11:42 Группа №3: title-description coherence
+21:11:44   coherence готово (3 признака)
+21:11:44 Группа №4: interactions
+21:11:44   interactions готово (4 признака)
+21:11:44 Загрузка CLIP...
+21:11:46   CLIP: 512 cols
+21:11:46 Группа №6: CLIP-derived structural
+21:11:48   K-means на CLIP пространстве (k=8)...
+21:11:54   CLIP-derived готово (6 признаков)
+21:11:54 TF-IDF + SVD-50...
+21:12:05 Группа №5: typosquat / brand identification deception (Karina Group D)
+21:12:05   typosquat готово (3 признака)
+21:12:05 Группа №7: categorical interactions
+21:12:05   categorical interactions готово (1 признак)
+21:12:05 Всего новых признаков (вне tab+CLIP+SVD): 39
+21:12:05 Итого признаков: 639 (tab=38 + clip=512 + svd=50 + new=39 + cat_extra=1)
+21:12:06 Обучение M2-FE+ ...
+21:13:55   CatBoost обучен за 1.8 мин, best iter 1031
+21:13:55 ==================================================
+21:13:55   M2-FE+ RAW:  ROC=0.9509  PR=0.7438  R@P>=0.9=0.1900
+21:13:55   M2-FE+ CAL:  ROC=0.9506  PR=0.7325  R@P>=0.9=0.1714
+21:13:55   M2 baseline:    PR=0.7175  R@P09=0.0099
+21:13:56   M2_no_te:       PR=0.7047  R@P09=0.0961
+21:13:56   M2-e5:          PR=0.6797  R@P09=0.0594
+21:13:56   Прирост FE+ vs M2: ΔPR = +0.0262
+21:13:56 Ансамбли с FE+:
+21:13:56   M2-FE+ + M2        : PR=0.7584  R@P09=0.1732
+21:13:56   M2-FE+ + M2_no_te  : PR=0.7460  R@P09=0.1572
+21:13:56   M2-FE+ + M2_e5     : PR=0.7379  R@P09=0.0803
+21:13:56   M2-FE+ + M2 + M2_e5:    PR=0.7542  R@P09=0.0853
+21:13:56   M2-FE+ + M2 + M2_no_te: PR=0.7526  R@P09=0.1635
+21:13:56   M2-FE+ + M2_no_te + M2_e5: PR=0.7471  R@P09=0.0818
+21:13:56   4-way M2-FE+ + M2 + M2_no_te + M2_e5: PR=0.7526  R@P09=0.0797
+21:13:56 SHAP топ-15 признаков M2-FE+:
+21:13:56    1. CommercialTypeName4                 5.066
+21:13:56    2. brand_std_price                     2.193
+21:13:56    3. cat_x_null_brand                    1.932
+21:13:56    4. brand_n_sellers                     1.558
+21:13:56    5. PriceDiscounted                     1.523
+21:13:56    6. ItemVarietyCount                    1.477
+21:13:56    7. brand_n_items                       1.436
+21:13:56    8. clip_pos_neg_ratio                  1.411
+21:13:56    9. brand_fuzzy                         1.267
+21:13:56   10. brand_exact                         1.182
+21:13:56   11. brand_mean_price                    1.105
+21:13:56   12. age_brand_concentration             1.061
+21:13:56   13. svd_4                               1.048
+21:13:56   14. brand_avg_word_len                  0.976
+21:13:56   15. clip_diff_to_pos_neg                0.929
+21:13:56 Saved → test_proba_diana_m2_fe_plus_typosquat.npy
+21:13:56 Saved → /Users/diana/master-thesis-2025/Диана_ВКР_финал/counterfeit_service/artifacts/cdsm_v3/rmm_catboost_typosquat.cbm (RMM-typosquat вариант)
+21:13:56 Всего: 2.4 мин
+21:13:56 ==================================================

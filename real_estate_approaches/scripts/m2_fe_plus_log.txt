@@ -1,0 +1,183 @@
+===== 13:54:20 M2-FE+ старт =====
+13:54:21 ==================================================
+13:54:21 ==================================================
+13:54:21 M2-FE+ : расширенный feature engineering
+13:54:21 M2-FE+ : расширенный feature engineering
+13:54:22 Группа №1: text statistics
+13:54:22 Группа №1: text statistics
+13:54:30   text statistics готово (18 признаков)
+13:54:30   text statistics готово (18 признаков)
+13:54:30 Группа №2: brand-level aggregates
+13:54:30 Группа №2: brand-level aggregates
+13:54:30   brand aggregates готово (5 признаков)
+13:54:30   brand aggregates готово (5 признаков)
+13:54:30 Группа №3: title-description coherence
+13:54:30 Группа №3: title-description coherence
+13:54:32   coherence готово (3 признака)
+13:54:32   coherence готово (3 признака)
+13:54:32 Группа №4: interactions
+13:54:32 Группа №4: interactions
+13:54:32   interactions готово (4 признака)
+13:54:32   interactions готово (4 признака)
+13:54:32 Загрузка CLIP...
+13:54:32 Загрузка CLIP...
+13:54:34   CLIP: 512 cols
+13:54:34   CLIP: 512 cols
+13:54:34 Группа №6: CLIP-derived structural
+13:54:34 Группа №6: CLIP-derived structural
+13:54:35   K-means на CLIP пространстве (k=8)...
+13:54:35   K-means на CLIP пространстве (k=8)...
+13:54:42   CLIP-derived готово (6 признаков)
+13:54:42   CLIP-derived готово (6 признаков)
+13:54:42 TF-IDF + SVD-50...
+13:54:42 TF-IDF + SVD-50...
+13:54:51 Группа №7: categorical interactions
+13:54:51 Группа №7: categorical interactions
+13:54:51   categorical interactions готово (1 признак)
+13:54:51   categorical interactions готово (1 признак)
+13:54:51 Всего новых признаков (вне tab+CLIP+SVD): 36
+13:54:51 Всего новых признаков (вне tab+CLIP+SVD): 36
+13:54:51 Итого признаков: 636 (tab=38 + clip=512 + svd=50 + new=36 + cat_extra=1)
+13:54:51 Итого признаков: 636 (tab=38 + clip=512 + svd=50 + new=36 + cat_extra=1)
+13:54:52 Обучение M2-FE+ ...
+13:54:52 Обучение M2-FE+ ...
+0:	test: 0.9088613	best: 0.9088613 (0)	total: 198ms	remaining: 8m 14s
+200:	test: 0.9567322	best: 0.9567322 (200)	total: 20.3s	remaining: 3m 51s
+400:	test: 0.9595529	best: 0.9595529 (400)	total: 39.3s	remaining: 3m 25s
+600:	test: 0.9605405	best: 0.9606074 (583)	total: 58.3s	remaining: 3m 4s
+800:	test: 0.9610090	best: 0.9610330 (788)	total: 1m 17s	remaining: 2m 43s
+1000:	test: 0.9616179	best: 0.9616179 (1000)	total: 1m 36s	remaining: 2m 23s
+1200:	test: 0.9619408	best: 0.9619590 (1185)	total: 1m 54s	remaining: 2m 3s
+Stopped by overfitting detector  (100 iterations wait)
+
+bestTest = 0.9619589678
+bestIteration = 1185
+
+Shrink model to first 1186 iterations.
+13:56:55   CatBoost обучен за 2.0 мин, best iter 1186
+13:56:55   CatBoost обучен за 2.0 мин, best iter 1186
+13:56:55 ==================================================
+13:56:55 ==================================================
+13:56:55   M2-FE+ RAW:  ROC=0.9484  PR=0.7375  R@P>=0.9=0.1154
+13:56:55   M2-FE+ RAW:  ROC=0.9484  PR=0.7375  R@P>=0.9=0.1154
+13:56:55   M2-FE+ CAL:  ROC=0.9482  PR=0.7282  R@P>=0.9=0.0870
+13:56:55   M2-FE+ CAL:  ROC=0.9482  PR=0.7282  R@P>=0.9=0.0870
+13:56:55   M2 baseline:    PR=0.7175  R@P09=0.0099
+13:56:55   M2 baseline:    PR=0.7175  R@P09=0.0099
+13:56:55   M2_no_te:       PR=0.7047  R@P09=0.0961
+13:56:55   M2_no_te:       PR=0.7047  R@P09=0.0961
+13:56:55   M2-e5:          PR=0.6797  R@P09=0.0594
+13:56:55   M2-e5:          PR=0.6797  R@P09=0.0594
+13:56:55   Прирост FE+ vs M2: ΔPR = +0.0200
+13:56:55   Прирост FE+ vs M2: ΔPR = +0.0200
+13:56:55 Ансамбли с FE+:
+13:56:55 Ансамбли с FE+:
+13:56:55   M2-FE+ + M2        : PR=0.7544  R@P09=0.1109
+13:56:55   M2-FE+ + M2        : PR=0.7544  R@P09=0.1109
+13:56:55   M2-FE+ + M2_no_te  : PR=0.7397  R@P09=0.0773
+13:56:55   M2-FE+ + M2_no_te  : PR=0.7397  R@P09=0.0773
+13:56:55   M2-FE+ + M2_e5     : PR=0.7335  R@P09=0.0737
+13:56:55   M2-FE+ + M2_e5     : PR=0.7335  R@P09=0.0737
+13:56:55   M2-FE+ + M2 + M2_e5:    PR=0.7509  R@P09=0.0782
+13:56:55   M2-FE+ + M2 + M2_e5:    PR=0.7509  R@P09=0.0782
+13:56:55   M2-FE+ + M2 + M2_no_te: PR=0.7487  R@P09=0.0989
+13:56:55   M2-FE+ + M2 + M2_no_te: PR=0.7487  R@P09=0.0989
+13:56:55   M2-FE+ + M2_no_te + M2_e5: PR=0.7425  R@P09=0.0756
+13:56:55   M2-FE+ + M2_no_te + M2_e5: PR=0.7425  R@P09=0.0756
+13:56:55   4-way M2-FE+ + M2 + M2_no_te + M2_e5: PR=0.7501  R@P09=0.0806
+13:56:55   4-way M2-FE+ + M2 + M2_no_te + M2_e5: PR=0.7501  R@P09=0.0806
+13:56:55 SHAP топ-15 признаков M2-FE+:
+13:56:55 SHAP топ-15 признаков M2-FE+:
+13:56:55    1. CommercialTypeName4                 5.303
+13:56:55    1. CommercialTypeName4                 5.303
+13:56:55    2. brand_std_price                     2.837
+13:56:55    2. brand_std_price                     2.837
+13:56:55    3. cat_x_null_brand                    2.643
+13:56:55    3. cat_x_null_brand                    2.643
+13:56:55    4. brand_n_sellers                     2.218
+13:56:55    4. brand_n_sellers                     2.218
+13:56:55    5. PriceDiscounted                     1.649
+13:56:55    5. PriceDiscounted                     1.649
+13:56:55    6. brand_avg_word_len                  1.289
+13:56:55    6. brand_avg_word_len                  1.289
+13:56:55    7. age_brand_concentration             1.261
+13:56:55    7. age_brand_concentration             1.261
+13:56:55    8. brand_mean_price                    1.256
+13:56:55    8. brand_mean_price                    1.256
+13:56:55    9. name_rus_char_len                   1.205
+13:56:55    9. name_rus_char_len                   1.205
+13:56:55   10. clip_pos_neg_ratio                  1.096
+13:56:55   10. clip_pos_neg_ratio                  1.096
+13:56:55   11. brand_n_items                       1.089
+13:56:55   11. brand_n_items                       1.089
+13:56:55   12. svd_15                              0.983
+13:56:55   12. svd_15                              0.983
+13:56:55   13. clip_diff_to_pos_neg                0.971
+13:56:55   13. clip_diff_to_pos_neg                0.971
+13:56:55   14. ItemAvailableCount                  0.907
+13:56:55   14. ItemAvailableCount                  0.907
+13:56:55   15. name_rus_digit_ratio                0.905
+13:56:55   15. name_rus_digit_ratio                0.905
+13:56:55 Saved → test_proba_diana_m2_fe_plus.npy
+13:56:55 Saved → test_proba_diana_m2_fe_plus.npy
+13:56:55 Всего: 2.6 мин
+13:56:55 Всего: 2.6 мин
+13:56:55 ==================================================
+13:56:55 ==================================================
+12:54:25 ==================================================
+12:54:25 M2-FE+ : расширенный feature engineering
+12:54:27 Группа №1: text statistics
+12:54:36   text statistics готово (18 признаков)
+12:54:36 Группа №2: brand-level aggregates
+12:54:36   brand aggregates готово (5 признаков)
+12:54:36 Группа №3: title-description coherence
+12:54:38   coherence готово (3 признака)
+12:54:38 Группа №4: interactions
+12:54:38   interactions готово (4 признака)
+12:54:38 Загрузка CLIP...
+12:54:41   CLIP: 512 cols
+12:54:41 Группа №6: CLIP-derived structural
+12:54:43   K-means на CLIP пространстве (k=8)...
+12:54:49   CLIP-derived готово (6 признаков)
+12:54:49 TF-IDF + SVD-50...
+12:55:00 Группа №7: categorical interactions
+12:55:00   categorical interactions готово (1 признак)
+12:55:00 Всего новых признаков (вне tab+CLIP+SVD): 36
+12:55:00 Итого признаков: 636 (tab=38 + clip=512 + svd=50 + new=36 + cat_extra=1)
+12:55:01 Обучение M2-FE+ ...
+12:57:05   CatBoost обучен за 2.1 мин, best iter 1186
+12:57:05 ==================================================
+12:57:05   M2-FE+ RAW:  ROC=0.9484  PR=0.7375  R@P>=0.9=0.1154
+12:57:05   M2-FE+ CAL:  ROC=0.9482  PR=0.7282  R@P>=0.9=0.0870
+12:57:05   M2 baseline:    PR=0.7175  R@P09=0.0099
+12:57:05   M2_no_te:       PR=0.7047  R@P09=0.0961
+12:57:05   M2-e5:          PR=0.6797  R@P09=0.0594
+12:57:05   Прирост FE+ vs M2: ΔPR = +0.0200
+12:57:05 Ансамбли с FE+:
+12:57:05   M2-FE+ + M2        : PR=0.7544  R@P09=0.1109
+12:57:05   M2-FE+ + M2_no_te  : PR=0.7397  R@P09=0.0773
+12:57:05   M2-FE+ + M2_e5     : PR=0.7335  R@P09=0.0737
+12:57:05   M2-FE+ + M2 + M2_e5:    PR=0.7509  R@P09=0.0782
+12:57:05   M2-FE+ + M2 + M2_no_te: PR=0.7487  R@P09=0.0989
+12:57:05   M2-FE+ + M2_no_te + M2_e5: PR=0.7425  R@P09=0.0756
+12:57:05   4-way M2-FE+ + M2 + M2_no_te + M2_e5: PR=0.7501  R@P09=0.0806
+12:57:05 SHAP топ-15 признаков M2-FE+:
+12:57:05    1. CommercialTypeName4                 5.303
+12:57:05    2. brand_std_price                     2.837
+12:57:05    3. cat_x_null_brand                    2.643
+12:57:05    4. brand_n_sellers                     2.218
+12:57:05    5. PriceDiscounted                     1.649
+12:57:05    6. brand_avg_word_len                  1.289
+12:57:05    7. age_brand_concentration             1.261
+12:57:05    8. brand_mean_price                    1.256
+12:57:05    9. name_rus_char_len                   1.205
+12:57:05   10. clip_pos_neg_ratio                  1.096
+12:57:05   11. brand_n_items                       1.089
+12:57:05   12. svd_15                              0.983
+12:57:05   13. clip_diff_to_pos_neg                0.971
+12:57:05   14. ItemAvailableCount                  0.907
+12:57:05   15. name_rus_digit_ratio                0.905
+12:57:05 Saved → test_proba_diana_m2_fe_plus.npy
+12:57:05 Saved → /Users/diana/master-thesis-2025/Диана_ВКР_финал/counterfeit_service/artifacts/cdsm_v3/rmm_catboost.cbm (RMM-канал CDSM v3, см. § 5.6.2 ВКР)
+12:57:05 Всего: 2.7 мин
+12:57:05 ==================================================

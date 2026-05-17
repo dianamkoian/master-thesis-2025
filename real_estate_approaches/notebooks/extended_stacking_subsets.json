@@ -1,0 +1,116 @@
+{
+  "S1_diana_only_4": {
+    "k": 4,
+    "models": [
+      "diana_team",
+      "diana_3way",
+      "diana_best_ensemble",
+      "diana_no_te"
+    ],
+    "best_C": 0.01,
+    "metrics_eval": {
+      "roc": 0.9602607903359939,
+      "pr": 0.7287129947359212,
+      "rap90": 0.16184615384615383
+    },
+    "metrics_full": {
+      "roc": 0.9591638515115481,
+      "pr": 0.7464886154741663,
+      "rap90": 0.07172087012707301
+    }
+  },
+  "S2_headline_4": {
+    "k": 4,
+    "models": [
+      "diana_team",
+      "soni_fusion",
+      "karina_combined",
+      "albina_mmd_v4"
+    ],
+    "best_C": 0.01,
+    "metrics_eval": {
+      "roc": 0.9654000218672658,
+      "pr": 0.7385242501334243,
+      "rap90": 0.2283076923076923
+    },
+    "metrics_full": {
+      "roc": 0.9582539899696676,
+      "pr": 0.7445286069252478,
+      "rap90": 0.16433340512599612
+    }
+  },
+  "S4_decorrelated_6": {
+    "k": 6,
+    "models": [
+      "soni_e0_clean",
+      "albina_mmd_v4",
+      "karina_combined",
+      "soni_e0_full",
+      "diana_team",
+      "diana_no_te"
+    ],
+    "best_C": 0.01,
+    "metrics_eval": {
+      "roc": 0.9615354266270405,
+      "pr": 0.730812881314778,
+      "rap90": 0.14461538461538462
+    },
+    "metrics_full": {
+      "roc": 0.955148662546435,
+      "pr": 0.744149718388836,
+      "rap90": 0.18673271591643334
+    }
+  },
+  "S5_diana5_plus_3hl": {
+    "k": 8,
+    "models": [
+      "diana_team",
+      "diana_calibrated",
+      "diana_3way",
+      "diana_best_ensemble",
+      "diana_no_te",
+      "soni_fusion",
+      "karina_combined",
+      "albina_mmd_v4"
+    ],
+    "best_C": 0.01,
+    "metrics_eval": {
+      "roc": 0.9647203607436196,
+      "pr": 0.7406176927369397,
+      "rap90": 0.25784615384615384
+    },
+    "metrics_full": {
+      "roc": 0.9595382583863773,
+      "pr": 0.7508486578038942,
+      "rap90": 0.162825759207409
+    }
+  },
+  "S6_all_12": {
+    "k": 12,
+    "models": [
+      "diana_team",
+      "diana_calibrated",
+      "diana_3way",
+      "diana_best_ensemble",
+      "diana_no_te",
+      "soni_fusion",
+      "soni_e7",
+      "soni_e5",
+      "soni_e0_full",
+      "soni_e0_clean",
+      "karina_combined",
+      "albina_mmd_v4"
+    ],
+    "best_C": 0.01,
+    "metrics_eval": {
+      "roc": 0.9615886502264588,
+      "pr": 0.7400907444917423,
+      "rap90": 0.21353846153846154
+    },
+    "metrics_full": {
+      "roc": 0.9610009175566174,
+      "pr": 0.7605694854245759,
+      "rap90": 0.15981046737023477
+    }
+  }
+}

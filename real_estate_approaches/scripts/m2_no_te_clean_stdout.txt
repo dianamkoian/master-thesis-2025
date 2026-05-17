@@ -1,0 +1,62 @@
+Loading data...
+Loaded: (197198, 46), positive 0.0662
+Train 69453, Val 69335, Test 58410
+
+Feature engineering...
+  basic done in 0.7s
+
+Loading CLIP embeddings...
+  CLIP shapes: (69453, 512), (69335, 512), (58410, 512)
+  K-means clustering...
+
+TF-IDF SVD-100...
+  TF-IDF SVD done in 13.8s. shape (69453, 100)
+
+Tabular features: 51
+Final shape: (69453, 663), (69335, 663), (58410, 663)
+
+Training CatBoost...
+  scale_pos_weight ≈ 15.40
+0:	test: 0.8598373	best: 0.8598373 (0)	total: 103ms	remaining: 4m 17s
+200:	test: 0.9470930	best: 0.9471101 (199)	total: 6.89s	remaining: 1m 18s
+400:	test: 0.9534247	best: 0.9534422 (398)	total: 13.4s	remaining: 1m 10s
+600:	test: 0.9551708	best: 0.9552014 (599)	total: 19.5s	remaining: 1m 1s
+800:	test: 0.9559593	best: 0.9560963 (780)	total: 25.4s	remaining: 54s
+1000:	test: 0.9567380	best: 0.9568359 (991)	total: 31.5s	remaining: 47.1s
+1200:	test: 0.9568550	best: 0.9569625 (1066)	total: 37.6s	remaining: 40.6s
+Stopped by overfitting detector  (150 iterations wait)
+
+bestTest = 0.956962473
+bestIteration = 1066
+
+Shrink model to first 1067 iterations.
+
+Training done in 38s, best iter = 1067
+
+=== Метрики на team_test (58 410 объектов) ===
+Raw          ROC-AUC=0.9371  PR-AUC=0.6628  R@P≥0.9=0.0696
+Calibrated   ROC-AUC=0.9369  PR-AUC=0.6533  R@P≥0.9=0.0444
+
+Bootstrap 95% CI:
+  ROC-AUC  mean=0.9369  CI=[0.9331, 0.9407]
+  PR-AUC   mean=0.6532  CI=[0.6387, 0.6671]
+  R@P≥0.9  mean=0.0350  CI=[0.0000, 0.0920]
+
+✓ Saved test probas: /Users/diana/master-thesis-2025/Диана_ВКР_финал/notebooks/test_proba_no_te_clean.npy
+
+Top-15 features:
+  brand_name_len                           4.895
+  category_median_price                    3.174
+  item_time_alive                          3.008
+  svd_0                                    2.584
+  PriceDiscounted                          1.996
+  svd_13                                   1.836
+  svd_7                                    1.783
+  svd_88                                   1.754
+  description_len                          1.527
+  name_rus_len                             1.469
+  ItemVarietyCount                         1.380
+  svd_3                                    1.287
+  svd_23                                   1.246
+  brand_name_is_null                       1.075
+  ItemAvailableCount                       1.025

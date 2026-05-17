@@ -1,0 +1,160 @@
+{
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "configs": {
+    "S2_full_4_headline": {
+      "k": 4,
+      "channels_kept": [
+        "diana_team",
+        "soni_fusion",
+        "karina_combined",
+        "albina_mmd_v4"
+      ],
+      "pr_mean": 0.7378579535264488,
+      "pr_std": 0.028676411995213466,
+      "pr_min": 0.7004787880892943,
+      "pr_max": 0.7887534171552062,
+      "rap_mean": 0.11465433456693766,
+      "rap_std": 0.05305909411976321,
+      "roc_mean": 0.956939158636571,
+      "roc_std": 0.01076676788328921,
+      "simple_blend_full_test": {
+        "pr": 0.749481168474838,
+        "rap": 0.11544260176609951,
+        "roc": 0.9570890673244625
+      },
+      "top500_union_size": 1071,
+      "top500_union_true_positives": 920
+    },
+    "LODO_without_diana_RE": {
+      "k": 3,
+      "channels_kept": [
+        "soni_fusion",
+        "karina_combined",
+        "albina_mmd_v4"
+      ],
+      "pr_mean": 0.7358403642360222,
+      "pr_std": 0.028157620803919176,
+      "pr_min": 0.6982389322467667,
+      "pr_max": 0.786731179724196,
+      "rap_mean": 0.1115242913078834,
+      "rap_std": 0.049868064702955475,
+      "roc_mean": 0.9568239943763241,
+      "roc_std": 0.01072277273036752,
+      "simple_blend_full_test": {
+        "pr": 0.7379065583837099,
+        "rap": 0.11242730992892526,
+        "roc": 0.9573365895773005
+      },
+      "delta_vs_S2": {
+        "pr_mean": -0.00201758929042658,
+        "pr_std": 0.003732134468243094,
+        "pr_positive_seeds": 3,
+        "rap_mean": -0.0031300432590542506,
+        "rap_std": 0.011590456428749885
+      },
+      "top500_union_size": 964,
+      "top500_union_true_positives": 821
+    },
+    "LODO_without_soni_fintech": {
+      "k": 3,
+      "channels_kept": [
+        "diana_team",
+        "karina_combined",
+        "albina_mmd_v4"
+      ],
+      "pr_mean": 0.7349477391164772,
+      "pr_std": 0.02795041794966684,
+      "pr_min": 0.6951098674691242,
+      "pr_max": 0.7820768029704345,
+      "rap_mean": 0.11228084608322264,
+      "rap_std": 0.06459992635199303,
+      "roc_mean": 0.9570388766906104,
+      "roc_std": 0.009656893152324398,
+      "simple_blend_full_test": {
+        "pr": 0.740258509614709,
+        "rap": 0.11113504199870773,
+        "roc": 0.9573143014986036
+      },
+      "delta_vs_S2": {
+        "pr_mean": -0.0029102144099715566,
+        "pr_std": 0.004120351562770409,
+        "pr_positive_seeds": 2,
+        "rap_mean": -0.002373488483714996,
+        "rap_std": 0.02351773229124888
+      },
+      "top500_union_size": 928,
+      "top500_union_true_positives": 796
+    },
+    "LODO_without_karina_mobile_ads": {
+      "k": 3,
+      "channels_kept": [
+        "diana_team",
+        "soni_fusion",
+        "albina_mmd_v4"
+      ],
+      "pr_mean": 0.7447364706757547,
+      "pr_std": 0.028205551927239083,
+      "pr_min": 0.7062020842458819,
+      "pr_max": 0.7970152311187702,
+      "rap_mean": 0.17533756593058714,
+      "rap_std": 0.05457872913228878,
+      "roc_mean": 0.9569104426142685,
+      "roc_std": 0.010688700059299047,
+      "simple_blend_full_test": {
+        "pr": 0.7546514915877454,
+        "rap": 0.19190178763730348,
+        "roc": 0.9579858059788859
+      },
+      "delta_vs_S2": {
+        "pr_mean": 0.006878517149305941,
+        "pr_std": 0.004616631853274961,
+        "pr_positive_seeds": 9,
+        "rap_mean": 0.060683231363649524,
+        "rap_std": 0.016139386871012257
+      },
+      "top500_union_size": 945,
+      "top500_union_true_positives": 826
+    },
+    "LODO_without_albina_social": {
+      "k": 3,
+      "channels_kept": [
+        "diana_team",
+        "soni_fusion",
+        "karina_combined"
+      ],
+      "pr_mean": 0.7410146413278959,
+      "pr_std": 0.025038604989476323,
+      "pr_min": 0.7034213785143643,
+      "pr_max": 0.782829400233535,
+      "rap_mean": 0.11311223351741433,
+      "rap_std": 0.07287974959948725,
+      "roc_mean": 0.9533734077948364,
+      "roc_std": 0.012644675916234121,
+      "simple_blend_full_test": {
+        "pr": 0.7387765960333013,
+        "rap": 0.07172087012707301,
+        "roc": 0.9535927411461057
+      },
+      "delta_vs_S2": {
+        "pr_mean": 0.0031566878014471444,
+        "pr_std": 0.0053836442178063,
+        "pr_positive_seeds": 7,
+        "rap_mean": -0.0015421010495232992,
+        "rap_std": 0.06075205926985528
+      },
+      "top500_union_size": 906,
+      "top500_union_true_positives": 787
+    }
+  }
+}

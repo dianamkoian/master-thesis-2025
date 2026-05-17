@@ -1,0 +1,66 @@
+Loading data...
+Loaded: (197198, 46), positive 0.0662
+Train 69453, Val 69335, Test 58410
+
+Feature engineering...
+  basic done in 0.8s
+
+Loading CLIP embeddings...
+  CLIP shapes: (69453, 512), (69335, 512), (58410, 512)
+  Computing clip_cat_sim (K-means [1] extension to CLIP-space)...
+  K-means clustering...
+
+TF-IDF SVD-100...
+  TF-IDF SVD done in 13.5s. shape (69453, 100)
+
+Tabular features: 54
+Final shape: (69453, 666), (69335, 666), (58410, 666)
+
+Training CatBoost...
+  scale_pos_weight ≈ 15.40
+0:	test: 0.9199877	best: 0.9199877 (0)	total: 98.1ms	remaining: 4m 5s
+200:	test: 0.9562300	best: 0.9563580 (188)	total: 6.72s	remaining: 1m 16s
+400:	test: 0.9585743	best: 0.9585944 (398)	total: 12.9s	remaining: 1m 7s
+600:	test: 0.9597279	best: 0.9597562 (598)	total: 18.8s	remaining: 59.4s
+800:	test: 0.9597737	best: 0.9598892 (778)	total: 24.6s	remaining: 52.1s
+1000:	test: 0.9602725	best: 0.9602793 (994)	total: 30.4s	remaining: 45.5s
+1200:	test: 0.9605399	best: 0.9605490 (1193)	total: 36.2s	remaining: 39.2s
+1400:	test: 0.9610218	best: 0.9610272 (1398)	total: 42.1s	remaining: 33s
+1600:	test: 0.9614967	best: 0.9615224 (1590)	total: 48.1s	remaining: 27s
+1800:	test: 0.9614855	best: 0.9616337 (1721)	total: 53.8s	remaining: 20.9s
+Stopped by overfitting detector  (150 iterations wait)
+
+bestTest = 0.9616337282
+bestIteration = 1721
+
+Shrink model to first 1722 iterations.
+
+Training done in 56s, best iter = 1722
+
+=== Метрики на team_test (58 410 объектов) ===
+Raw          ROC-AUC=0.9544  PR-AUC=0.7064  R@P≥0.9=0.0153
+Calibrated   ROC-AUC=0.9542  PR-AUC=0.6989  R@P≥0.9=0.0009
+
+Bootstrap 95% CI:
+  ROC-AUC  mean=0.9542  CI=[0.9510, 0.9572]
+  PR-AUC   mean=0.6991  CI=[0.6843, 0.7138]
+  R@P≥0.9  mean=0.0019  CI=[0.0002, 0.0020]
+
+✓ Saved test probas: /Users/diana/master-thesis-2025/Диана_ВКР_финал/notebooks/test_proba_diana_team_v3.npy
+
+Top-15 features:
+  category_target_mean                     13.374
+  brand_target_mean                        12.018
+  item_time_alive                          1.708
+  brand_name_len                           1.230
+  dist_centroid                            1.183
+  name_rus_len                             1.136
+  PriceDiscounted                          0.996
+  description_len                          0.958
+  ItemAvailableCount                       0.938
+  seller_time_alive                        0.890
+  ExemplarAcceptedCountTotal90             0.822
+  svd_0                                    0.726
+  svd_47                                   0.583
+  ItemVarietyCount                         0.563
+  rating_total                             0.559

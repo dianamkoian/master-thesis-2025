@@ -1,0 +1,46 @@
+{
+  "team__thr_2.0": {
+    "split": "team",
+    "price_too_high_threshold": 2.0,
+    "metrics_test": {
+      "ROC": 0.9397999795553745,
+      "PR": 0.6998432344149611,
+      "R@P": 0.10661210424294637
+    },
+    "best_iter": 889,
+    "training_time_sec": 23.2
+  },
+  "team__thr_1.5": {
+    "split": "team",
+    "price_too_high_threshold": 1.5,
+    "metrics_test": {
+      "ROC": 0.9397232611363954,
+      "PR": 0.7008585151283524,
+      "R@P": 0.11027353004522938
+    },
+    "best_iter": 921,
+    "training_time_sec": 22.9
+  },
+  "indiv__thr_2.0": {
+    "split": "indiv",
+    "price_too_high_threshold": 2.0,
+    "metrics_test": {
+      "ROC": 0.957204660790479,
+      "PR": 0.7050908721541436,
+      "R@P": 0.13059472716125076
+    },
+    "best_iter": 628,
+    "training_time_sec": 23.4
+  },
+  "indiv__thr_1.5": {
+    "split": "indiv",
+    "price_too_high_threshold": 1.5,
+    "metrics_test": {
+      "ROC": 0.9574730625075349,
+      "PR": 0.7052803087753755,
+      "R@P": 0.11404046597179644
+    },
+    "best_iter": 653,
+    "training_time_sec": 30.3
+  }
+}

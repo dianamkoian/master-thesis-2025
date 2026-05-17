@@ -1,0 +1,38 @@
+15:26:33 ==================================================
+15:26:33 Counterfactual / semantic ablation
+15:26:37 CLIP merged: 512 cols
+15:26:37 TF-IDF + SVD-50...
+15:26:58 Признаков: 600
+15:27:00 Обучение M2 (упрощённой)...
+15:30:01   обучена за 3.0 мин, best iter=1182
+15:30:01   baseline test: ROC=0.9508  PR=0.6527
+15:30:01 ==================================================
+15:30:01 Counterfactual ablation на high-confidence TP (y=1, p>0.7):
+15:30:01   размер high-conf TP подвыборки: 967
+15:30:01 Группа признаков                            mean ΔP     std ΔP  median ΔP
+15:30:01   PriceDiscounted                              0.0120     0.0255     0.0033
+15:30:01   item_count_fake_returns30                    0.0000     0.0006     0.0000
+15:30:01   item_count_returns30                         0.0000     0.0000     0.0000
+15:30:01   item_count_sales30                          -0.0003     0.0025     0.0000
+15:30:01   GmvTotal30                                   0.0003     0.0178     0.0000
+15:30:01   ExemplarReturnedCountTotal30                 0.0010     0.0156     0.0000
+15:30:01   item_time_alive                              0.1729     0.1347     0.1486
+15:30:01   seller_time_alive                           -0.0027     0.0215     0.0006
+15:30:01   rating_1_count                              -0.0001     0.0016     0.0000
+15:30:01   rating_5_count                              -0.0008     0.0065     0.0000
+15:30:01   photos_published_count                      -0.0013     0.0101     0.0000
+15:30:01   comments_published_count                    -0.0006     0.0058     0.0000
+15:30:01 --- Group-level counterfactual ---
+15:30:01   group returns_block             (n= 12): mean ΔP=-0.0016, std=0.0351, %resolved=0.1%
+15:30:01   group sales_block               (n=  6): mean ΔP=-0.0019, std=0.0342, %resolved=0.0%
+15:30:01   group rating_block              (n=  5): mean ΔP=-0.0011, std=0.0081, %resolved=0.0%
+15:30:01   group time_block                (n=  2): mean ΔP=0.1533, std=0.1227, %resolved=8.8%
+15:30:01   group price_block               (n=  1): mean ΔP=0.0120, std=0.0255, %resolved=0.0%
+15:30:01   group photos_comments           (n=  3): mean ΔP=-0.0018, std=0.0129, %resolved=0.0%
+15:30:01   group CLIP_image                (n=512): mean ΔP=0.0139, std=0.0950, %resolved=1.3%
+15:30:01   group TF-IDF SVD                (n= 50): mean ΔP=0.0653, std=0.0792, %resolved=2.0%
+15:30:01 --- Полный «de-counterfeit» mutation на high-conf TP ---
+15:30:01   baseline mean p = 0.9036, после полной мутации mean p = 0.6936
+15:30:01   % переклассифицировано в "оригинал" (p<0.5): 6.1%
+15:30:01 Всего: 3.5 мин
+15:30:01 ==================================================

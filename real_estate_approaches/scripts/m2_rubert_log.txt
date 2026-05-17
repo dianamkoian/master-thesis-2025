@@ -1,0 +1,122 @@
+===== 12:53:15 M2-RuBERT старт =====
+12:53:15 ==================================================
+12:53:15 ==================================================
+12:53:15 M2 rubert-variant (cointegrated/rubert-tiny2): старт
+12:53:15 M2 rubert-variant (cointegrated/rubert-tiny2): старт
+12:53:15 Загрузка train.csv...
+12:53:15 Загрузка train.csv...
+12:53:16   train=69453 val=69335 test=58410
+12:53:16   train=69453 val=69335 test=58410
+12:53:16 Загрузка CLIP...
+12:53:16 Загрузка CLIP...
+12:53:18   CLIP merged: 512 cols
+12:53:18   CLIP merged: 512 cols
+12:53:18 Загрузка cointegrated/rubert-tiny2...
+12:53:18 Загрузка cointegrated/rubert-tiny2...
+12:53:22   device: mps
+12:53:22   device: mps
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/55 [00:00<?, ?it/s]Loading weights: 100%|██████████| 55/55 [00:00<00:00, 8195.49it/s]
+[1mBertModel LOAD REPORT[0m from: cointegrated/rubert-tiny2
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+bert.embeddings.position_ids               | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+12:53:25   модель загружена, embedding dim = 312
+12:53:25   модель загружена, embedding dim = 312
+12:53:25   всего текстов: 197198
+12:53:25   всего текстов: 197198
+12:53:32   rubert progress: 12800/197198 (6.5%), 1701.1 txt/s, ETA 1.8 min
+12:53:32   rubert progress: 12800/197198 (6.5%), 1701.1 txt/s, ETA 1.8 min
+12:53:39   rubert progress: 25600/197198 (13.0%), 1783.4 txt/s, ETA 1.6 min
+12:53:39   rubert progress: 25600/197198 (13.0%), 1783.4 txt/s, ETA 1.6 min
+12:53:46   rubert progress: 38400/197198 (19.5%), 1829.3 txt/s, ETA 1.4 min
+12:53:46   rubert progress: 38400/197198 (19.5%), 1829.3 txt/s, ETA 1.4 min
+12:53:52   rubert progress: 51200/197198 (26.0%), 1861.1 txt/s, ETA 1.3 min
+12:53:52   rubert progress: 51200/197198 (26.0%), 1861.1 txt/s, ETA 1.3 min
+12:53:59   rubert progress: 64000/197198 (32.5%), 1876.1 txt/s, ETA 1.2 min
+12:53:59   rubert progress: 64000/197198 (32.5%), 1876.1 txt/s, ETA 1.2 min
+12:54:06   rubert progress: 76800/197198 (38.9%), 1883.3 txt/s, ETA 1.1 min
+12:54:06   rubert progress: 76800/197198 (38.9%), 1883.3 txt/s, ETA 1.1 min
+12:54:12   rubert progress: 89600/197198 (45.4%), 1882.3 txt/s, ETA 1.0 min
+12:54:12   rubert progress: 89600/197198 (45.4%), 1882.3 txt/s, ETA 1.0 min
+12:54:19   rubert progress: 102400/197198 (51.9%), 1878.6 txt/s, ETA 0.8 min
+12:54:19   rubert progress: 102400/197198 (51.9%), 1878.6 txt/s, ETA 0.8 min
+12:54:26   rubert progress: 115200/197198 (58.4%), 1873.0 txt/s, ETA 0.7 min
+12:54:26   rubert progress: 115200/197198 (58.4%), 1873.0 txt/s, ETA 0.7 min
+12:54:33   rubert progress: 128000/197198 (64.9%), 1872.4 txt/s, ETA 0.6 min
+12:54:33   rubert progress: 128000/197198 (64.9%), 1872.4 txt/s, ETA 0.6 min
+12:54:40   rubert progress: 140800/197198 (71.4%), 1870.9 txt/s, ETA 0.5 min
+12:54:40   rubert progress: 140800/197198 (71.4%), 1870.9 txt/s, ETA 0.5 min
+12:54:47   rubert progress: 153600/197198 (77.9%), 1875.2 txt/s, ETA 0.4 min
+12:54:47   rubert progress: 153600/197198 (77.9%), 1875.2 txt/s, ETA 0.4 min
+12:54:53   rubert progress: 166400/197198 (84.4%), 1875.3 txt/s, ETA 0.3 min
+12:54:53   rubert progress: 166400/197198 (84.4%), 1875.3 txt/s, ETA 0.3 min
+12:55:00   rubert progress: 179200/197198 (90.9%), 1879.1 txt/s, ETA 0.2 min
+12:55:00   rubert progress: 179200/197198 (90.9%), 1879.1 txt/s, ETA 0.2 min
+12:55:07   rubert progress: 192000/197198 (97.4%), 1882.0 txt/s, ETA 0.0 min
+12:55:07   rubert progress: 192000/197198 (97.4%), 1882.0 txt/s, ETA 0.0 min
+12:55:09   rubert готово за 1.7 мин
+12:55:09   rubert готово за 1.7 мин
+12:55:10 PCA-25 на rubert embeddings...
+12:55:10 PCA-25 на rubert embeddings...
+12:55:10   PCA explained variance: 0.6875
+12:55:10   PCA explained variance: 0.6875
+12:55:10   итого признаков: 575 (tab=38 + clip=512 + rubert=25)
+12:55:10   итого признаков: 575 (tab=38 + clip=512 + rubert=25)
+12:55:10   X_train=(69453, 575)  X_val=(69335, 575)  X_test=(58410, 575)
+12:55:10   X_train=(69453, 575)  X_val=(69335, 575)  X_test=(58410, 575)
+12:55:10 Обучение CatBoost...
+12:55:10 Обучение CatBoost...
+0:	test: 0.8922187	best: 0.8922187 (0)	total: 167ms	remaining: 6m 58s
+200:	test: 0.9446673	best: 0.9446864 (197)	total: 18.5s	remaining: 3m 31s
+400:	test: 0.9484858	best: 0.9484858 (400)	total: 35.6s	remaining: 3m 6s
+600:	test: 0.9501227	best: 0.9501227 (600)	total: 52.4s	remaining: 2m 45s
+800:	test: 0.9510299	best: 0.9510299 (800)	total: 1m 9s	remaining: 2m 26s
+1000:	test: 0.9515964	best: 0.9516073 (998)	total: 1m 25s	remaining: 2m 8s
+1200:	test: 0.9518179	best: 0.9518710 (1130)	total: 1m 42s	remaining: 1m 51s
+Stopped by overfitting detector  (100 iterations wait)
+
+bestTest = 0.9518709671
+bestIteration = 1130
+
+Shrink model to first 1131 iterations.
+12:56:57   CatBoost обучен за 1.8 мин, best iter 1131
+12:56:57   CatBoost обучен за 1.8 мин, best iter 1131
+12:56:57 ==================================================
+12:56:57 ==================================================
+12:56:57   M2-rubert RAW: ROC=0.9427  PR=0.6580  R@P>=0.9=0.0556
+12:56:57   M2-rubert RAW: ROC=0.9427  PR=0.6580  R@P>=0.9=0.0556
+12:56:57   M2-rubert CAL: ROC=0.9426  PR=0.6484  R@P>=0.9=0.0489
+12:56:57   M2-rubert CAL: ROC=0.9426  PR=0.6484  R@P>=0.9=0.0489
+12:56:57   Контекст: M2=0.7175  M2_e5=0.6797  M2_no_te=0.7047
+12:56:57   Контекст: M2=0.7175  M2_e5=0.6797  M2_no_te=0.7047
+12:56:57   Ансамбли:
+12:56:57   Ансамбли:
+12:56:57     M2-rubert + M2: PR=0.7292  R@P09=0.0778
+12:56:57     M2-rubert + M2: PR=0.7292  R@P09=0.0778
+12:56:57     M2-rubert + M2_e5: PR=0.6752  R@P09=0.0844
+12:56:57     M2-rubert + M2_e5: PR=0.6752  R@P09=0.0844
+12:56:57     M2-rubert + M2_no_te: PR=0.7209  R@P09=0.0620
+12:56:57     M2-rubert + M2_no_te: PR=0.7209  R@P09=0.0620
+12:56:57     M2-rubert + M2 + M2_e5: PR=0.7271  R@P09=0.0778
+12:56:57     M2-rubert + M2 + M2_e5: PR=0.7271  R@P09=0.0778
+12:56:57     M2-rubert + M2 + M2_no_te: PR=0.7389  R@P09=0.0601
+12:56:57     M2-rubert + M2 + M2_no_te: PR=0.7389  R@P09=0.0601
+12:56:57     M2-rubert + M2 + M2_e5 + M2_no_te (4-way): PR=0.7387  R@P09=0.0676
+12:56:57     M2-rubert + M2 + M2_e5 + M2_no_te (4-way): PR=0.7387  R@P09=0.0676
+12:56:57 Saved → test_proba_diana_m2_rubert.npy
+12:56:57 Saved → test_proba_diana_m2_rubert.npy
+12:56:57 Всего: 3.7 мин
+12:56:57 Всего: 3.7 мин
+12:56:57 ==================================================
+12:56:57 ==================================================

@@ -1,0 +1,26 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+======================================================================
+Verdict-conditioned reasoning demo (§ 4.4.9.7)
+======================================================================
+ensemble proba: n=58410, mean=0.1210, borderline (0.3,0.7): 2716 objects
+selected 50 borderline objects across 5 proba-bins
+loaded card features for 50 objects
+
+loading Qwen2.5-1.5B-Instruct ...
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 6627.87it/s]
+The following generation flags are not valid and may be ignored: ['temperature', 'top_p', 'top_k']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+  [ 1/50]  elapsed= 16.8s  ETA=822.1s  proba=0.341
+  [ 5/50]  elapsed= 38.0s  ETA=341.7s  proba=0.434
+  [10/50]  elapsed= 65.4s  ETA=261.7s  proba=0.667
+  [15/50]  elapsed= 93.9s  ETA=219.0s  proba=0.598
+  [20/50]  elapsed=119.3s  ETA=178.9s  proba=0.378
+  [25/50]  elapsed=145.2s  ETA=145.2s  proba=0.423
+  [30/50]  elapsed=170.6s  ETA=113.8s  proba=0.310
+  [35/50]  elapsed=197.3s  ETA= 84.6s  proba=0.604
+  [40/50]  elapsed=224.1s  ETA= 56.0s  proba=0.397
+  [45/50]  elapsed=250.7s  ETA= 27.9s  proba=0.648
+  [50/50]  elapsed=277.6s  ETA=  0.0s  proba=0.468
+
+saved csv: /Users/diana/master-thesis-2025/Диана_ВКР_финал/notebooks/artifacts_lmm/verdict_conditioned_reasoning_50.csv
+saved md:  /Users/diana/master-thesis-2025/Диана_ВКР_финал/notebooks/artifacts_lmm/verdict_conditioned_reasoning_50.md
+total runtime: 277.6s
