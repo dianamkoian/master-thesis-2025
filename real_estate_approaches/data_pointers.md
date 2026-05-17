@@ -41,3 +41,18 @@
 
 - **`ml_ozon_counterfeit_test_images/`** — публичная часть тестовой выборки соревнования (22 735 PNG, ≈ 3,3 ГБ); используется только для качественной демонстрации Qwen2-VL.
 - **Веса CatBoost-инференса production-сервиса** (`catboost_model.cbm`, `tfidf_vectorizer.pkl`, `img_scaler.pkl` и др.) — артефакты раздела команды, не относящиеся напрямую к диссертации автора; для полного воспроизведения см. README соответствующих репозиториев соавторов.
+
+## 7. Командные вероятности соавторов (входы для стекинг-экспериментов)
+
+Эксперименты по кросс-доменному стекингу (ноутбук `07_karina_channel_variants.ipynb`, скрипты в `scripts/sonya_pilot/`) используют как входные данные вероятности моделей соавторов на едином командном test-сплите (n = 58 410). Эти файлы — результаты работы других участников команды; в индивидуальную папку автора они не включены и предоставляются соответствующими соавторами.
+
+| Файл | Источник | Содержание | Куда положить |
+|------|----------|-----------|----------------|
+| `test_proba_karina_team.npy` | К. Азимова (Apps & Ads) | вероятности доменной модели мобильных приложений | `notebooks/` |
+| `test_proba_fusion_team.npy` | С. Красовская (FinTech) | финальная мультимодальная модель FinTech (headline) | `scripts/sonya_pilot/proba/` |
+| `test_proba_e0_team_clean.npy` | С. Красовская (FinTech) | FinTech baseline E0 (чистый табличный, без текста) | `scripts/sonya_pilot/proba/` |
+| `test_proba_e0_team_full.npy` | С. Красовская (FinTech) | FinTech baseline E0 (текст как category) | `scripts/sonya_pilot/proba/` |
+| `test_proba_e5_team.npy` | С. Красовская (FinTech) | FinTech E5 (visual-only) | `scripts/sonya_pilot/proba/` |
+| `test_proba_e7_team.npy` | С. Красовская (FinTech) | FinTech E7 (text-only) | `scripts/sonya_pilot/proba/` |
+
+Собственные вероятности автора (`test_proba_diana_*`, `test_proba_real_estate*` и др.) и единый командный сплит (`notebooks/team_splits/`) остаются в репозитории.
