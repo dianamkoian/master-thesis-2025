@@ -1,74 +1,60 @@
-# ВКР Дианы Мкоян — финальная версия
+# Недвижимость — индивидуальный вклад Д. Мкоян
+
+Индивидуальный домен «недвижимость» в групповой ВКР команды.
 
 Магистерская диссертация на тему: **«Система контроля качества для e-commerce на основе кросс-доменной адаптации методов обнаружения фейков с использованием больших мультимодальных моделей»**.
 
 НИУ ВШЭ, Факультет компьютерных наук, программа «Магистр по наукам о данных», 2026 год.
 Научный руководитель — К. В. Быков.
 
-Эта папка содержит **только индивидуальный вклад автора и связанные артефакты**. Все командные исходники, чужие файлы и устаревшие версии остались в основной директории проекта `master-thesis-2025/` и не вошли в данную сборку.
+Папка содержит **индивидуальный вклад автора по домену недвижимости**: рабочие ноутбуки, скрипты экспериментов, рисунки и артефакты воспроизводимости.
 
 ## Структура
 
 ```
-Диана_ВКР_финал/
-├── README.md                                      # этот файл
-├── diploma/                                       # тексты диплома
-│   ├── Диплом_Мкоян_Диана_final.docx             # финальный текст ВКР (источник истины)
-│   ├── Титульный_лист_Мкоян_2026.docx             # заполненный титульный лист
-│   ├── hse_reference.docx                         # стилевой шаблон ВШЭ для pandoc
-│   └── Project_Passport.md                        # паспорт проекта (контекст)
+real_estate_approaches/
+├── README.md                            # этот файл
+├── data_pointers.md                     # где взять большие входные файлы (датасет, эмбеддинги)
+├── Диана_combined_share.ipynb            # сводный ноутбук пайплайна (shareable-версия)
 │
-├── figures/                                       # все 22 рисунка диплома
-│   ├── рис_4_5_m2_fusion.png                      # архитектура M2 Multimodal Feature Fusion
-│   ├── рис_4_6_m3_dual_level.png                  # M3 Dual-Level Fusion
-│   ├── рис_4_7_m5_oof_stacking.png                # M5 OOF Stacking
-│   ├── рис_4_8_cascade.png                        # каскад с LMM (главная схема § 3.4.9)
-│   ├── рис_4_9_negative_results.png               # сравнение negative results (bar chart)
-│   ├── рис_6_1_service_arch.png                   # production-сервис
-│   ├── рис_7_1_rabbitmq_flow.png                  # RabbitMQ flow
-│   ├── eda/                                       # 11 figures из 01_eda_defense.ipynb (Глава 2)
-│   └── experiments/                               # 4 диагностики экспериментов (§ 3.4)
+├── notebooks/                            # 8 рабочих ноутбуков + артефакты экспериментов
+│   ├── 00_combined_final.ipynb           # сводный финальный ноутбук пайплайна
+│   ├── 01_eda_defense.ipynb              # компактный EDA с 11 figures для слайдов (Глава 2)
+│   ├── 02_reproduction_fixed.ipynb       # адаптация 5 методов детекции M1–M5
+│   ├── 03_original_hybrid_cascade.ipynb  # каскад с CLIP zero-shot + conformal prediction
+│   ├── 04_lmm_reasoning.ipynb            # каскад с Qwen2.5-1.5B zero-shot
+│   ├── 05_qwen2vl_multimodal.ipynb       # каскад с Qwen2-VL-2B
+│   ├── 06_extended_stacking.ipynb        # расширенный стекинг-эксперимент
+│   ├── 07_karina_channel_variants.ipynb  # анализ вариантов канала соавтора в стекинге
+│   ├── artifacts/                        # CSV / PNG из ноута 02 (M1–M5)
+│   ├── artifacts_original/               # CSV / PNG / probas из ноута 03
+│   ├── artifacts_lmm/                    # CSV / PNG / probas из ноута 04
+│   ├── artifacts_lmm_lora/               # LoRA-адаптер Qwen2.5 + scores
+│   ├── artifacts_qwen2vl/                # исполненная копия ноута 05 + логи
+│   ├── cdsm/                             # артефакты кросс-доменной модели (CDSM)
+│   ├── team_splits/                      # единый командный сплит (индексы + y_test)
+│   └── *.npy / *.json / *.csv            # вероятности моделей и абляций, индексы сплитов, сводки метрик
 │
-├── notebooks/                                     # 5 рабочих ноутов
-│   ├── 01_eda_defense.ipynb                       # компактный EDA с 11 figures для слайдов
-│   ├── 02_reproduction_fixed.ipynb                # адаптация 5 RE-методов M1–M5 (§ 3.4.2–4.4.6)
-│   ├── 03_original_hybrid_cascade.ipynb           # каскад с CLIP zero-shot + conformal (§ 3.4.9.1, 4.4.9.2, 4.4.9.5)
-│   ├── 04_lmm_reasoning.ipynb                     # каскад с Qwen2.5-1.5B zero-shot (§ 3.4.9.3)
-│   ├── 05_qwen2vl_multimodal.ipynb                # каскад с Qwen2-VL-2B (готов к запуску)
-│   ├── artifacts/                                 # CSV / PNG из ноута 02 (M1–M5)
-│   ├── artifacts_original/                        # CSV / PNG / probas из ноута 03
-│   ├── artifacts_lmm/                             # CSV / PNG / probas из ноута 04
-│   ├── artifacts_lmm_lora/                        # LoRA-адаптер Qwen2.5 + scores (§ 3.4.9.4)
-│   │   └── qwen_lora_adapter/                     # веса LoRA r=8, target=q_proj/v_proj
-│   ├── test_proba_real_estate.npy                 # RAW probas для общекомандного стекинга
-│   ├── val_proba_real_estate.npy                  # OOF val probas
-│   ├── test_proba_no_te.npy / val_proba_no_te.npy # probas без target encoding (ablation, § 3.4.7)
-│   ├── test_proba_tabnet.npy / val_proba_tabnet.npy   # TabNet probas (Negative transfer 4)
-│   ├── test_proba_stack_cb_tabnet.npy             # ансамбль CB + TabNet (уступает CB-only)
-│   └── feature_importance_team.csv                # топ-30 признаков CatBoost для § 3.4.11
+├── scripts/                              # python-скрипты экспериментов (+ логи прогонов *.txt)
+│   ├── m2_*.py                           # варианты и абляции модели M2 Feature Fusion
+│   ├── bootstrap_ci_*.py                 # доверительные интервалы (bootstrap)
+│   ├── clustering_*, mondrian_*, counterfactual_*   # вспомогательные эксперименты
+│   ├── tabnet_sweep.py, extended_stacking.py, domain_lodo_cdsm.py и др.
+│   ├── archive/                          # ранние версии скриптов
+│   └── sonya_pilot/                      # реран автора по 4-доменному стекинг-пилоту + входные probas
 │
-├── scripts/                                       # python-скрипты
-│   ├── team_split_v2_script.py                    # финальная мультимодальная модель на едином тесте
-│   ├── tabnet_script.py                           # TabNet на едином сплите (§ 3.4.8)
-│   └── tabpfn_v2_script.py                        # TabPFN v2 (не запущена, требует HF-токена)
-│
-├── counterfeit_service/                           # полный production-сервис с async-pipeline
-│   ├── app/main.py                                # FastAPI: /predict (sync) + /predict-async + /result/{id}
-│   ├── app/worker.py                              # aio_pika consumer (§ 5.4 Д. Мкоян)
-│   ├── app/predictor.py                           # Feature Fusion CatBoost (§ 5.2 К. Азимова)
-│   ├── app/schemas.py                             # Pydantic models
-│   ├── app/db/                                    # async PostgreSQL (session/models/crud)
-│   ├── static/                                    # веб-интерфейс (§ 5.5 С. Красовская)
-│   ├── Dockerfile / Dockerfile.worker             # контейнеры для API и worker
-│   ├── docker-compose.yml                         # api + worker + rabbitmq + postgres
-│   ├── requirements.txt
-│   ├── save_d2v_model.py                          # утилита для сериализации Doc2Vec из train
-│   └── README.md                                  # архитектура + инструкция запуска
-│
-└── literature/                                    # литература по индивидуальному домену
-    ├── Обзор_источников.md                        # сводный обзор 15 источников
-    └── *.pdf                                      # PDF-источников [1]–[5]
+└── figures/                              # 22 рисунка
+    ├── рис_4_5 … рис_7_1                  # 7 схем для диплома (архитектуры моделей, сервис)
+    ├── eda/                              # 11 figures из 01_eda_defense.ipynb
+    └── experiments/                      # 4 диагностики экспериментов
 ```
+
+## Что НЕ входит в эту папку
+
+- **Текст диплома** (Word-документ, титульный лист, Декларация ИИ) — хранится отдельно, в репозиторий не выкладывается.
+- **Командный EDA** — общий для команды, лежит в `eda_and_baseline/` в корне репозитория.
+- **Production-сервис** — в отдельной папке `counterfeit_service/` в корне репозитория.
+- **Большие входные файлы** (датасет Ozon eCup 2025, CLIP-эмбеддинги, raw-изображения товаров) — не выкладываются по правилам соревнования; источники указаны в [data_pointers.md](data_pointers.md).
 
 ## Воспроизведение
 
@@ -78,24 +64,14 @@
 - Apple M4 Pro 24 ГБ RAM (MPS-ускорение для нейросетевых моделей)
 - Стек: `pandas`, `numpy`, `scikit-learn` 1.7, `catboost` 1.2, `transformers` 5.x,
   `sentence-transformers`, `torch` 2.x с MPS, `pytorch_tabnet`, `peft`, `shap` 0.5,
-  `matplotlib`, `seaborn`, `FastAPI`, `pika` / `aio_pika`, `Docker`
+  `matplotlib`, `seaborn`
 
-### Запуск ноутов
+### Входные данные
 
-Перед запуском ноутов 02–05 необходимо иметь:
-
-1. `ml_ozon_ounterfeit_train.csv` — основной датасет Ozon eCup 2025 (197 198 объектов), путь в ноутах: `Diana's folder/ml_ozon_ounterfeit_train.csv`
-2. `clip_embeddings.parquet` — предвычисленные CLIP ViT-B/32 эмбеддинги (187 604 объекта × 512-dim), путь в ноутах: `counterfeit_service/clip_embeddings.parquet`
-3. Для ноута 05 (Qwen2-VL): папка `data/ml_ozon_сounterfeit_train_images/` с raw-изображениями товаров (имена файлов = ItemID)
-
-Эти большие файлы **не входят** в данную сборку — их публикация ограничена правилами соревнования. Источники указаны в [data_pointers.md](data_pointers.md).
-
-### Финальный текст ВКР
-
-Источник истины — готовый Word-документ `diploma/Диплом_Мкоян_Диана_final.docx`.
-Ранние markdown-версии и pandoc-сборки сохранены в `diploma/_archive_old_versions/`.
-
-Затем в Word: вклеить содержимое `Титульный_лист_Мкоян_2026.docx` в начало, добавить Содержание (References → Table of Contents), включить нумерацию страниц.
+Перед запуском ноутбуков 02–05 нужны датасет Ozon eCup 2025 (197 198 объектов),
+предвычисленные CLIP ViT-B/32 эмбеддинги (187 604 × 512-dim) и — для ноута 05 —
+raw-изображения товаров. Эти файлы в сборку не входят; пути и источники указаны
+в [data_pointers.md](data_pointers.md).
 
 ## Ключевые результаты
 

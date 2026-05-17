@@ -3,15 +3,14 @@
 Qwen2.5-1.5B-Instruct на 50 borderline-объектах командного теста.
 
 Вердикт берётся от 4-way ансамбля `grid_best_pr` = 0,25·fusion + 0,50·M2-FE+
-+ 0,25·albina (PR-AUC = 0,7556 на командном тесте, см.
-`scripts/sonya_pilot/stacking_pilot_4domains_v2.json`).
++ 0,25·albina (PR-AUC = 0,7556 на командном тесте).
 
 Выходы:
   artifacts_lmm/verdict_conditioned_reasoning_50.csv  — полная таблица
   artifacts_lmm/verdict_conditioned_reasoning_50.md   — для вставки в § 4.4.9.7
 
 Запуск:
-  cd Диана_ВКР_финал
+  cd real_estate_approaches
   python scripts/llm_reasoning_demo.py
 """
 from __future__ import annotations
@@ -23,11 +22,11 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path("/Users/diana/master-thesis-2025")
-DIPLOMA = ROOT / "Диана_ВКР_финал"
+ROOT = Path(__file__).resolve().parents[2]
+DIPLOMA = ROOT / "real_estate_approaches"
 SCRIPTS = DIPLOMA / "scripts"
 NOTEBOOKS = DIPLOMA / "notebooks"
-SERVICE_APP = DIPLOMA / "counterfeit_service" / "app"
+SERVICE_APP = ROOT / "counterfeit_service" / "app"
 OUT_DIR = NOTEBOOKS / "artifacts_lmm"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -78,7 +77,7 @@ selected_positions = np.array(sorted(selected_positions))[:N_DEMO]
 print(f"selected {len(selected_positions)} borderline objects across {n_bins} proba-bins")
 
 # 3. Достаём фичи карточек из train CSV.
-DATA_CSV = ROOT / "Diana's folder" / "ml_ozon_ounterfeit_train.csv"
+DATA_CSV = ROOT / "data" / "ml_ozon_ounterfeit_train.csv"
 df = pd.read_csv(DATA_CSV, encoding="utf-8")
 COLS_NEEDED = [
     "ItemID", "name_rus", "description", "brand_name", "CommercialTypeName4",

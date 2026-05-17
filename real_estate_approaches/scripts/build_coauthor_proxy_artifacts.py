@@ -28,7 +28,7 @@
                               AMM canonical:    PR=0.7084, R@P=0.0276)
 
 Запуск (~30-40 минут CPU):
-    python3 Диана_ВКР_финал/scripts/build_coauthor_proxy_artifacts.py
+    python3 real_estate_approaches/scripts/build_coauthor_proxy_artifacts.py
 """
 from __future__ import annotations
 
@@ -45,12 +45,12 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (average_precision_score, precision_recall_curve,
                              roc_auc_score)
 
-ROOT = Path("/Users/diana/master-thesis-2025")
+ROOT = Path(__file__).resolve().parents[2]
 PKG = ROOT / "packages"
-SPLITS = ROOT / "Диана_ВКР_финал" / "notebooks" / "team_splits"
-NB_CDSM = ROOT / "Диана_ВКР_финал" / "notebooks" / "cdsm"
-ART = ROOT / "Диана_ВКР_финал" / "counterfeit_service" / "artifacts" / "cdsm_v3"
-CSV = ROOT / "Diana's folder" / "ml_ozon_ounterfeit_train.csv"
+SPLITS = ROOT / "real_estate_approaches" / "notebooks" / "team_splits"
+NB_CDSM = ROOT / "real_estate_approaches" / "notebooks" / "cdsm"
+ART = ROOT / "counterfeit_service" / "artifacts" / "cdsm_v3"
+CSV = ROOT / "data" / "ml_ozon_ounterfeit_train.csv"
 CLIP_PARQUET = ROOT / "counterfeit_service" / "clip_embeddings.parquet"
 TEXT_E5 = ROOT / "text_e5_small.parquet"
 

@@ -15,7 +15,7 @@ import hashlib
 from pathlib import Path
 from collections import Counter
 
-NB = Path("/Users/diana/master-thesis-2025/Диана_ВКР_финал/notebooks/00_combined_final.ipynb")
+NB = Path(__file__).resolve().parents[2] / "notebooks" / "00_combined_final.ipynb"
 
 nb = json.load(open(NB))
 cells = nb["cells"]

@@ -25,10 +25,10 @@ warnings.filterwarnings('ignore')
 SEED = 42
 np.random.seed(SEED)
 
-ROOT = Path('/Users/diana/master-thesis-2025')
-DATA_PATH = ROOT / "Diana's folder" / 'ml_ozon_ounterfeit_train.csv'
+ROOT = Path(__file__).resolve().parents[3]
+DATA_PATH = ROOT / "data" / 'ml_ozon_ounterfeit_train.csv'
 CLIP_PATH = ROOT / 'counterfeit_service' / 'clip_embeddings.parquet'
-OUT_DIR = ROOT / 'new_diploma' / 'real_estate_approaches'
+OUT_DIR = ROOT / 'real_estate_approaches'
 
 TARGET = 'resolution'
 CATEGORY_COL = 'CommercialTypeName4'

@@ -11,9 +11,9 @@ import numpy as np
 from sklearn.metrics import (average_precision_score, precision_recall_curve,
                               roc_auc_score)
 
-DIANA_FOLDER = Path("/Users/diana/master-thesis-2025/Диана_ВКР_финал")
+DIANA_FOLDER = Path(__file__).resolve().parents[2]
 SONYA_PILOT = DIANA_FOLDER / "scripts/sonya_pilot"
-NPY = Path("/Users/diana/master-thesis-2025/npy_files")
+NPY = DIANA_FOLDER / "notebooks"
 SPLITS = DIANA_FOLDER / "notebooks/team_splits"
 
 SEED = 42

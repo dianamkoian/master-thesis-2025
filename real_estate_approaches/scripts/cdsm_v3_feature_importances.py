@@ -7,7 +7,7 @@ Standalone-скрипт: загружает 15 fold-моделей CDSM Mode 1/2
 (cells 5–15: A+B+C+D для Mode 1, +E+F для Mode 2, +G+H+I для Mode 3).
 
 Запуск (из корня репо):
-    python3 Диана_ВКР_финал/scripts/cdsm_v3_feature_importances.py
+    python3 real_estate_approaches/scripts/cdsm_v3_feature_importances.py
 
 Выход:
     counterfeit_service/artifacts/cdsm_v3/feature_importances.json
@@ -25,9 +25,9 @@ import numpy as np
 import pandas as pd
 from catboost import CatBoostClassifier
 
-ROOT = Path("/Users/diana/master-thesis-2025")
-ART = ROOT / "Диана_ВКР_финал" / "counterfeit_service" / "artifacts" / "cdsm_v3"
-TEAM_META = ROOT / "Диана_ВКР_финал" / "notebooks" / "team_splits" / "team_split_meta.json"
+ROOT = Path(__file__).resolve().parents[2]
+ART = ROOT / "counterfeit_service" / "artifacts" / "cdsm_v3"
+TEAM_META = ROOT / "real_estate_approaches" / "notebooks" / "team_splits" / "team_split_meta.json"
 
 # Восстановление имён признаков по группам (cell 5–13 ноута 08)
 with TEAM_META.open() as f:

@@ -26,11 +26,11 @@ warnings.filterwarnings('ignore')
 os.environ['OMP_NUM_THREADS'] = '1'
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
 
-ROOT = Path('/Users/diana/master-thesis-2025')
-DATA_CSV = ROOT / "Diana's folder" / 'ml_ozon_ounterfeit_train.csv'
+ROOT = Path(__file__).resolve().parents[2]
+DATA_CSV = ROOT / "data" / 'ml_ozon_ounterfeit_train.csv'
 CLIP_PARQUET = ROOT / 'counterfeit_service' / 'clip_embeddings.parquet'
-OUT_DIR = ROOT / 'Диана_ВКР_финал' / 'notebooks'
-LOG = ROOT / 'Диана_ВКР_финал' / 'scripts' / 'm2_fe_plus_individual_v2_log.txt'
+OUT_DIR = ROOT / 'real_estate_approaches' / 'notebooks'
+LOG = ROOT / 'real_estate_approaches' / 'scripts' / 'm2_fe_plus_individual_v2_log.txt'
 
 SEED = 42
 TARGET = 'resolution'
@@ -181,7 +181,7 @@ del svd_arr; gc.collect()
 svd_cols = [f'svd_{i}' for i in range(50)]
 
 # Tab cols (как в командном FE+: 38 признаков из team_split_meta.json)
-team_feat_path = ROOT / 'Диана_ВКР_финал' / 'notebooks' / 'team_splits' / 'team_split_meta.json'
+team_feat_path = ROOT / 'real_estate_approaches' / 'notebooks' / 'team_splits' / 'team_split_meta.json'
 if team_feat_path.exists():
     meta = json.load(open(team_feat_path))
     tab_cols = meta['team_feature_cols']

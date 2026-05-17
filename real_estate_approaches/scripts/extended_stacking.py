@@ -54,12 +54,12 @@ from catboost import CatBoostClassifier
 warnings.filterwarnings("ignore")
 
 # ---------- paths ----------
-ROOT = Path("/Users/diana/master-thesis-2025")
+ROOT = Path(__file__).resolve().parents[2]
 PKG = ROOT / "packages"
-NB = ROOT / "Диана_ВКР_финал" / "notebooks"
+NB = ROOT / "real_estate_approaches" / "notebooks"
 NPY = ROOT / "npy_files"
 SONYA = ROOT / "proba_of_sonya"
-CSV_TRAIN = ROOT / "Diana's folder" / "ml_ozon_ounterfeit_train.csv"
+CSV_TRAIN = ROOT / "data" / "ml_ozon_ounterfeit_train.csv"
 
 CANDIDATES = [
     ("diana_team",          "package_diana",  "test_proba_diana_team.npy"),

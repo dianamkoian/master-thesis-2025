@@ -23,12 +23,12 @@ warnings.filterwarnings('ignore')
 os.environ['OMP_NUM_THREADS'] = '1'
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
 
-ROOT = Path('/Users/diana/master-thesis-2025')
-DATA_CSV = ROOT / "Diana's folder" / 'ml_ozon_ounterfeit_train.csv'
+ROOT = Path(__file__).resolve().parents[2]
+DATA_CSV = ROOT / "data" / 'ml_ozon_ounterfeit_train.csv'
 CLIP_PARQUET = ROOT / 'counterfeit_service' / 'clip_embeddings.parquet'
-SPLITS = ROOT / 'Диана_ВКР_финал' / 'notebooks' / 'team_splits'
-OUT_DIR = ROOT / 'Диана_ВКР_финал' / 'notebooks'
-LOG = ROOT / 'Диана_ВКР_финал' / 'scripts' / 'm2_fe_plus_typosquat_log.txt'
+SPLITS = ROOT / 'real_estate_approaches' / 'notebooks' / 'team_splits'
+OUT_DIR = ROOT / 'real_estate_approaches' / 'notebooks'
+LOG = ROOT / 'real_estate_approaches' / 'scripts' / 'm2_fe_plus_typosquat_log.txt'
 
 def log(msg):
     s = f'{time.strftime("%H:%M:%S")} {msg}'
@@ -292,7 +292,7 @@ np.save(OUT_DIR / 'test_proba_diana_m2_fe_plus_typosquat_calibrated.npy', p_test
 log(f'Saved → test_proba_diana_m2_fe_plus_typosquat.npy')
 
 # CDSM v3 production artifact: typosquat-вариант (отдельный файл)
-CDSM_ART = ROOT / 'Диана_ВКР_финал' / 'counterfeit_service' / 'artifacts' / 'cdsm_v3'
+CDSM_ART = ROOT / 'counterfeit_service' / 'artifacts' / 'cdsm_v3'
 CDSM_ART.mkdir(parents=True, exist_ok=True)
 cb.save_model(str(CDSM_ART / 'rmm_catboost_typosquat.cbm'))
 log(f'Saved → {CDSM_ART / "rmm_catboost_typosquat.cbm"} (RMM-typosquat вариант)')

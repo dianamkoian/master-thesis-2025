@@ -35,10 +35,10 @@ warnings.filterwarnings('ignore')
 SEED = 42
 np.random.seed(SEED)
 
-ROOT = Path('/Users/diana/master-thesis-2025')
-DATA_PATH = ROOT / "Diana's folder" / 'ml_ozon_ounterfeit_train.csv'
+ROOT = Path(__file__).resolve().parents[2]
+DATA_PATH = ROOT / "data" / 'ml_ozon_ounterfeit_train.csv'
 CLIP_PATH = ROOT / 'counterfeit_service' / 'clip_embeddings.parquet'
-OUT_DIR = ROOT / 'Диана_ВКР_финал' / 'notebooks'
+OUT_DIR = ROOT / 'real_estate_approaches' / 'notebooks'
 
 TARGET = 'resolution'
 CATEGORY_COL = 'CommercialTypeName4'
@@ -250,7 +250,7 @@ for label, fn in [('ROC-AUC ', roc_auc_score), ('PR-AUC  ', average_precision_sc
     print(f'  {label} mean={m:.4f}  CI=[{lo:.4f}, {hi:.4f}]')
 
 # Save — RAW + Calibrated в *_clean.npy (НЕ перезаписывает оригинальные real_estate)
-OUT_NB = ROOT / 'Диана_ВКР_финал' / 'notebooks'
+OUT_NB = ROOT / 'real_estate_approaches' / 'notebooks'
 out_proba = OUT_NB / 'test_proba_diana_team_clean.npy'
 np.save(out_proba, p_test_raw.astype(np.float32))
 np.save(OUT_NB / 'val_proba_diana_team_clean.npy', p_val_raw.astype(np.float32))

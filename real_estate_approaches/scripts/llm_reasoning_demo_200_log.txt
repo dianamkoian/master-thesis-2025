@@ -7,7 +7,9 @@ selected 200 borderline objects across 5 proba-bins
 loaded card features for 200 objects
 
 loading Qwen2.5-1.5B-Instruct ...
-Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 6152.59it/s]
+
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 338/338 [00:00<00:00, 6152.59it/s]
 The following generation flags are not valid and may be ignored: ['temperature', 'top_p', 'top_k']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
   [ 1/200]  elapsed= 19.1s  ETA=3800.1s  proba=0.432
   [ 5/200]  elapsed= 48.6s  ETA=1897.1s  proba=0.427
@@ -51,7 +53,7 @@ The following generation flags are not valid and may be ignored: ['temperature',
   [195/200]  elapsed=893.4s  ETA= 22.9s  proba=0.310
   [200/200]  elapsed=912.4s  ETA=  0.0s  proba=0.587
 
-saved csv: /Users/diana/master-thesis-2025/Диана_ВКР_финал/notebooks/artifacts_lmm/verdict_conditioned_reasoning_200.csv
-saved stats: /Users/diana/master-thesis-2025/Диана_ВКР_финал/notebooks/artifacts_lmm/verdict_conditioned_reasoning_200_stats.md
-saved md:  /Users/diana/master-thesis-2025/Диана_ВКР_финал/notebooks/artifacts_lmm/verdict_conditioned_reasoning_200.md
+saved csv: real_estate_approaches/notebooks/artifacts_lmm/verdict_conditioned_reasoning_200.csv
+saved stats: real_estate_approaches/notebooks/artifacts_lmm/verdict_conditioned_reasoning_200_stats.md
+saved md:  real_estate_approaches/notebooks/artifacts_lmm/verdict_conditioned_reasoning_200.md
 total runtime: 912.4s
