@@ -35,7 +35,7 @@
 
 ## 5. Сервис в production
 
-Развёрнутая копия сервиса доступна по адресу `http://5.129.242.72:8000` (Timeweb Cloud). Health-check: `GET /health`.
+Развёрнутая копия сервиса доступна по адресу `https://marketplace-fraud.ru` (Timeweb Cloud). Health-check: `GET /health`.
 
 ## 6. Опционально
 
