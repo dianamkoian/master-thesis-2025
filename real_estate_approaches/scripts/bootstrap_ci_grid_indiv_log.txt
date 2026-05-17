@@ -57,7 +57,7 @@ Bootstrap CI для best R@P конфига:
 15:32:40 
 Saved: test_proba_diana_indiv_best_pr.npy, test_proba_diana_indiv_best_rap.npy
 15:32:40 
-Summary JSON: /Users/diana/master-thesis-2025/Диана_ВКР_финал/notebooks/bootstrap_ci_grid_indiv_summary.json
+Summary JSON: real_estate_approaches/notebooks/bootstrap_ci_grid_indiv_summary.json
 15:32:40 
 Всего: 1.2 мин
 15:32:40 ============================================================

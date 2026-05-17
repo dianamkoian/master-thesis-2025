@@ -23,7 +23,9 @@
 11:48:05   device: mps
 11:48:05   device: mps
 Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 12642.25it/s]
+
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 199/199 [00:00<00:00, 12642.25it/s]
 [1mXLMRobertaModel LOAD REPORT[0m from: intfloat/multilingual-e5-base
 Key                     | Status     |  | 
 ------------------------+------------+--+-
@@ -139,8 +141,8 @@ Shrink model to first 1468 iterations.
 12:31:23   Прирост от e5: ΔPR-AUC = -0.0379, ΔROC = -0.0087
 12:31:23   Ансамбль 0.5×M2 + 0.5×M2-e5: ROC=0.9620  PR=0.7401  R@P>=0.9=0.0838
 12:31:23   Ансамбль 0.5×M2 + 0.5×M2-e5: ROC=0.9620  PR=0.7401  R@P>=0.9=0.0838
-12:31:23 Saved → /Users/diana/master-thesis-2025/Диана_ВКР_финал/notebooks/test_proba_diana_m2_e5.npy
-12:31:23 Saved → /Users/diana/master-thesis-2025/Диана_ВКР_финал/notebooks/test_proba_diana_m2_e5.npy
+12:31:23 Saved → real_estate_approaches/notebooks/test_proba_diana_m2_e5.npy
+12:31:23 Saved → real_estate_approaches/notebooks/test_proba_diana_m2_e5.npy
 12:31:23 Всего: 43.4 мин
 12:31:23 Всего: 43.4 мин
 12:31:23 ==================================================

@@ -16,11 +16,11 @@ import numpy as np, pandas as pd
 
 warnings.filterwarnings('ignore')
 
-ROOT = Path('/Users/diana/master-thesis-2025')
-DATA_CSV = ROOT / "Diana's folder" / 'ml_ozon_ounterfeit_train.csv'
-SPLITS = ROOT / 'Диана_ВКР_финал' / 'notebooks' / 'team_splits'
-OUT_DIR = ROOT / 'Диана_ВКР_финал' / 'notebooks'
-LOG = ROOT / 'Диана_ВКР_финал' / 'scripts' / 'mondrian_mainline_indiv_log.txt'
+ROOT = Path(__file__).resolve().parents[2]
+DATA_CSV = ROOT / "data" / 'ml_ozon_ounterfeit_train.csv'
+SPLITS = ROOT / 'real_estate_approaches' / 'notebooks' / 'team_splits'
+OUT_DIR = ROOT / 'real_estate_approaches' / 'notebooks'
+LOG = ROOT / 'real_estate_approaches' / 'scripts' / 'mondrian_mainline_indiv_log.txt'
 
 def log(msg):
     s = f'{time.strftime("%H:%M:%S")} {msg}'

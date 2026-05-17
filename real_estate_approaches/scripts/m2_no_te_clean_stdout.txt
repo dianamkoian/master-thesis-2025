@@ -42,7 +42,7 @@ Bootstrap 95% CI:
   PR-AUC   mean=0.6532  CI=[0.6387, 0.6671]
   R@P≥0.9  mean=0.0350  CI=[0.0000, 0.0920]
 
-✓ Saved test probas: /Users/diana/master-thesis-2025/Диана_ВКР_финал/notebooks/test_proba_no_te_clean.npy
+✓ Saved test probas: real_estate_approaches/notebooks/test_proba_no_te_clean.npy
 
 Top-15 features:
   brand_name_len                           4.895

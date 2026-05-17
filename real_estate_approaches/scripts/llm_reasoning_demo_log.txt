@@ -7,7 +7,9 @@ selected 50 borderline objects across 5 proba-bins
 loaded card features for 50 objects
 
 loading Qwen2.5-1.5B-Instruct ...
-Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 6627.87it/s]
+
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 338/338 [00:00<00:00, 6627.87it/s]
 The following generation flags are not valid and may be ignored: ['temperature', 'top_p', 'top_k']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
   [ 1/50]  elapsed= 16.8s  ETA=822.1s  proba=0.341
   [ 5/50]  elapsed= 38.0s  ETA=341.7s  proba=0.434
@@ -21,6 +23,6 @@ The following generation flags are not valid and may be ignored: ['temperature',
   [45/50]  elapsed=250.7s  ETA= 27.9s  proba=0.648
   [50/50]  elapsed=277.6s  ETA=  0.0s  proba=0.468
 
-saved csv: /Users/diana/master-thesis-2025/Диана_ВКР_финал/notebooks/artifacts_lmm/verdict_conditioned_reasoning_50.csv
-saved md:  /Users/diana/master-thesis-2025/Диана_ВКР_финал/notebooks/artifacts_lmm/verdict_conditioned_reasoning_50.md
+saved csv: real_estate_approaches/notebooks/artifacts_lmm/verdict_conditioned_reasoning_50.csv
+saved md:  real_estate_approaches/notebooks/artifacts_lmm/verdict_conditioned_reasoning_50.md
 total runtime: 277.6s

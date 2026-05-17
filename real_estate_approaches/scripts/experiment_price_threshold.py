@@ -15,7 +15,7 @@
 CatBoost iterations=1000, depth=6, lr=0.05, scale_pos_weight=spw, seed=42.
 
 Запуск (~20 мин в фоне):
-    python3 Диана_ВКР_финал/scripts/experiment_price_threshold.py
+    python3 real_estate_approaches/scripts/experiment_price_threshold.py
 """
 from __future__ import annotations
 
@@ -32,12 +32,12 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import (average_precision_score, precision_recall_curve,
                              roc_auc_score)
 
-ROOT = Path("/Users/diana/master-thesis-2025")
-CSV = ROOT / "Diana's folder" / "ml_ozon_ounterfeit_train.csv"
-TEAM_SPLITS = ROOT / "Диана_ВКР_финал" / "notebooks" / "team_splits"
-NB = ROOT / "Диана_ВКР_финал" / "notebooks"
+ROOT = Path(__file__).resolve().parents[2]
+CSV = ROOT / "data" / "ml_ozon_ounterfeit_train.csv"
+TEAM_SPLITS = ROOT / "real_estate_approaches" / "notebooks" / "team_splits"
+NB = ROOT / "real_estate_approaches" / "notebooks"
 CLIP_PARQUET = ROOT / "counterfeit_service" / "clip_embeddings.parquet"
-OUT = ROOT / "Диана_ВКР_финал" / "scripts" / "experiment_price_threshold_results.json"
+OUT = ROOT / "real_estate_approaches" / "scripts" / "experiment_price_threshold_results.json"
 
 SEED = 42
 

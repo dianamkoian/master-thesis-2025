@@ -28,11 +28,11 @@ warnings.filterwarnings('ignore')
 os.environ['OMP_NUM_THREADS'] = '1'
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
 
-ROOT = Path('/Users/diana/master-thesis-2025')
-DATA_CSV = ROOT / "Diana's folder" / 'ml_ozon_ounterfeit_train.csv'
+ROOT = Path(__file__).resolve().parents[2]
+DATA_CSV = ROOT / "data" / 'ml_ozon_ounterfeit_train.csv'
 CLIP_PARQUET = ROOT / 'counterfeit_service' / 'clip_embeddings.parquet'
-OUT_DIR = ROOT / 'Диана_ВКР_финал' / 'notebooks'
-LOG = ROOT / 'Диана_ВКР_финал' / 'scripts' / 'm2_mainline_indiv_log.txt'
+OUT_DIR = ROOT / 'real_estate_approaches' / 'notebooks'
+LOG = ROOT / 'real_estate_approaches' / 'scripts' / 'm2_mainline_indiv_log.txt'
 
 SEED = 42
 TARGET = 'resolution'

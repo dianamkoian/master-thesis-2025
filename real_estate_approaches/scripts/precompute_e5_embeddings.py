@@ -18,9 +18,9 @@ import torch
 from sentence_transformers import SentenceTransformer
 from pathlib import Path
 
-ROOT = Path('/Users/diana/master-thesis-2025')
-CSV  = ROOT / "Diana's folder" / 'ml_ozon_ounterfeit_train.csv'
-OUT  = ROOT / 'Диана_ВКР_финал' / 'notebooks' / 'cdsm' / 'e5_small_embeddings.npy'
+ROOT = Path(__file__).resolve().parents[2]
+CSV  = ROOT / "data" / 'ml_ozon_ounterfeit_train.csv'
+OUT  = ROOT / 'real_estate_approaches' / 'notebooks' / 'cdsm' / 'e5_small_embeddings.npy'
 OUT.parent.mkdir(parents=True, exist_ok=True)
 
 print(f'[{time.strftime("%H:%M:%S")}] start; MPS available: {torch.backends.mps.is_available()}')

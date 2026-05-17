@@ -3,7 +3,7 @@
 
 Replaces Diana's old proba (M2 mainline clean, PR=0.7175, R@P=0.0099)
 with the new M2-FE+ standalone proba (PR=0.7375, R@P=0.1154) from
-/Users/diana/master-thesis-2025/npy_files/test_proba_diana_team.npy.
+notebooks/test_proba_diana_team.npy.
 
 Reproduces Sonya's pilot methodology exactly, but extends the paired bootstrap
 to compare the best blend against EVERY single model (not just fusion).
@@ -23,9 +23,9 @@ from sklearn.metrics import (average_precision_score, precision_recall_curve,
                               roc_auc_score)
 
 # Paths
-DIANA_FOLDER = Path("/Users/diana/master-thesis-2025/Диана_ВКР_финал")
+DIANA_FOLDER = Path(__file__).resolve().parents[2]
 SONYA_PILOT = DIANA_FOLDER / "scripts/sonya_pilot"
-NPY = Path("/Users/diana/master-thesis-2025/npy_files")
+NPY = DIANA_FOLDER / "notebooks"
 SPLITS = DIANA_FOLDER / "notebooks/team_splits"
 
 SEED = 42

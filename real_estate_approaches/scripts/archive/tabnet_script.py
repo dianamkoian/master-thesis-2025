@@ -25,9 +25,9 @@ SEED = 42
 np.random.seed(SEED)
 torch.manual_seed(SEED)
 
-ROOT = Path('/Users/diana/master-thesis-2025')
-DATA_PATH = ROOT / "Diana's folder" / 'ml_ozon_ounterfeit_train.csv'
-OUT_DIR = ROOT / 'new_diploma' / 'real_estate_approaches'
+ROOT = Path(__file__).resolve().parents[3]
+DATA_PATH = ROOT / "data" / 'ml_ozon_ounterfeit_train.csv'
+OUT_DIR = ROOT / 'real_estate_approaches'
 
 TARGET = 'resolution'
 CATEGORY_COL = 'CommercialTypeName4'

@@ -40,9 +40,9 @@ from catboost import CatBoostClassifier
 from rapidfuzz.fuzz import partial_ratio
 warnings.filterwarnings('ignore')
 
-ROOT = Path('/Users/diana/master-thesis-2025')
+ROOT = Path(__file__).resolve().parents[2]
 PKG = ROOT / 'packages'
-NB  = ROOT / 'Диана_ВКР_финал' / 'notebooks'
+NB  = ROOT / 'real_estate_approaches' / 'notebooks'
 OUT_DIR = NB / 'cdsm'
 SEED = 42
 
@@ -57,7 +57,7 @@ def metrics(y, p):
             'R@P': rap90(y, p)}
 
 # ============ Load ============
-df = pd.read_csv(ROOT/"Diana's folder"/'ml_ozon_ounterfeit_train.csv', encoding='utf-8')
+df = pd.read_csv(ROOT/"data"/'ml_ozon_ounterfeit_train.csv', encoding='utf-8')
 train_idx = np.load(PKG/'package_diana'/'3_probas_team_split'/'team_train_idx.npy')
 val_idx   = np.load(PKG/'package_diana'/'3_probas_team_split'/'team_val_idx.npy')
 test_idx  = np.load(PKG/'package_diana'/'3_probas_team_split'/'team_test_idx.npy')

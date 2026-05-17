@@ -54,6 +54,6 @@
 21:13:56   14. brand_avg_word_len                  0.976
 21:13:56   15. clip_diff_to_pos_neg                0.929
 21:13:56 Saved → test_proba_diana_m2_fe_plus_typosquat.npy
-21:13:56 Saved → /Users/diana/master-thesis-2025/Диана_ВКР_финал/counterfeit_service/artifacts/cdsm_v3/rmm_catboost_typosquat.cbm (RMM-typosquat вариант)
+21:13:56 Saved → counterfeit_service/artifacts/cdsm_v3/rmm_catboost_typosquat.cbm (RMM-typosquat вариант)
 21:13:56 Всего: 2.4 мин
 21:13:56 ==================================================

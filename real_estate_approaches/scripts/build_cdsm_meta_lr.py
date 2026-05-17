@@ -13,7 +13,7 @@
 за один вызов).
 
 Запуск (из корня репо):
-    python3 Диана_ВКР_финал/scripts/build_cdsm_meta_lr.py
+    python3 real_estate_approaches/scripts/build_cdsm_meta_lr.py
 """
 from __future__ import annotations
 
@@ -28,11 +28,11 @@ from sklearn.metrics import (average_precision_score, precision_recall_curve,
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-ROOT = Path("/Users/diana/master-thesis-2025")
+ROOT = Path(__file__).resolve().parents[2]
 PKG_DIANA = ROOT / "packages" / "package_diana" / "3_probas_team_split"
-NB_CDSM = ROOT / "Диана_ВКР_финал" / "notebooks" / "cdsm"
-ARTIFACTS = ROOT / "Диана_ВКР_финал" / "counterfeit_service" / "artifacts" / "cdsm_v3"
-CSV_PATH = ROOT / "Diana's folder" / "ml_ozon_ounterfeit_train.csv"
+NB_CDSM = ROOT / "real_estate_approaches" / "notebooks" / "cdsm"
+ARTIFACTS = ROOT / "counterfeit_service" / "artifacts" / "cdsm_v3"
+CSV_PATH = ROOT / "data" / "ml_ozon_ounterfeit_train.csv"
 
 SEED = 42
 

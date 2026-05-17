@@ -91,7 +91,7 @@ Shrink model to first 1182 iterations.
 ЛУЧШИЙ ВЕС M2-FE+ по PR-AUC: w=0.90, PR=0.7422, R@P=0.2495
 15:06:05 ЛУЧШИЙ ВЕС M2-FE+ по R@P09: w=0.45, PR=0.7202, R@P=0.2728
 15:06:05 
-Summary JSON сохранён: /Users/diana/master-thesis-2025/Диана_ВКР_финал/notebooks/m2_fe_plus_indiv_v2_summary.json
+Summary JSON сохранён: real_estate_approaches/notebooks/m2_fe_plus_indiv_v2_summary.json
 15:06:05 
 Всего: 5.1 мин
 15:06:05 ============================================================

@@ -178,6 +178,6 @@ Shrink model to first 1186 iterations.
 12:57:05   14. ItemAvailableCount                  0.907
 12:57:05   15. name_rus_digit_ratio                0.905
 12:57:05 Saved → test_proba_diana_m2_fe_plus.npy
-12:57:05 Saved → /Users/diana/master-thesis-2025/Диана_ВКР_финал/counterfeit_service/artifacts/cdsm_v3/rmm_catboost.cbm (RMM-канал CDSM v3, см. § 5.6.2 ВКР)
+12:57:05 Saved → counterfeit_service/artifacts/cdsm_v3/rmm_catboost.cbm (RMM-канал CDSM v3, см. § 5.6.2 ВКР)
 12:57:05 Всего: 2.7 мин
 12:57:05 ==================================================

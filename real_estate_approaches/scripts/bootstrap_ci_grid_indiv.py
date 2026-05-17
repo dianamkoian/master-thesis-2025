@@ -17,9 +17,9 @@ import numpy as np
 
 warnings.filterwarnings('ignore')
 
-ROOT = Path('/Users/diana/master-thesis-2025')
-OUT_DIR = ROOT / 'Диана_ВКР_финал' / 'notebooks'
-LOG = ROOT / 'Диана_ВКР_финал' / 'scripts' / 'bootstrap_ci_grid_indiv_log.txt'
+ROOT = Path(__file__).resolve().parents[2]
+OUT_DIR = ROOT / 'real_estate_approaches' / 'notebooks'
+LOG = ROOT / 'real_estate_approaches' / 'scripts' / 'bootstrap_ci_grid_indiv_log.txt'
 
 def log(msg):
     s = f'{time.strftime("%H:%M:%S")} {msg}'
