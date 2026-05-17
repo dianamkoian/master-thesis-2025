@@ -64,15 +64,15 @@
 counterfeit_service/
 ├── app/
 │   ├── main.py                # FastAPI: /predict (sync) и /predict-async (async)
-│   ├── worker.py              # aio_pika consumer — § 5.4 Д. Мкоян
-│   ├── predictor.py           # Feature Fusion inference (общекомандный, К. Азимова)
+│   ├── worker.py              # aio_pika consumer
+│   ├── predictor.py           # Feature Fusion inference 
 │   ├── schemas.py             # Pydantic models: sync + async ответы
-│   └── db/                    # Async PostgreSQL (§ 5.4 + интеграция с § 5.3)
+│   └── db/                    # Async PostgreSQL 
 │       ├── session.py         # AsyncSessionLocal, engine, init_db
 │       ├── models.py          # PredictionAsync
 │       └── crud.py            # create_pending / mark_done / mark_error / get_by_task_id
 ├── static/
-│   └── index.html             # Веб-интерфейс (С. Красовская, § 5.5)
+│   └── index.html             # Веб-интерфейс 
 ├── artifacts/                 # Файлы моделей (см. «Артефакты»)
 ├── Dockerfile                 # Контейнер API
 ├── Dockerfile.worker          # Контейнер worker'а (тот же образ + другой CMD)
@@ -83,7 +83,8 @@ counterfeit_service/
 ## Артефакты моделей
 
 Файлы моделей не хранятся в репозитории из-за большого размера.
-Скачать с Яндекс Диска: https://disk.yandex.ru/d/aw6epg3MNkQ9vw
+Скачать с Яндекс Диска: https://disk.yandex.ru/d/aw6epg3MNkQ9vw 
+Скачать с Гугл Диска: https://drive.google.com/drive/folders/1OhX74NztRlqOMhH3g0hJvisxA5cwb4mV?usp=share_link
 
 | Файл | Описание |
 |---|---|
