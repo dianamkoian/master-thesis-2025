@@ -9,7 +9,7 @@
 | Участник | Домен / Подсистема |
 | --- | --- |
 | **Азимова Карина** | Мобильные приложения и реклама / Серверная часть (FastAPI) |
-| **Бахтиарова Альбина** | Социальные сети/ Организация хранилища |
+| **Бахтиарова Альбина** | Социальные сети / Организация хранилища |
 | **Мкоян Диана** | Недвижимость / Брокер сообщений (RabbitMQ) + тестирование |
 | **Красовская Софья Дмитриевна** | Финтех / Веб-интерфейс |
 
@@ -77,7 +77,7 @@ p_HCDM = 0,875·p_social + 0,075·p_mobile + 0,025·p_realestate + 0,025·p_fint
 | Очередь задач | RabbitMQ (AMQP, dead-letter exchange) | Мкоян |
 | Хранилище | PostgreSQL 15 + SQLAlchemy 2.x (asyncpg) + Alembic | Бахтиарова |
 | Веб-интерфейс | HTML + JavaScript (без фреймворков), деплой на Timeweb | Красовская |
-| Оркестрация | Docker Compose | 
+| Оркестрация | Docker Compose | — |
 
 
 ### Эндпойнты API
@@ -105,20 +105,17 @@ p_HCDM = 0,875·p_social + 0,075·p_mobile + 0,025·p_realestate + 0,025·p_fint
 
 ```
 .
-├── data/                  # Скрипты загрузки и подготовки данных (датасет не включён)
-├── domains/
-│   ├── social/            # MMD-Mode-3, ансамбль CatBoost
-│   ├── mobile/            # Mobile-Adapted (CLIP + SVD/TF-IDF)
-│   ├── realestate/        # RealEstate-Adapted (price_too_high, typosquat)
-│   └── fintech/           # Fintech-Adapted (SMOTE, undersampling)
-├── hcdm/                  # Композиция, веса, SHAP-анализ
-├── service/
-│   ├── api/               # FastAPI: эндпойнты, Pydantic-схемы
-│   ├── worker/            # Inference-пайплайн (consumer RabbitMQ)
-│   ├── db/                # SQLAlchemy-модели, репозитории, миграции Alembic
-│   └── web/               # HTML/JS веб-интерфейс
-├── tests/                 # Smoke, функциональные, нагрузочные тесты
-├── docker-compose.yml
+├── apps_and_advertising_approaches/  # домен «мобильные приложения и реклама» — Азимова К. У.
+├── counterfeit_service/              # production-сервис: FastAPI, RabbitMQ, PostgreSQL, веб-интерфейс
+├── data/                             # указатели на исходные данные (датасет не включён)
+├── eda_and_baseline/                 # общий разведочный анализ данных и baseline-модели
+├── fintech_approaches/               # домен «финтех» — Красовская С. Д.
+├── notes/                            # рабочие материалы команды
+├── real_estate_approaches/           # домен «недвижимость» — Мкоян Д.
+├── social_network_approaches/        # домен «социальные сети» — Бахтиарова А. Ж.
+├── app.py
+├── requirements.txt
+├── Summary_source.md
 └── README.md
 ```
 
