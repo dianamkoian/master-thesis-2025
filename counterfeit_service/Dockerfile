@@ -8,9 +8,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libgl1 \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python deps first (layer cache)
+# CPU-only torch wheel: экономит ~1,5 ГБ (без nvidia_cublas, triton, cuDNN).
+# Используем PyTorch CPU index — wheels оптимизированы для inference без GPU.
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir \
+        --extra-index-url https://download.pytorch.org/whl/cpu \
+        -r requirements.txt
 
 # Download CLIP weights at build time so first request is fast
 RUN python -c "\
@@ -19,12 +22,12 @@ CLIPModel.from_pretrained('openai/clip-vit-base-patch32'); \
 CLIPProcessor.from_pretrained('openai/clip-vit-base-patch32'); \
 print('CLIP cached')"
 
-# Copy application code
+# Copy application code. artifacts/ НЕ копируется в image — приходит через
+# volume mount в docker-compose.yml (`./artifacts:/app/artifacts`), что
+# экономит ~1 ГБ context на каждом билде и позволяет менять веса моделей
+# без пересборки образа.
 COPY app/ ./app/
 COPY static/ ./static/
-
-# artifacts/ is mounted as a volume — not copied into image
-# so model files stay outside the image and can be updated without rebuild
 
 ENV ARTIFACTS_DIR=/app/artifacts
 ENV COUNTERFEIT_THRESHOLD=0.5

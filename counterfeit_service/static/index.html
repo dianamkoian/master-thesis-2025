@@ -87,6 +87,12 @@
     input:focus, textarea:focus {
       border-color: #005bff;
     }
+    input:disabled {
+      background: #f0f0f0;
+      color: #999;
+      cursor: not-allowed;
+    }
+
     textarea { resize: vertical; min-height: 80px; }
 
     /* Image upload area */
@@ -149,28 +155,46 @@
     /* Result card */
     #result { display: none; }
 
-    .verdict {
-      text-align: center;
-      padding: 24px 16px;
+    /* Раскрывающийся блок «Как модель приняла решение» */
+    .signals-details {
+      margin-top: 20px;
       border-radius: 12px;
-      margin-bottom: 20px;
+      background: #fafbff;
+      border: 1px solid #e8ecf5;
+      overflow: hidden;
+      transition: box-shadow .2s;
     }
-    .verdict.counterfeit { background: #fff0f0; border: 2px solid #ff3b30; }
-    .verdict.original    { background: #f0fff4; border: 2px solid #34c759; }
-
-    .verdict .label {
-      font-size: 28px;
-      font-weight: 900;
-      letter-spacing: -0.5px;
+    .signals-details[open] { box-shadow: 0 2px 10px rgba(0,91,255,0.04); }
+    .signals-details summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 14px 18px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #1a1d2e;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      user-select: none;
+      transition: background .15s;
     }
-    .verdict.counterfeit .label { color: #c00; }
-    .verdict.original    .label { color: #1a7a2e; }
-
-    .verdict .prob {
-      font-size: 15px;
-      margin-top: 8px;
-      color: #555;
+    .signals-details summary::-webkit-details-marker { display: none; }
+    .signals-details summary::marker { content: ''; }
+    .signals-details summary:hover { background: #f0f4ff; }
+    .signals-details summary::before {
+      content: '▶';
+      font-size: 11px;
+      color: #888;
+      transition: transform .25s;
+      display: inline-block;
     }
+    .signals-details[open] summary::before { transform: rotate(90deg); }
+    .signals-details > .signals,
+    .signals-details > .model-tag {
+      margin: 0 14px;
+    }
+    .signals-details > .signals { padding: 4px 0 14px; }
+    .signals-details > .model-tag { margin-bottom: 14px; }
 
     .signals {
       display: grid;
@@ -209,6 +233,971 @@
       background: #005bff;
       transition: width .5s ease;
     }
+    .signal-card .sig-sublabel {
+      font-size: 10px;
+      font-weight: 500;
+      color: #999;
+      text-transform: none;
+      letter-spacing: 0;
+      display: inline-block;
+      margin-top: 4px;
+    }
+    .signal-card--na {
+      opacity: 0.55;
+    }
+    .signal-card .sig-val--na {
+      color: #aaa;
+    }
+    .signal-card .sig-bar--na {
+      width: 100%;
+      background: repeating-linear-gradient(
+        45deg, #e0e8ff, #e0e8ff 4px, #f0f4ff 4px, #f0f4ff 8px
+      );
+    }
+    .route-tag {
+      margin-top: 12px;
+      font-size: 12px;
+      color: #777;
+      text-align: center;
+    }
+    .route-tag code {
+      background: #f0f4ff;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #005bff;
+      font-family: monospace;
+    }
+
+    /* Подпись о выбранной модели + пасхалки */
+    .model-tag {
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: #fafbff;
+      border-radius: 8px;
+      border-left: 4px solid #005bff;
+      font-size: 13px;
+    }
+    .model-tag-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .model-tag-badge {
+      color: white;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .3px;
+    }
+    .model-tag-title {
+      font-weight: 600;
+      color: #333;
+    }
+    .model-tag-title code {
+      background: #e0e8ff;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #003fb3;
+      font-family: 'JetBrains Mono', 'SF Mono', monospace;
+      font-size: 12px;
+    }
+    .model-tag-desc {
+      margin-top: 6px;
+      color: #666;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+    .route-egg {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .route-egg code {
+      background: rgba(0,0,0,0.06);
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+    }
+    .route-egg--block {
+      background: #ffe8e8;
+      border-left: 3px solid #d32f2f;
+      color: #8a1c1c;
+    }
+    .route-egg--frozen {
+      background: #e8f7ee;
+      border-left: 3px solid #3a9d23;
+      color: #2a6e18;
+    }
+
+    /* Футер с формулой HCDM */
+    /* Гамбургер-меню */
+    header { position: relative; }
+    .nav-toggle {
+      position: absolute;
+      top: 50%;
+      right: 24px;
+      transform: translateY(-50%);
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255,255,255,0.15);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      transition: background .2s;
+      z-index: 10;
+    }
+    .nav-toggle:hover { background: rgba(255,255,255,0.3); }
+    .nav-toggle span {
+      display: block;
+      width: 18px;
+      height: 2px;
+      background: white;
+      border-radius: 2px;
+      transition: transform .25s, opacity .25s;
+    }
+    .nav-toggle.is-open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .nav-toggle.is-open span:nth-child(2) { opacity: 0; }
+    .nav-toggle.is-open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+    .nav-menu {
+      position: absolute;
+      top: 72px;
+      right: 16px;
+      background: white;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      border-radius: 12px;
+      padding: 8px;
+      min-width: 260px;
+      z-index: 20;
+    }
+    .nav-menu[hidden] { display: none; }
+    .nav-item {
+      display: block;
+      padding: 10px 14px;
+      border-radius: 8px;
+      color: #333;
+      text-decoration: none;
+      font-size: 14px;
+      transition: background .15s;
+    }
+    .nav-item:hover { background: #f0f4ff; }
+    .nav-item--active { background: #e0e8ff; color: #003fb3; font-weight: 600; }
+    .nav-item--external { color: #666; font-size: 13px; }
+    .nav-item--external:hover { color: #005bff; }
+    .nav-divider {
+      border-top: 1px solid #e8ecf5;
+      margin: 8px 6px;
+    }
+
+    /* Page-section transitions */
+    .page-section[hidden] { display: none; }
+    .page-section { animation: sectionFade .3s ease; }
+    @keyframes sectionFade {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    /* Metrics page */
+    .metrics-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .btn-mini {
+      background: #f0f4ff;
+      color: #005bff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .btn-mini:hover { background: #e0e8ff; }
+    .loading-pulse {
+      text-align: center;
+      padding: 40px 0;
+      color: #999;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .metric-tile {
+      background: #f8f9ff;
+      padding: 14px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .metric-tile .v { font-size: 28px; font-weight: 800; color: #005bff; line-height: 1.1; }
+    .metric-tile .l { font-size: 12px; color: #666; margin-top: 4px; text-transform: uppercase; letter-spacing: .5px; }
+    .metrics-content h3 { margin: 24px 0 12px; font-size: 16px; }
+    /* Обёртка с горизонтальным скроллом для широких таблиц */
+    .metrics-content .table-wrap {
+      overflow-x: auto;
+      border-radius: 8px;
+      border: 1px solid #f0f0f5;
+      background: white;
+      -webkit-overflow-scrolling: touch;
+    }
+    .metrics-content table {
+      width: 100%;
+      min-width: 720px;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .metrics-content th, .metrics-content td { padding: 8px 10px; text-align: left; border-bottom: 1px solid #f0f0f5; white-space: nowrap; }
+    .metrics-content th { background: #f8f9ff; color: #666; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .4px; }
+    .metrics-content tr:hover td { background: #fafbff; }
+    /* Подсказка о скролле под широкими таблицами на узких экранах */
+    .metrics-content .table-hint {
+      font-size: 11px;
+      color: #999;
+      margin-top: 4px;
+      font-style: italic;
+    }
+    .metrics-content code {
+      background: #f0f4ff;
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-family: 'JetBrains Mono', 'SF Mono', monospace;
+      font-size: 11px;
+      color: #003fb3;
+    }
+    .verdict-cell--fake { color: #d32f2f; font-weight: 700; }
+    .verdict-cell--ok { color: #3a9d23; }
+    .mode-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+    .mode-badge--sync  { background: #e6f0ff; color: #003fb3; }
+    .mode-badge--async { background: #f3e5f5; color: #6a1b9a; }
+    .cell-name {
+      max-width: 260px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: #333;
+    }
+
+    /* Гистограмма probability */
+    .histogram {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 4px;
+      align-items: end;
+      height: 140px;
+      margin: 12px 0;
+      padding: 8px;
+      background: #f8f9ff;
+      border-radius: 8px;
+    }
+    .histogram-bar {
+      background: linear-gradient(180deg, #5b8cff, #003fb3);
+      border-radius: 4px 4px 0 0;
+      min-height: 4px;
+      position: relative;
+      transition: opacity .2s;
+    }
+    .histogram-bar:hover { opacity: 0.7; }
+    .histogram-bar .count {
+      position: absolute;
+      top: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px;
+      font-weight: 600;
+      color: #555;
+    }
+    .histogram-labels {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 4px;
+      padding: 0 8px;
+      margin-top: 2px;
+    }
+    .histogram-labels span {
+      text-align: center;
+      font-size: 10px;
+      color: #999;
+    }
+
+    /* Architecture page */
+    .arch-formula {
+      padding: 16px;
+      background: linear-gradient(135deg, #005bff 0%, #003fb3 100%);
+      color: white;
+      border-radius: 10px;
+      text-align: center;
+      margin: 12px 0 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .arch-formula code { color: white; }
+    /* Обёртка для адаптивного скролла на узких экранах */
+    .arch-table-wrap {
+      overflow-x: auto;
+      border-radius: 8px;
+      border: 1px solid #f0f0f5;
+      background: white;
+      margin-bottom: 20px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .arch-channels {
+      width: 100%;
+      min-width: 520px;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-bottom: 0;
+    }
+    .arch-channels th, .arch-channels td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid #e8ecf5;
+      vertical-align: top;
+    }
+    @media (max-width: 600px) {
+      .arch-channels th, .arch-channels td { padding: 8px 10px; font-size: 12px; }
+    }
+    .arch-channels th {
+      background: #f8f9ff;
+      color: #666;
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+    .arch-channels code {
+      background: #f0f4ff;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #003fb3;
+    }
+    .arch-pre {
+      background: #1a1d2e;
+      color: #c8d4ff;
+      padding: 16px;
+      border-radius: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      line-height: 1.45;
+      overflow-x: auto;
+      margin: 12px 0;
+    }
+
+    /* Архитектурная диаграмма v2 (SVG-стрелки + dataflow) */
+    .arch-legend {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.55;
+      margin: 8px 0 12px;
+    }
+    .arch-diagram-v2 {
+      margin: 12px 0 28px;
+      padding: 28px 20px 16px;
+      background: linear-gradient(135deg, #fafbff 0%, #f0f4ff 100%);
+      border-radius: 16px;
+    }
+    .arch-row-v2 {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+    }
+    .arch-row-v2--pair {
+      align-items: stretch;
+    }
+    .arch-node-v2 {
+      flex: 1;
+      max-width: 640px;
+      background: white;
+      border-radius: 12px;
+      padding: 16px 20px;
+      box-shadow: 0 4px 14px rgba(0,91,255,0.08);
+      border: 1px solid #e0e8ff;
+      transition: transform .15s, box-shadow .15s;
+    }
+    .arch-node-v2:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(0,91,255,0.14);
+    }
+    .arch-row-v2--pair .arch-node-v2 { flex: 1; max-width: 320px; }
+    .arch-node-v2-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #1a1d2e;
+    }
+    .arch-node-v2-sub {
+      font-size: 13px;
+      color: #444;
+      line-height: 1.55;
+    }
+    .arch-node-v2-meta {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed #e0e8ff;
+      font-size: 12px;
+      color: #666;
+    }
+    .arch-node-v2-meta code,
+    .arch-node-v2-sub code {
+      background: #f0f4ff;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-family: 'JetBrains Mono', 'SF Mono', monospace;
+      font-size: 11px;
+      color: #003fb3;
+    }
+    /* Тематические цвета компонентов */
+    .arch-node-v2--client { border-left: 4px solid #5b8cff; }
+    .arch-node-v2--api    { border-left: 4px solid #003fb3; background: linear-gradient(135deg, #ffffff 0%, #f5f9ff 100%); }
+    .arch-node-v2--db     { border-left: 4px solid #2e7d32; }
+    .arch-node-v2--broker { border-left: 4px solid #c95400; }
+    .arch-node-v2--worker { border-left: 4px solid #6a1b9a; background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%); }
+
+    /* Endpoint-таблетки */
+    .arch-endpoints {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .arch-ep {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #f0f4ff;
+      color: #003fb3;
+      white-space: nowrap;
+    }
+    .arch-ep--sync    { background: #e6f5e9; color: #2e7d32; }
+    .arch-ep--async   { background: #f3e5f5; color: #6a1b9a; }
+    .arch-ep--reasoning { background: #fff3d6; color: #a36500; }
+
+    /* Мини-таблицы внутри карточек */
+    .arch-mini-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin: 4px 0 6px;
+    }
+    .arch-mini-table th {
+      text-align: left;
+      padding: 3px 8px 3px 0;
+      vertical-align: top;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      color: #1a1d2e;
+      width: 38%;
+      font-size: 11px;
+    }
+    .arch-mini-table td {
+      padding: 3px 0;
+      vertical-align: top;
+      color: #555;
+    }
+
+    /* Коннекторы между узлами архитектуры (вертикальные линии с подписью) */
+    .arch-connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 6px 0;
+      gap: 2px;
+    }
+    .arch-connector-line {
+      width: 2px;
+      height: 22px;
+      background: #5a6480;
+      border-radius: 1px;
+    }
+    .arch-connector-tip {
+      font-size: 14px;
+      color: #5a6480;
+      line-height: 0.6;
+      margin-top: -2px;
+    }
+    .arch-connector-label {
+      font-family: 'JetBrains Mono', 'SF Mono', monospace;
+      font-size: 11px;
+      color: #5a6480;
+      font-weight: 500;
+      letter-spacing: 0.2px;
+    }
+    .arch-connector--green .arch-connector-line,
+    .arch-connector--green .arch-connector-tip { background: #3a9d23; color: #3a9d23; }
+    .arch-connector--green .arch-connector-line { background: #3a9d23; }
+    .arch-connector--green .arch-connector-label { color: #2e7d32; }
+    .arch-connector--purple .arch-connector-line { background: #7b1fa2; }
+    .arch-connector--purple .arch-connector-tip { color: #7b1fa2; }
+    .arch-connector--purple .arch-connector-label { color: #6a1b9a; }
+    .arch-connector--up { padding: 8px 0; }
+    .arch-connector--up .arch-connector-tip { margin-top: 0; margin-bottom: -2px; }
+
+    .arch-fork-pair {
+      display: flex;
+      gap: 32px;
+      justify-content: center;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .arch-fork-pair .arch-connector { flex: 1; max-width: 320px; }
+
+    @media (max-width: 720px) {
+      .arch-row-v2--pair { flex-direction: column; }
+      .arch-row-v2--pair .arch-node-v2 { max-width: none; }
+      .arch-fork-pair { flex-direction: column; gap: 6px; }
+    }
+
+    /* Старая диаграмма v1 — оставлена как fallback для других случаев */
+    .arch-diagram {
+      margin: 20px 0 28px;
+      padding: 24px 16px;
+      background: linear-gradient(135deg, #f8fafc 0%, #eef2f8 100%);
+      border-radius: 16px;
+    }
+    .arch-row {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .arch-row--end { align-items: center; }
+    .arch-node {
+      flex: 1;
+      min-width: 200px;
+      max-width: 320px;
+      padding: 14px 18px;
+      border-radius: 12px;
+      background: white;
+      border: 2px solid #e0e8ff;
+      box-shadow: 0 2px 8px rgba(0,91,255,0.06);
+      transition: transform .15s, box-shadow .15s;
+    }
+    .arch-node:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0,91,255,0.14);
+    }
+    .arch-node-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1a1d2e;
+      margin-bottom: 6px;
+    }
+    .arch-node-sub {
+      font-size: 12px;
+      color: #5a6480;
+      line-height: 1.55;
+    }
+    .arch-node-sub code {
+      background: #f0f4ff;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #003fb3;
+    }
+    /* Цвета карточек */
+    .arch-node--frontend { border-color: #b9d4ff; background: linear-gradient(135deg, #ffffff 0%, #f3f8ff 100%); }
+    .arch-node--api      { border-color: #7fb0ff; background: linear-gradient(135deg, #ffffff 0%, #e6f0ff 100%); }
+    .arch-node--ml       { border-color: #5b8cff; background: linear-gradient(135deg, #ffffff 0%, #dde9ff 100%); }
+    .arch-node--db       { border-color: #4caf50; background: linear-gradient(135deg, #ffffff 0%, #e8f5e9 100%); }
+    .arch-node--broker   { border-color: #ff6f00; background: linear-gradient(135deg, #ffffff 0%, #fff3e0 100%); }
+    .arch-node--worker   { border-color: #9c27b0; background: linear-gradient(135deg, #ffffff 0%, #f3e5f5 100%); }
+    .arch-node--ml .arch-node-title { color: #003fb3; }
+    .arch-node--db .arch-node-title { color: #2e7d32; }
+    .arch-node--broker .arch-node-title { color: #c95400; }
+    .arch-node--worker .arch-node-title { color: #6a1b9a; }
+    /* Стрелки */
+    .arch-arrow {
+      text-align: center;
+      color: #888;
+      font-size: 12px;
+      font-style: italic;
+      margin: 6px 0;
+      letter-spacing: .3px;
+    }
+    .arch-arrow-h {
+      display: flex;
+      align-items: center;
+      color: #888;
+      font-size: 12px;
+      font-style: italic;
+      padding: 0 4px;
+    }
+    .arch-arrow-up {
+      display: flex;
+      align-items: center;
+      writing-mode: vertical-rl;
+      color: #888;
+      font-size: 12px;
+      font-style: italic;
+    }
+    .arch-fork {
+      display: flex;
+      gap: 14px;
+      margin: 0 8px;
+    }
+    .arch-fork-leg {
+      flex: 1;
+      text-align: center;
+    }
+    .arch-spacer { flex: 1; min-width: 200px; max-width: 320px; }
+    @media (max-width: 720px) {
+      .arch-row { flex-direction: column; align-items: stretch; }
+      .arch-spacer { display: none; }
+      .arch-arrow-h { justify-content: center; padding: 6px 0; }
+      .arch-arrow-up { writing-mode: horizontal-tb; justify-content: center; }
+    }
+    .arch-refs {
+      padding-left: 20px;
+      line-height: 1.8;
+      color: #444;
+      font-size: 14px;
+    }
+    .arch-refs li { margin-bottom: 2px; }
+
+    /* Подсказки и подписи на странице Архитектура */
+    #section-architecture h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: #1a1d2e;
+      margin: 32px 0 12px;
+      letter-spacing: -0.2px;
+    }
+    #section-architecture h3:first-of-type { margin-top: 8px; }
+    #section-architecture p {
+      font-size: 14px;
+      line-height: 1.65;
+      color: #333;
+      margin: 0 0 14px;
+    }
+    #section-architecture > .card > h2 { margin-bottom: 18px; }
+    #section-architecture .card { padding-bottom: 8px; }
+    .arch-tip {
+      margin: 0 0 18px;
+      padding: 12px 16px;
+      background: #f8f9ff;
+      border-left: 4px solid #5b8cff;
+      border-radius: 4px 8px 8px 4px;
+      font-size: 13px;
+      line-height: 1.55;
+      color: #444;
+    }
+    .arch-tip code {
+      background: #e0e8ff;
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #003fb3;
+    }
+    .arch-channel-arch {
+      display: block;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 11px;
+      color: #888;
+      margin-top: 2px;
+    }
+    .arch-glossary {
+      margin-top: 24px;
+      padding: 14px 18px;
+      background: #fafbff;
+      border: 1px solid #e8ecf5;
+      border-radius: 12px;
+    }
+    .arch-glossary summary {
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 15px;
+      color: #1a1d2e;
+      user-select: none;
+      list-style: none;
+    }
+    .arch-glossary summary::-webkit-details-marker { display: none; }
+    .arch-glossary summary::before {
+      content: '▶';
+      font-size: 11px;
+      color: #888;
+      margin-right: 8px;
+      transition: transform .25s;
+      display: inline-block;
+    }
+    .arch-glossary[open] summary::before { transform: rotate(90deg); }
+    .arch-glossary dl {
+      margin: 14px 0 0;
+      display: grid;
+      grid-template-columns: max-content 1fr;
+      gap: 6px 16px;
+      font-size: 13px;
+    }
+    .arch-glossary dt {
+      font-weight: 600;
+      color: #003fb3;
+      white-space: nowrap;
+    }
+    .arch-glossary dd {
+      margin: 0;
+      color: #555;
+      line-height: 1.5;
+    }
+    @media (max-width: 600px) {
+      .arch-glossary dl { grid-template-columns: 1fr; }
+      .arch-glossary dt { margin-top: 6px; }
+    }
+
+    .hcdm-footer {
+      margin-top: 32px;
+      padding: 16px 0;
+      border-top: 1px solid #e8ecf5;
+      text-align: center;
+      font-size: 11px;
+      color: #999;
+      line-height: 1.7;
+    }
+    .hcdm-footer code {
+      background: #f0f4ff;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-family: 'JetBrains Mono', monospace;
+      color: #555;
+    }
+    .hcdm-footer .hcdm-formula {
+      display: block;
+      margin: 6px 0;
+      font-family: 'JetBrains Mono', monospace;
+      color: #555;
+    }
+
+    /* Декомпозиция HCDM по формуле */
+    .formula-card {
+      background: #f8f9ff;
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 12px;
+      grid-column: 1 / -1;
+      transition: transform .15s, box-shadow .15s;
+      animation: cardSlide .45s ease backwards;
+    }
+    /* Stagger-анимация — карточки раскрываются по одной */
+    .formula-card:nth-of-type(1) { animation-delay: .05s; }
+    .formula-card:nth-of-type(2) { animation-delay: .15s; }
+    .formula-card:nth-of-type(3) { animation-delay: .25s; }
+    .formula-card:nth-of-type(4) { animation-delay: .35s; }
+    @keyframes cardSlide {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: none; }
+    }
+    .formula-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,91,255,0.08);
+    }
+    .formula-head {
+      margin-bottom: 6px;
+    }
+    .formula-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1a1d2e;
+    }
+    .formula-subtitle {
+      font-size: 12px;
+      color: #888;
+      font-style: italic;
+      margin-top: 2px;
+    }
+    .formula-concepts {
+      font-size: 12px;
+      color: #5a6480;
+      line-height: 1.55;
+      margin: 8px 0 12px;
+    }
+    .formula-numbers {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    @media (max-width: 520px) {
+      .formula-numbers { grid-template-columns: 1fr 1fr; }
+      .formula-numbers .formula-num-block--accent { grid-column: 1 / -1; }
+      .verdict-hero { flex-direction: column; text-align: center; }
+      .verdict-text { min-width: auto; }
+    }
+    .formula-num-block {
+      background: white;
+      border-radius: 8px;
+      padding: 8px 10px;
+      text-align: center;
+    }
+    .formula-num-block--accent {
+      background: linear-gradient(135deg, #005bff 0%, #003fb3 100%);
+      color: white;
+    }
+    .formula-num-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: #999;
+      margin-bottom: 4px;
+    }
+    .formula-num-block--accent .formula-num-label { color: rgba(255,255,255,0.85); }
+    .formula-num-value {
+      font-size: 18px;
+      font-weight: 800;
+      color: #1a1d2e;
+      font-variant-numeric: tabular-nums;
+    }
+    .formula-num-block--accent .formula-num-value { color: white; }
+
+    .formula-summary {
+      grid-column: 1 / -1;
+      margin-top: 16px;
+      padding: 20px;
+      background: linear-gradient(135deg, #005bff 0%, #003fb3 100%);
+      color: white;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 6px 20px rgba(0,91,255,0.18);
+    }
+    .formula-summary-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      opacity: 0.85;
+      margin-bottom: 8px;
+    }
+    .formula-summary-value {
+      font-size: 38px;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -1px;
+    }
+
+    /* Hero-блок вердикта с круглым прогресс-кольцом */
+    .verdict-hero {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 28px 24px;
+      border-radius: 16px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      color: white;
+      background: linear-gradient(135deg, #3a9d23 0%, #1f6e10 100%);
+      box-shadow: 0 6px 20px rgba(58,157,35,0.22);
+    }
+    .verdict-hero--borderline {
+      background: linear-gradient(135deg, #f0a93b 0%, #c47512 100%);
+      box-shadow: 0 6px 20px rgba(196,117,18,0.25);
+    }
+    .verdict-hero--fake {
+      background: linear-gradient(135deg, #e25555 0%, #a82323 100%);
+      box-shadow: 0 6px 20px rgba(168,35,35,0.28);
+    }
+    .verdict-hero--block {
+      background: linear-gradient(135deg, #d32f2f 0%, #7d0c0c 100%);
+      box-shadow: 0 8px 24px rgba(125,12,12,0.32);
+    }
+    .verdict-ring {
+      width: 152px;
+      height: 152px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.12);
+      transition: background 0.6s ease;
+      padding: 6px;
+      background: rgba(255,255,255,0.25) !important;
+    }
+    .verdict-ring-inner {
+      width: 100%;
+      height: 100%;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .verdict-ring-num {
+      font-size: 34px;
+      font-weight: 900;
+      color: #1a1d2e;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+    .verdict-ring-pct {
+      font-size: 18px;
+      font-weight: 700;
+      color: #666;
+      margin-left: 1px;
+    }
+    .verdict-ring-caption {
+      font-size: 9px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      text-align: center;
+      margin-top: 4px;
+      line-height: 1.2;
+    }
+    .verdict-text {
+      flex: 1;
+      min-width: 220px;
+    }
+    .verdict-icon {
+      font-size: 32px;
+      margin-bottom: 4px;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+    }
+    .verdict-label {
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 8px;
+      letter-spacing: -.3px;
+      color: white !important;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    }
+    .verdict-note {
+      font-size: 14px;
+      color: rgba(255,255,255,0.92);
+      line-height: 1.5;
+    }
 
     .error-msg {
       background: #fff0f0;
@@ -217,6 +1206,99 @@
       padding: 16px;
       color: #c00;
       font-size: 14px;
+    }
+
+    /* Reasoning section (§ 3.4.9.7 — verdict-conditioned LLM-explainer) */
+    .reasoning-block {
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 12px;
+      background: #f8f9ff;
+      border: 1.5px solid #e0e8ff;
+      border-left-width: 5px;
+      animation: fadeIn .35s ease;
+      transition: background .3s, border-color .3s;
+    }
+    .reasoning-block--blocking_explanation {
+      background: linear-gradient(135deg, #fff5f3 0%, #ffe8e3 100%);
+      border-color: #ffcec6;
+      border-left-color: #d32f2f;
+    }
+    .reasoning-block--confident_positive_no_block {
+      background: linear-gradient(135deg, #fffaf0 0%, #fff2d6 100%);
+      border-color: #ffe2a8;
+      border-left-color: #c97a00;
+    }
+    .reasoning-block--borderline_explanation {
+      background: linear-gradient(135deg, #fffbf2 0%, #fff3d6 100%);
+      border-color: #ffdfa0;
+      border-left-color: #e89c33;
+    }
+    .reasoning-block--confident_negative {
+      background: linear-gradient(135deg, #f5fbf5 0%, #e6f5ea 100%);
+      border-color: #c5e6cd;
+      border-left-color: #3a9d23;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+    .reasoning-block .head {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 12px;
+    }
+    .reasoning-block h3 {
+      font-size: 15px; font-weight: 700; color: #333;
+    }
+    .badge {
+      font-size: 11px; font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+    .badge.block      { background: #ffe5e3; color: #c00; }
+    .badge.qa         { background: #fff3d6; color: #a36500; }
+    .badge.borderline { background: #e6f0ff; color: #0047cc; }
+    .badge.negative   { background: #e2f5e6; color: #1a7a2e; }
+    .badge.error      { background: #f0f0f0; color: #555; }
+
+    .reasoning-block .text {
+      font-size: 15px; line-height: 1.55; color: #222;
+      white-space: pre-wrap;
+    }
+    .skeleton-lines > div {
+      height: 10px; background: #e9eefb; border-radius: 4px;
+      margin: 6px 0;
+      animation: shimmer 1.4s linear infinite;
+      background-image: linear-gradient(90deg, #e9eefb 0%, #d5dff8 50%, #e9eefb 100%);
+      background-size: 200% 100%;
+    }
+    .skeleton-lines > div:nth-child(1) { width: 92%; }
+    .skeleton-lines > div:nth-child(2) { width: 78%; }
+    .skeleton-lines > div:nth-child(3) { width: 55%; }
+    @keyframes shimmer { 0% {background-position: 200% 0;} 100% {background-position: -200% 0;} }
+    .skeleton-hint {
+      margin-top: 10px; font-size: 12px; color: #888;
+    }
+
+    /* Soft inline-validation (§ 5.6: UX-аспект функционального тестирования) */
+    .form-group .field-hint {
+      font-size: 11.5px; color: #888; margin-top: 2px;
+    }
+    .field-error {
+      display: none;
+      margin-top: 6px;
+      padding: 8px 10px;
+      background: #fff5f3;
+      border-left: 3px solid #ff9b8a;
+      border-radius: 4px;
+      font-size: 12.5px;
+      color: #8a3a2c;
+      line-height: 1.4;
+    }
+    .field-error.visible { display: block; animation: fadeIn .25s ease; }
+    .form-group.invalid input,
+    .form-group.invalid textarea,
+    .form-group.invalid .upload-area {
+      border-color: #ffb3a3;
     }
 
     .spinner {
@@ -241,18 +1323,33 @@
 <body>
 
 <header>
+  <button id="navToggle" class="nav-toggle" aria-label="Меню">
+    <span></span><span></span><span></span>
+  </button>
   <div class="logo">ozon</div>
   <div class="subtitle">Система детекции контрафактных товаров</div>
 </header>
 
+<!-- Drop-down nav (открывается по hamburger) -->
+<nav id="navMenu" class="nav-menu" hidden>
+  <a href="#" data-section="check" class="nav-item nav-item--active">📦 Проверить товар</a>
+  <a href="#" data-section="metrics" class="nav-item">📊 Метрики</a>
+  <a href="#" data-section="architecture" class="nav-item">🏗 Архитектура</a>
+  <div class="nav-divider"></div>
+  <a href="/docs" target="_blank" class="nav-item nav-item--external">📚 API · Swagger ↗</a>
+  <a href="/redoc" target="_blank" class="nav-item nav-item--external">📖 API · ReDoc ↗</a>
+</nav>
+
 <div class="container">
 
+  <!-- Раздел: Проверить товар -->
+  <section id="section-check" class="page-section">
   <div class="card">
     <h2>Проверить товар</h2>
     <form id="checkForm">
 
       <!-- Photo upload -->
-      <div class="form-group full" style="margin-bottom:20px">
+      <div class="form-group full" id="imageGroup" style="margin-bottom:20px">
         <label>Фото товара *</label>
         <div class="upload-area" id="uploadArea">
           <input type="file" name="image" id="imageInput" accept="image/*" required>
@@ -263,57 +1360,69 @@
             <span class="hint">JPG, PNG, WEBP — до 10 МБ</span>
           </div>
         </div>
+        <div class="field-error" id="imageError">
+          Без фото товара модель не сможет проанализировать карточку — это основной визуальный сигнал. Пожалуйста, прикрепите изображение.
+        </div>
       </div>
 
       <div class="form-grid">
-        <div class="form-group full">
-          <label for="name">Название товара</label>
-          <input type="text" id="name" name="name" placeholder="Например: Кроссовки Nike Air Max 90">
+        <div class="form-group full" id="nameGroup">
+          <label for="name">Название товара *</label>
+          <input type="text" id="name" name="name" placeholder="Например: Смартфон Samsung Galaxy S24 256GB чёрный" data-required>
+          <div class="field-hint">Полное название, как в карточке маркетплейса.</div>
+          <div class="field-error" id="nameError">
+            Пожалуйста, укажите название товара — без него модель не сможет проанализировать текстовую модальность и сформулировать объяснение.
+          </div>
         </div>
 
         <div class="form-group full">
           <label for="description">Описание</label>
-          <textarea id="description" name="description" placeholder="Описание товара из карточки..."></textarea>
+          <textarea id="description" name="description" placeholder="Например: Новый запечатанный, гарантия производителя, оригинал. Память 256 ГБ, две SIM-карты, NFC, Snapdragon 8 Gen 3..."></textarea>
         </div>
 
         <div class="form-group">
           <label for="brand">Бренд</label>
-          <input type="text" id="brand" name="brand" placeholder="Nike">
+          <input type="text" id="brand" name="brand" placeholder="Samsung">
+          <div class="field-hint">Оставьте пустым, если бренд не указан в карточке.</div>
         </div>
 
         <div class="form-group">
           <label for="category">Категория (CommercialTypeName4)</label>
-          <input type="text" id="category" name="category" placeholder="Кроссовки">
+          <input type="text" id="category" name="category" placeholder="Смартфоны">
         </div>
 
         <div class="form-group">
           <label for="price">Цена (₽)</label>
-          <input type="number" id="price" name="price" value="0" min="0" step="1">
+          <input type="number" id="price" name="price" min="0" step="1" placeholder="65000">
+          <div class="field-hint">Оставьте пустым, если данных нет. Чтобы передать ноль — введите <code>0</code>.</div>
         </div>
 
         <div class="form-group">
           <label for="item_time_alive">Дней на площадке</label>
-          <input type="number" id="item_time_alive" name="item_time_alive" value="0" min="0" step="1">
+          <input type="number" id="item_time_alive" name="item_time_alive" min="0" step="1" placeholder="120">
+          <div class="field-hint">Сколько дней карточка опубликована.</div>
         </div>
 
         <div class="form-group">
           <label for="item_count_sales30">Продажи за 30 дней</label>
-          <input type="number" id="item_count_sales30" name="item_count_sales30" value="0" min="0" step="1">
+          <input type="number" id="item_count_sales30" name="item_count_sales30" min="0" step="1" placeholder="45">
         </div>
 
         <div class="form-group">
           <label for="item_count_returns30">Возвраты за 30 дней</label>
-          <input type="number" id="item_count_returns30" name="item_count_returns30" value="0" min="0" step="1">
+          <input type="number" id="item_count_returns30" name="item_count_returns30" min="0" step="1" placeholder="2">
         </div>
 
         <div class="form-group">
           <label for="seller_time_alive">Возраст продавца (дни)</label>
-          <input type="number" id="seller_time_alive" name="seller_time_alive" value="0" min="0" step="1">
+          <input type="number" id="seller_time_alive" name="seller_time_alive" min="0" step="1" placeholder="850">
+          <div class="field-hint">Сколько дней зарегистрирован продавец.</div>
         </div>
 
         <div class="form-group">
-          <label for="seller_id">ID продавца (необязательно)</label>
-          <input type="text" id="seller_id" name="seller_id" placeholder="Например: seller_12345">
+          <label for="item_id">ItemID (опционально)</label>
+          <input type="number" id="item_id" name="item_id" min="0" step="1" placeholder="202599">
+          <div class="field-hint">Идентификатор товара. Оставьте пустым для live-инференса по введённым полям.</div>
         </div>
       </div>
 
@@ -325,11 +1434,368 @@
   <div class="card" id="result">
     <div id="resultContent"></div>
   </div>
+  </section>
 
+  <!-- Раздел: Метрики -->
+  <section id="section-metrics" class="page-section" hidden>
+    <div class="card">
+      <div class="metrics-head">
+        <h2>Метрики сервиса</h2>
+        <button id="metricsRefresh" class="btn-mini">↻ Обновить</button>
+      </div>
+      <div id="metricsContent" class="metrics-content">
+        <div class="loading-pulse">Загрузка…</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Раздел: Архитектура -->
+  <section id="section-architecture" class="page-section" hidden>
+    <div class="card">
+      <h2>Архитектура сервиса</h2>
+
+      <h3 style="margin-top:8px">Финальная модель — HCDM</h3>
+      <p>
+        Чтобы предсказать, контрафактный товар или нет, сервис <strong>комбинирует
+        четыре независимые модели</strong>, каждая из которых обучена в своей
+        предметной области (социальные сети, мобильные приложения, недвижимость,
+        финтех). Это и есть «иерархическая кросс-доменная композиция»: один
+        главный канал даёт основной сигнал (вес <strong>0,875</strong> —
+        87,5 % итогового вердикта), три дополнительных канала <strong>уточняют</strong>
+        ответ (вес 0,025–0,075 каждый). Веса подобраны на отдельной валидационной
+        выборке и зафиксированы — не пересчитываются на каждый запрос.
+      </p>
+      <div class="arch-formula">
+        <code>p<sub>HCDM</sub> = 0,875 · p<sub>репутация и контент</sub> + 0,075 · p<sub>изображение</sub> + 0,025 · p<sub>бренд и цена</sub> + 0,025 · p<sub>текст+картинка</sub></code>
+      </div>
+      <p class="arch-tip">
+        Каждое <code>p<sub>...</sub></code> — это число от 0 до 1, вероятность контрафакта
+        по своему сигналу. Финальное <code>p<sub>HCDM</sub></code> — взвешенная сумма;
+        порог <strong>0,5</strong> → товар попадает в очередь модератора, порог <strong>0,85</strong>
+        → автоматическая блокировка.
+      </p>
+      <div class="arch-table-wrap">
+        <table class="arch-channels">
+          <thead><tr><th>Канал</th><th>Что смотрит</th><th>Вес в HCDM</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Репутация и контент</strong><br><span class="arch-channel-arch">Mode 3 (Deep Deliberation), домен соц. сетей</span></td><td>Историческая частота контрафакта у продавца, бренда, категории; текстовые и визуальные признаки</td><td>0,875</td></tr>
+            <tr><td><strong>Только изображение</strong><br><span class="arch-channel-arch">Baseline C, домен мобильных приложений</span></td><td>Логистическая регрессия на эмбеддинге фото CLIP — независимый визуальный сигнал</td><td>0,075</td></tr>
+            <tr><td><strong>Бренд и цена</strong><br><span class="arch-channel-arch">M2-FE+, домен недвижимости</span></td><td>Аномалии цены и характеристик товара относительно бренда; признаки «опечаток» в названии бренда</td><td>0,025</td></tr>
+            <tr><td><strong>Совместный текст и картинка</strong><br><span class="arch-channel-arch">FT-MFF (late fusion), домен финтеха</span></td><td>Совместное представление текста и изображения для перекрёстной верификации</td><td>0,025</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Метрики итоговой модели</h3>
+      <p>
+        Все три метрики ниже — стандартные для задач с сильным дисбалансом классов (≈ 7 % контрафакта).
+        <strong>PR-AUC</strong> измеряет, насколько хорошо модель ранжирует подозрительные товары на вершину
+        списка. <strong>R@P ≥ 0,9</strong> отвечает на вопрос «сколько процентов всех настоящих контрафактов
+        мы поймаем, если требуем точность не ниже 90 %» — это <em>бизнес-метрика</em> для канала
+        автоматической блокировки. <strong>ROC-AUC</strong> — общая метрика разделимости классов.
+      </p>
+      <div class="arch-table-wrap">
+        <table class="arch-channels">
+          <thead><tr><th>Метрика</th><th>На полном тестовом множестве<br><span class="arch-channel-arch">n = 58 410 товаров</span></th><th>На «чистой» валидационной половине<br><span class="arch-channel-arch">n = 24 842 (без подбора весов)</span></th></tr></thead>
+          <tbody>
+            <tr><td>PR-AUC</td><td><strong>0,8044</strong></td><td>0,7909</td></tr>
+            <tr><td>R@P ≥ 0,9</td><td>0,2068</td><td><strong>0,3920</strong></td></tr>
+            <tr><td>ROC-AUC</td><td><strong>0,9720</strong></td><td>0,9714</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:13px;color:#666">
+        Многосидовая валидация — повторение замера с 5 разными случайными разбиениями данных
+        (random_state ∈ {1, 7, 42, 123, 2024}). HCDM значимо превзошла предыдущую командную
+        конфигурацию (CDSM v3) <strong>в 5 случаях из 5</strong> — это самый устойчивый
+        эмпирический результат работы (§ 4.5.6 диплома).
+      </p>
+
+      <details class="arch-glossary">
+        <summary>Глоссарий технических терминов</summary>
+        <dl>
+          <dt>HCDM</dt><dd>Hierarchical Cross-Domain Model — авторское название итоговой композиции 4 моделей</dd>
+          <dt>Канал / channel</dt><dd>Один из 4 базовых predictor'ов (отдельная нейронная сеть или дерево решений)</dd>
+          <dt>Convex blending</dt><dd>Линейная комбинация с положительными весами, в сумме дающими 1 (как процентное распределение голосов)</dd>
+          <dt>Wolpert-валидация</dt><dd>Протокол подбора весов на одной половине данных и оценки на другой — гарантирует, что веса не «подсмотрены» под итоговый тест [Wolpert, 1992]</dd>
+          <dt>PR-AUC (precision-recall AUC)</dt><dd>Площадь под кривой precision/recall. От 0 до 1, выше — лучше. При базовой частоте 7 % случайная модель даёт ~0,07; HCDM = 0,8044</dd>
+          <dt>R@P ≥ 0,9 (recall at precision)</dt><dd>«Сколько процентов контрафактов мы ловим, если ставим порог так, чтобы 90 % срабатываний были истинными»</dd>
+          <dt>ROC-AUC</dt><dd>Общая разделимость классов. Случайная модель даёт 0,5; HCDM = 0,972</dd>
+          <dt>CatBoost</dt><dd>Алгоритм градиентного бустинга от Yandex — основа большинства каналов HCDM</dd>
+          <dt>CLIP ViT-B/32</dt><dd>Нейросетевой эмбеддер изображений от OpenAI — переводит фото в 512-мерный вектор для дальнейшей обработки</dd>
+          <dt>multilingual-e5-small</dt><dd>Текстовый эмбеддер (Microsoft) — переводит текст в 384-мерный вектор; поддерживает русский</dd>
+          <dt>Frozen lookup</dt><dd>Сервис не пересчитывает предсказание, а отдаёт заранее вычисленное значение из parquet-файла. Используется для известных товаров из тестового сплита — гарантирует бит-точное соответствие метрикам диплома</dd>
+          <dt>Live HCDM</dt><dd>Запуск всех 4 моделей на лету для нового товара (которого нет в parquet). Качество может быть чуть ниже headline-метрик, потому что для нового продавца нет исторической статистики</dd>
+        </dl>
+      </details>
+
+      <h3>Стек сервиса</h3>
+      <p class="arch-legend">
+        Карточки — компоненты системы; стрелки — потоки данных, подписанные используемым протоколом.
+        Зелёный поток — синхронный путь, фиолетовый — асинхронный (через очередь сообщений).
+      </p>
+      <div class="arch-diagram-v2">
+        <!-- Row 1: Browser -->
+        <div class="arch-row-v2">
+          <div class="arch-node-v2 arch-node-v2--client">
+            <div class="arch-node-v2-title">🖥 Браузер пользователя</div>
+            <div class="arch-node-v2-sub">SPA на vanilla JavaScript · разделы Проверить · Метрики · Архитектура</div>
+          </div>
+        </div>
+
+        <!-- Connector: Browser → FastAPI -->
+        <div class="arch-connector">
+          <div class="arch-connector-line"></div>
+          <div class="arch-connector-label">HTTPS · multipart/form-data</div>
+          <div class="arch-connector-tip" aria-hidden="true">▼</div>
+        </div>
+
+        <!-- Row 2: FastAPI -->
+        <div class="arch-row-v2">
+          <div class="arch-node-v2 arch-node-v2--api">
+            <div class="arch-node-v2-title">⚡ FastAPI (uvicorn ASGI)</div>
+            <div class="arch-node-v2-sub">
+              <div class="arch-endpoints">
+                <span class="arch-ep arch-ep--sync">POST /predict</span>
+                <span class="arch-ep arch-ep--async">POST /predict-async</span>
+                <span class="arch-ep arch-ep--async">GET /result/{task_id}</span>
+                <span class="arch-ep arch-ep--reasoning">GET /predict/{task_id}/reasoning</span>
+                <span class="arch-ep">GET /health</span>
+                <span class="arch-ep">GET /api/metrics</span>
+              </div>
+              <div class="arch-node-v2-meta">
+                Внутренний компонент <code>HCDMHeadlinePredictor</code>:
+                lookup (canonical ItemID) · live 4-channel composition · D2V fallback
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Connector fork: FastAPI → Postgres (sync) + RabbitMQ (async) -->
+        <div class="arch-fork-pair">
+          <div class="arch-connector arch-connector--green">
+            <div class="arch-connector-line"></div>
+            <div class="arch-connector-label">SQL · asyncpg</div>
+            <div class="arch-connector-tip" aria-hidden="true">▼</div>
+          </div>
+          <div class="arch-connector arch-connector--purple">
+            <div class="arch-connector-line"></div>
+            <div class="arch-connector-label">AMQP · aio_pika</div>
+            <div class="arch-connector-tip" aria-hidden="true">▼</div>
+          </div>
+        </div>
+
+        <!-- Row 3: DB + Broker side by side -->
+        <div class="arch-row-v2 arch-row-v2--pair">
+          <div class="arch-node-v2 arch-node-v2--db">
+            <div class="arch-node-v2-title">🐘 PostgreSQL 16</div>
+            <div class="arch-node-v2-sub">
+              <table class="arch-mini-table">
+                <tr><th>prediction_requests</th><td>audit вход (PK task_id, JSON tab_inputs)</td></tr>
+                <tr><th>predictions_async</th><td>результаты sync+async (proba, signals, reasoning)</td></tr>
+              </table>
+              <div class="arch-node-v2-meta">UI на <code>:5050</code> (pgAdmin) · async-драйвер <code>asyncpg</code></div>
+            </div>
+          </div>
+          <div class="arch-node-v2 arch-node-v2--broker">
+            <div class="arch-node-v2-title">🐰 RabbitMQ 3.13</div>
+            <div class="arch-node-v2-sub">
+              <table class="arch-mini-table">
+                <tr><th>inference_queue</th><td>durable · TTL 5 мин · max 10 000</td></tr>
+                <tr><th>inference_dlq</th><td>DLX для отвергнутых и истёкших</td></tr>
+              </table>
+              <div class="arch-node-v2-meta">UI на <code>:15672</code> · policy <code>inference-resilience</code></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Connector: RabbitMQ → Worker -->
+        <div class="arch-connector arch-connector--purple arch-connector--right">
+          <div class="arch-connector-line"></div>
+          <div class="arch-connector-label">basic.consume · prefetch=1</div>
+          <div class="arch-connector-tip" aria-hidden="true">▼</div>
+        </div>
+
+        <!-- Row 4: Worker -->
+        <div class="arch-row-v2">
+          <div class="arch-node-v2 arch-node-v2--worker">
+            <div class="arch-node-v2-title">⚙ Worker (aio_pika consumer)</div>
+            <div class="arch-node-v2-sub">
+              Async consumer · pluggable <code>PREDICTOR_TYPE</code> · publisher_confirms<br>
+              Успех: <code>basic.ack</code> + <code>UPDATE predictions_async SET status='done'</code>.
+              Ошибка: <code>basic.reject(requeue=False)</code> → сообщение в DLX → <code>inference_dlq</code>.
+            </div>
+          </div>
+        </div>
+
+        <!-- Connector: Worker → PostgreSQL (запись результата) -->
+        <div class="arch-connector arch-connector--green arch-connector--up arch-connector--left">
+          <div class="arch-connector-tip" aria-hidden="true">▲</div>
+          <div class="arch-connector-line"></div>
+          <div class="arch-connector-label">crud.mark_done() · запись результата</div>
+        </div>
+      </div>
+
+      <h3>Production-инстанс и документация</h3>
+      <ul class="arch-refs">
+        <li>🌐 Production: <a href="https://marketplace-fraud.ru" target="_blank" rel="noopener">marketplace-fraud.ru</a> (Timeweb VPS, HTTPS через Let's Encrypt)</li>
+        <li>📚 Swagger UI: <a href="/docs" target="_blank">/docs</a> · ReDoc: <a href="/redoc" target="_blank">/redoc</a></li>
+        <li>🐰 RabbitMQ Management и 🐘 pgAdmin — слушают только <code>127.0.0.1</code> на VPS, доступ через SSH-туннель: <code>ssh -L 5050:localhost:5050 -L 15672:localhost:15672 root@5.129.242.72</code></li>
+      </ul>
+
+      <h3>Разделы диплома</h3>
+      <ul class="arch-refs">
+        <li>Глава 4 — общая модель: обоснование, итоговая модель HCDM, её валидация и выбор модели для сервиса</li>
+        <li>Глава 5 — реализация системы: архитектура сервиса, асинхронная обработка через RabbitMQ, тестирование и нагрузка</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer class="hcdm-footer">
+    <div>
+      <strong>HCDM — Иерархическая кросс-доменная модель</strong>
+    </div>
+    <div style="margin-top:8px;opacity:0.7">
+      Сервис: FastAPI · RabbitMQ · PostgreSQL · CatBoost · CLIP ViT-B/32 · multilingual-e5 · Qwen2.5-1.5B (reasoning)
+    </div>
+  </footer>
 </div>
 
 <script>
-  // Image preview
+  // ─── Hamburger nav ──────────────────────────────────────────────
+  const navToggle = document.getElementById('navToggle');
+  const navMenu = document.getElementById('navMenu');
+  navToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const open = navMenu.hidden;
+    navMenu.hidden = !open;
+    navToggle.classList.toggle('is-open', open);
+  });
+  // Close on outside click
+  document.addEventListener('click', (e) => {
+    if (!navMenu.hidden && !navMenu.contains(e.target) && e.target !== navToggle) {
+      navMenu.hidden = true;
+      navToggle.classList.remove('is-open');
+    }
+  });
+  // Section switching
+  document.querySelectorAll('.nav-item[data-section]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = link.dataset.section;
+      document.querySelectorAll('.page-section').forEach(s => s.hidden = (s.id !== 'section-' + target));
+      document.querySelectorAll('.nav-item[data-section]').forEach(a => a.classList.toggle('nav-item--active', a === link));
+      navMenu.hidden = true;
+      navToggle.classList.remove('is-open');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (target === 'metrics') loadMetrics();
+    });
+  });
+
+  // ─── Metrics page ──────────────────────────────────────────────
+  document.getElementById('metricsRefresh').addEventListener('click', loadMetrics);
+
+  async function loadMetrics() {
+    const container = document.getElementById('metricsContent');
+    container.innerHTML = '<div class="loading-pulse">Загрузка…</div>';
+    try {
+      const r = await fetch('/api/metrics');
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const d = await r.json();
+      container.innerHTML = renderMetrics(d);
+    } catch (err) {
+      container.innerHTML = `<div class="error-msg">Ошибка загрузки: ${err.message}</div>`;
+    }
+  }
+
+  function renderMetrics(d) {
+    // Сводка-тайлы
+    const tilesHtml = `
+      <div class="metric-grid">
+        <div class="metric-tile"><div class="v">${d.total_requests.toLocaleString('ru-RU')}</div><div class="l">Всего запросов</div></div>
+        <div class="metric-tile"><div class="v">${(d.requests_by_mode.sync || 0).toLocaleString('ru-RU')}</div><div class="l">Sync</div></div>
+        <div class="metric-tile"><div class="v">${(d.requests_by_mode.async || 0).toLocaleString('ru-RU')}</div><div class="l">Async</div></div>
+        <div class="metric-tile"><div class="v">${(d.async_by_status.done || 0).toLocaleString('ru-RU')}</div><div class="l">Done</div></div>
+      </div>
+    `;
+    const thesisHtml = '';
+
+    // Распределение по route
+    const routeRows = d.by_route.map(r =>
+      `<tr><td><code>${r.route}</code></td><td>${r.count}</td><td>${r.avg_proba.toFixed(4)}</td><td>${r.fake_count}</td></tr>`
+    ).join('');
+    const routeHtml = `
+      <h3>Предсказания по model_route</h3>
+      <div class="table-wrap">
+        <table><thead><tr><th>Route</th><th>Кол-во</th><th>avg proba</th><th>fake count</th></tr></thead>
+        <tbody>${routeRows || '<tr><td colspan="4" style="text-align:center;color:#999">Пусто</td></tr>'}</tbody></table>
+      </div>
+    `;
+
+    // Reasoning-modes
+    const modeRows = d.reasoning_modes.map(m =>
+      `<tr><td><code>${m.mode}</code></td><td>${m.count}</td></tr>`
+    ).join('');
+    const modeHtml = `
+      <h3>Reasoning-режимы</h3>
+      <div class="table-wrap">
+        <table><thead><tr><th>Mode</th><th>Кол-во</th></tr></thead><tbody>${modeRows}</tbody></table>
+      </div>
+    `;
+
+    // Гистограмма probability
+    const bins = Array.from({length: 10}, (_, i) =>
+      d.proba_histogram.find(b => b.bin === i)?.count || 0
+    );
+    const maxBin = Math.max(...bins, 1);
+    const barsHtml = bins.map(c =>
+      `<div class="histogram-bar" style="height:${(c/maxBin*100).toFixed(1)}%">${c > 0 ? `<span class="count">${c}</span>` : ''}</div>`
+    ).join('');
+    const labelsHtml = bins.map((_, i) => `<span>${(i/10).toFixed(1)}</span>`).join('');
+    const histHtml = `
+      <h3>Гистограмма probability (async)</h3>
+      <div class="histogram">${barsHtml}</div>
+      <div class="histogram-labels">${labelsHtml}</div>
+    `;
+
+    // Последние 20
+    const recentRows = d.recent.map(r => {
+      const vClass = r.is_counterfeit ? 'verdict-cell--fake' : 'verdict-cell--ok';
+      const v = r.is_counterfeit ? '🚨 FAKE' : '✅ OK';
+      const prob = r.probability !== null ? (r.probability * 100).toFixed(2) + '%' : '—';
+      const modeBadge = r.mode === 'async'
+        ? '<span class="mode-badge mode-badge--async">async</span>'
+        : '<span class="mode-badge mode-badge--sync">sync</span>';
+      // Название может быть длинным — обрезаем до 40 символов в ячейке,
+      // полное имя видно по hover (title-атрибут).
+      const nameRaw = r.name || '—';
+      const nameShort = nameRaw.length > 40 ? nameRaw.slice(0, 39) + '…' : nameRaw;
+      return `<tr>
+        <td><code>${r.task}</code></td>
+        <td>${r.time}</td>
+        <td>${modeBadge}</td>
+        <td class="${vClass}">${v}</td>
+        <td>${prob}</td>
+        <td><code>${r.route || '—'}</code></td>
+        <td class="cell-name" title="${escapeHtml(nameRaw)}">${escapeHtml(nameShort)}</td>
+        <td>${r.brand || '—'}</td>
+        <td>${r.category || '—'}</td>
+        <td>${r.item_id || '—'}</td>
+      </tr>`;
+    }).join('');
+    const recentHtml = `
+      <h3>Последние 20 предсказаний</h3>
+      <div class="table-wrap">
+        <table><thead><tr><th>task</th><th>time</th><th>mode</th><th>verdict</th><th>proba</th><th>route</th><th>name</th><th>brand</th><th>category</th><th>item_id</th></tr></thead>
+        <tbody>${recentRows || '<tr><td colspan="10" style="text-align:center;color:#999">Пусто</td></tr>'}</tbody></table>
+      </div>
+      <div class="table-hint">↔ Прокрутите таблицу по горизонтали, если не все колонки видны.</div>
+    `;
+
+    return tilesHtml + thesisHtml + routeHtml + modeHtml + histHtml + recentHtml;
+  }
+
+  // ─── Image preview ─────────────────────────────────────────────
   const imageInput = document.getElementById('imageInput');
   const preview = document.getElementById('preview');
   const uploadPlaceholder = document.getElementById('uploadPlaceholder');
@@ -346,9 +1812,59 @@
     reader.readAsDataURL(file);
   });
 
+  // ── Soft validation: блокируем отправку, если критичные поля пустые ──
+  // Базовые HTML5-сообщения подавляем (`novalidate` и `setCustomValidity('')`),
+  // вместо них показываем дружелюбные inline-подсказки рядом с полем.
+  document.getElementById('checkForm').setAttribute('novalidate', '');
+
+  function clearValidationFeedback() {
+    document.querySelectorAll('.form-group.invalid').forEach(el => el.classList.remove('invalid'));
+    document.querySelectorAll('.field-error.visible').forEach(el => el.classList.remove('visible'));
+  }
+
+  function showFieldError(groupId, errorId) {
+    const group = document.getElementById(groupId);
+    const err = document.getElementById(errorId);
+    if (group) group.classList.add('invalid');
+    if (err) err.classList.add('visible');
+  }
+
+  function validateForm() {
+    clearValidationFeedback();
+    let firstInvalid = null;
+    // image — основной визуальный сигнал, без него inference бессмысленен.
+    const imageInput = document.getElementById('imageInput');
+    if (!imageInput.files || !imageInput.files[0]) {
+      showFieldError('imageGroup', 'imageError');
+      firstInvalid = firstInvalid || document.getElementById('imageGroup');
+    }
+    // name — без названия LLM-канал не сможет сформулировать reasoning.
+    const nameInput = document.getElementById('name');
+    if (!nameInput.value.trim()) {
+      showFieldError('nameGroup', 'nameError');
+      firstInvalid = firstInvalid || document.getElementById('nameGroup');
+    }
+    if (firstInvalid) {
+      firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return false;
+    }
+    return true;
+  }
+
+  // Снимаем подсветку, как только пользователь начал править поле.
+  document.getElementById('imageInput').addEventListener('change', () => {
+    document.getElementById('imageGroup').classList.remove('invalid');
+    document.getElementById('imageError').classList.remove('visible');
+  });
+  document.getElementById('name').addEventListener('input', () => {
+    document.getElementById('nameGroup').classList.remove('invalid');
+    document.getElementById('nameError').classList.remove('visible');
+  });
+
   // Form submit
   document.getElementById('checkForm').addEventListener('submit', async function(e) {
     e.preventDefault();
+    if (!validateForm()) return;
 
     const btn = document.getElementById('submitBtn');
     const resultCard = document.getElementById('result');
@@ -359,10 +1875,21 @@
     resultCard.style.display = 'none';
 
     const formData = new FormData(this);
-    if (!formData.get('seller_id')) formData.delete('seller_id');
+
+    // Пустые числовые поля (input не заполнен и чекбокс "нет данных" не активирован)
+    // удаляем из FormData, иначе FastAPI получит "" вместо отсутствия поля и вернёт
+    // 422 при попытке привести к Optional[float]. Удаление = эквивалент отметки
+    // "нет данных" — на сервере это станет None.
+    ['price', 'item_time_alive', 'item_count_sales30',
+     'item_count_returns30', 'seller_time_alive', 'item_id'].forEach(field => {
+      if (formData.get(field) === '') formData.delete(field);
+    });
 
     try {
-      const resp = await fetch('/predict', { method: 'POST', body: formData });
+      // 1. Быстрый вердикт без reasoning (defer_reasoning=true) → ~1-2 c.
+      const resp = await fetch('/predict?defer_reasoning=true', {
+        method: 'POST', body: formData,
+      });
       const data = await resp.json();
 
       if (!resp.ok) {
@@ -373,22 +1900,38 @@
       const prob = (data.probability * 100).toFixed(1);
       const s = data.signals;
 
+      // Карточка вердикта + сигналы появляются сразу.
+      // Reasoning-блок с скелетоном — пока LLM генерирует в фоне.
       resultContent.innerHTML = `
-        <div class="verdict ${isCounterfeit ? 'counterfeit' : 'original'}">
-          <div class="label">${isCounterfeit ? '🚨 КОНТРАФАКТ' : '✅ ОРИГИНАЛ'}</div>
-          <div class="prob">Вероятность контрафакта: <strong>${prob}%</strong></div>
+        ${renderVerdictHero(isCounterfeit, data.probability)}
+
+        <div class="reasoning-block" id="reasoningBlock">
+          <div class="head">
+            <h3>Объяснение модели</h3>
+            <span class="badge borderline" id="reasoningBadge">анализ…</span>
+          </div>
+          <div class="skeleton-lines">
+            <div></div><div></div><div></div>
+          </div>
+          <div class="skeleton-hint">LLM формулирует объяснение (обычно 3–7 секунд)…</div>
         </div>
 
-        <h2 style="margin-bottom:12px">Сигналы модальностей</h2>
-        <div class="signals">
-          ${signalCard('Мультимодальный', s.multimodal_score)}
-          ${signalCard('Изображение', s.image_signal)}
-          ${signalCard('Текст', s.text_signal)}
-        </div>
+        <details class="signals-details">
+          <summary>${renderSignalsHeader(s)}</summary>
+          <div class="signals">
+            ${renderSignalsBlock(s)}
+          </div>
+          ${s.model_route ? renderModelTag(s.model_route, data.probability) : ''}
+        </details>
       `;
 
       resultCard.style.display = 'block';
       resultCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      // 2. Polling reasoning'а параллельно — не блокирует UI.
+      if (data.task_id) {
+        pollReasoning(data.task_id);
+      }
 
     } catch (err) {
       resultContent.innerHTML = `<div class="error-msg">Ошибка: ${err.message}</div>`;
@@ -399,17 +1942,311 @@
     }
   });
 
-  function signalCard(label, score) {
+  // Polling progressive disclosure (§ 5.5 ВКР).
+  // 200 + ready → показать; 202 → подождать и повторить; 404/timeout → fallback.
+  // Таймаут 90 с подобран под CPU-inference Qwen2.5-0.5B в Docker (worst-case
+  // около 60 с, обычно 5–15 с); на хосте с MPS — на порядок быстрее.
+  async function pollReasoning(taskId, attempt = 0) {
+    const MAX_ATTEMPTS = 60;        // 60 × 1.5 с = 90 с
+    const INTERVAL_MS  = 1500;
+    const SLOW_HINT_AT = 7;         // на 7-й попытке (~10 с) сменить подсказку
+    if (attempt >= MAX_ATTEMPTS) {
+      renderReasoningError('Превышено время ожидания объяснения. Попробуйте перезапустить.');
+      return;
+    }
+    // Обновляем skeleton-подпись после ~10 секунд, чтобы пользователь видел,
+    // что LLM не зависла, а просто работает дольше обычного на CPU.
+    if (attempt === SLOW_HINT_AT) {
+      const hint = document.querySelector('#reasoningBlock .skeleton-hint');
+      if (hint) hint.textContent =
+        'LLM-инференс на CPU занимает больше времени, чем обычно. Подождите ещё несколько секунд…';
+    }
+    try {
+      const r = await fetch(`/predict/${taskId}/reasoning`);
+      if (r.status === 404) {
+        renderReasoningError('Объяснение не найдено (TTL истёк).');
+        return;
+      }
+      const body = await r.json();
+      if (body.status === 'pending') {
+        setTimeout(() => pollReasoning(taskId, attempt + 1), INTERVAL_MS);
+        return;
+      }
+      if (body.status === 'error') {
+        renderReasoningError(body.error || 'Ошибка LLM.');
+        return;
+      }
+      // status === 'ready'
+      renderReasoning(body);
+    } catch (err) {
+      renderReasoningError(err.message);
+    }
+  }
+
+  function renderReasoning(body) {
+    const block = document.getElementById('reasoningBlock');
+    if (!block) return;
+    // Для confident-negative + null reasoning блок просто скрываем —
+    // если модель уверена в "оригинале", дополнительный текст не нужен.
+    if (body.reasoning_mode === 'confident_negative' &&
+        (!body.reasoning || !body.reasoning.trim())) {
+      block.hidden = true;
+      return;
+    }
+    const badgeClass = badgeCssFor(body.reasoning_mode);
+    const badgeLabel = badgeLabelFor(body.reasoning_mode);
+    const text = body.reasoning && body.reasoning.trim()
+      ? body.reasoning
+      : 'Модель уверена в вердикте — дополнительное объяснение не требуется.';
+    // Окрашиваем block в соответствие с reasoning_mode
+    block.className = 'reasoning-block reasoning-block--' + (body.reasoning_mode || 'unknown');
+    block.innerHTML = `
+      <div class="head">
+        <h3>Объяснение модели</h3>
+        <span class="badge ${badgeClass}">${badgeLabel}</span>
+      </div>
+      <div class="text">${escapeHtml(text)}</div>
+    `;
+  }
+
+  function renderReasoningError(msg) {
+    const block = document.getElementById('reasoningBlock');
+    if (!block) return;
+    block.innerHTML = `
+      <div class="head">
+        <h3>Объяснение модели</h3>
+        <span class="badge error">недоступно</span>
+      </div>
+      <div class="text" style="color:#888">${escapeHtml(msg)}</div>
+    `;
+  }
+
+  function badgeCssFor(mode) {
+    return {
+      'blocking_explanation':        'block',
+      'confident_positive_no_block': 'qa',
+      'borderline_explanation':      'borderline',
+      'confident_negative':          'negative',
+      'llm_error':                   'error',
+    }[mode] || 'borderline';
+  }
+
+  function badgeLabelFor(mode) {
+    return {
+      'blocking_explanation':        'автоблокировка',
+      'confident_positive_no_block': 'высокая уверенность',
+      'borderline_explanation':      'требуется модерация',
+      'confident_negative':          'разрешено',
+      'llm_error':                   'ошибка LLM',
+    }[mode] || 'анализ';
+  }
+
+  function escapeHtml(s) {
+    return String(s)
+      .replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+  }
+
+  function signalCard(label, score, sublabel) {
+    // score может быть null (live HCDM не разлагает image/text) — показываем "—"
+    if (score === null || score === undefined) {
+      return `
+        <div class="signal-card signal-card--na">
+          <div class="sig-label">${label}${sublabel ? `<br><span class="sig-sublabel">${sublabel}</span>` : ''}</div>
+          <div class="sig-val sig-val--na">—</div>
+          <div class="sig-bar-wrap">
+            <div class="sig-bar sig-bar--na"></div>
+          </div>
+        </div>`;
+    }
     const pct = (score * 100).toFixed(1);
-    const width = Math.round(score * 100);
+    const width = Math.max(1, Math.round(score * 100));  // min 1px чтобы было видно
     return `
       <div class="signal-card">
-        <div class="sig-label">${label}</div>
+        <div class="sig-label">${label}${sublabel ? `<br><span class="sig-sublabel">${sublabel}</span>` : ''}</div>
         <div class="sig-val">${pct}%</div>
         <div class="sig-bar-wrap">
           <div class="sig-bar" style="width:${width}%"></div>
         </div>
       </div>`;
+  }
+
+  // Метка-описание выбранной модели + пасхалки.
+  // model_route — это режим инференса (не «канал»; каналы — это 4 слагаемых формулы HCDM).
+  // Героический блок вердикта с круглым прогресс-кольцом.
+  function renderVerdictHero(isCounterfeit, proba) {
+    const pct = (proba * 100).toFixed(1);
+    const deg = Math.round(proba * 360);
+    // Mode: ok / borderline / fake / block (определяет градиент-класс)
+    let mode = 'ok';
+    let label = 'Оригинал';
+    let icon = '✅';
+    let note = 'Сигналов контрафакта не обнаружено.';
+    if (proba >= 0.85) {
+      mode = 'block'; label = 'Контрафакт · auto-block'; icon = '🚫';
+      note = 'Карточка превысила порог 0,85 — автоматическая блокировка с уведомлением продавца (§ 4.6 ВКР).';
+    } else if (isCounterfeit) {
+      mode = 'fake'; label = 'Контрафакт'; icon = '🚨';
+      note = 'Карточка превысила порог 0,5 — попадёт в очередь модерации.';
+    } else if (proba >= 0.25) {
+      mode = 'borderline'; label = 'Требует модерации'; icon = '⚠';
+      note = 'Сигналы вызывают сомнения — нужна ручная проверка.';
+    }
+    // Цвет ring-сектора (заливка по proba)
+    const ringFill = { ok: '#fff', borderline: '#fff', fake: '#fff', block: '#fff' }[mode];
+    return `
+      <div class="verdict-hero verdict-hero--${mode}">
+        <div class="verdict-ring"
+             style="background: conic-gradient(${ringFill} ${deg}deg, rgba(255,255,255,0.25) 0deg);">
+          <div class="verdict-ring-inner">
+            <div class="verdict-ring-num">${pct}<span class="verdict-ring-pct">%</span></div>
+            <div class="verdict-ring-caption">вероятность<br>контрафакта</div>
+          </div>
+        </div>
+        <div class="verdict-text">
+          <div class="verdict-icon" aria-hidden="true">${icon}</div>
+          <div class="verdict-label">${label}</div>
+          <div class="verdict-note">${note}</div>
+        </div>
+      </div>`;
+  }
+
+  function renderModelTag(route, proba) {
+    const meta = {
+      'hcdm_4channel_headline': {
+        title: 'HCDM · frozen lookup',
+        desc: 'Бит-точное воспроизведение headline-метрик § 4.5 ВКР для canonical ItemID.',
+        badge: '📊 § 4.5',
+        color: '#3a9d23',
+      },
+      'hcdm_4channel_live': {
+        title: 'HCDM · live 4-channel',
+        desc: '',
+        badge: '⚡ live',
+        color: '#005bff',
+      },
+      'hcdm_headline_fallback_baseline': {
+        title: 'D2VCatBoost · baseline fallback',
+        desc: 'HCDM-артефакты недоступны — graceful fallback на baseline (§ 3.4.3).',
+        badge: '⚠ fallback',
+        color: '#cc7a00',
+      },
+      'cdsm_v3_4channel_headline': {
+        title: 'CDSM v3 · итог Phase 1',
+        desc: 'Историческая headline-конфигурация § 4.4.5 ВКР (frozen lookup).',
+        badge: '📊 Phase 1',
+        color: '#888',
+      },
+    };
+    const m = meta[route] || { title: route, desc: '', badge: '', color: '#666' };
+    let eggs = '';
+    // Пасхалка 1: auto-action триггер (proba >= 0,85 = BLOCKING_THRESHOLD из § 4.6)
+    if (proba >= 0.85) {
+      eggs += `<div class="route-egg route-egg--block">🚫 <strong>Auto-action</strong>: proba ≥ 0,85 — карточка ушла бы в автоблокировку (§ 4.6 ВКР, канал автоматических действий).</div>`;
+    }
+    // Пасхалка 2: frozen-lookup честный референс
+    if (route === 'hcdm_4channel_headline') {
+      eggs += `<div class="route-egg route-egg--frozen">🎯 Эта проба <strong>идентична</strong> числу из <code>test_proba_FINAL_FRANKENSTEIN.npy</code> на той же позиции тестового сплита. Сервис не вычислял её сейчас — он прочёл её из <code>hcdm_headline_lookup.parquet</code>.</div>`;
+    }
+    return `
+      <div class="model-tag" style="border-left-color:${m.color}">
+        <div class="model-tag-head">
+          <span class="model-tag-badge" style="background:${m.color}">${m.badge}</span>
+          <span class="model-tag-title">Модель: <code>${route}</code></span>
+        </div>
+        <div class="model-tag-desc">${m.desc ? m.title + ' — ' + m.desc : m.title}</div>
+        ${eggs}
+      </div>`;
+  }
+
+  function renderSignalsHeader(s) {
+    if (s.model_route === 'hcdm_4channel_live') {
+      return 'Как модель приняла решение';
+    }
+    return 'Сигналы модальностей';
+  }
+
+  function renderSignalsBlock(s) {
+    // Live HCDM: показываем декомпозицию ПО ФОРМУЛЕ § 4.5 ВКР:
+    //   p_HCDM = 0,875·p_social + 0,075·p_mobile_image + 0,025·p_realestate + 0,025·p_fintech
+    // Каждая карточка = одно слагаемое (вес × raw канал = вклад в итог).
+    if (s.model_route === 'hcdm_4channel_live') {
+      const terms = [
+        {
+          name: 'Репутация и контент',
+          subtitle: 'Mode 3 (Deep Deliberation) · домен соц. сетей',
+          concepts: 'LOO target encoding по продавцу/бренду/категории · TF-IDF SVD текст · CLIP-эмбеддинг изображения · multi-mode adaptive thinking',
+          weight: 0.875,
+          value: s.p_social,
+        },
+        {
+          name: 'Только изображение',
+          subtitle: 'Baseline C · домен мобильных приложений и рекламы',
+          concepts: 'LogReg на 512-мерном CLIP ViT-B/32 эмбеддинге · ортогональный diversifier с минимальной корреляцией к якорю',
+          weight: 0.075,
+          value: s.p_mobile_image,
+        },
+        {
+          name: 'Бренд, цена, текстовые признаки',
+          subtitle: 'M2-FE+ · домен недвижимости',
+          concepts: 'brand-aggregates (mean/std цены, количество товаров) · K-means structural · FADAML-ценовые признаки · typosquatting (cross-domain с мобильного)',
+          weight: 0.025,
+          value: s.p_realestate,
+        },
+        {
+          name: 'Совместный текст и картинка',
+          subtitle: 'FT-MFF · домен финтеха',
+          concepts: 'late fusion multilingual-e5-PCA · CLIP-PCA · табличные признаки в CatBoost',
+          weight: 0.025,
+          value: s.p_fintech,
+        },
+      ];
+      return terms.map(formulaCard).join('') + renderFormulaSummary(terms, s.multimodal_score);
+    }
+    // Frozen-lookup или fallback: классические 3 карточки (headline без разложения)
+    return [
+      signalCard('Мультимодальный', s.multimodal_score),
+      signalCard('Изображение', s.image_signal),
+      signalCard('Текст', s.text_signal),
+    ].join('');
+  }
+
+  function formulaCard(t) {
+    const rawPct = (t.value === null || t.value === undefined) ? '—' : (t.value * 100).toFixed(1) + '%';
+    const contribution = (t.value === null || t.value === undefined) ? 0 : t.value * t.weight;
+    const contribPP = (contribution * 100).toFixed(2);
+    const barWidth = Math.max(1, Math.round(contribution * 100));
+    return `
+      <div class="formula-card">
+        <div class="formula-head">
+          <div class="formula-name">${t.name}</div>
+          <div class="formula-subtitle">${t.subtitle}</div>
+        </div>
+        <div class="formula-concepts">${t.concepts}</div>
+        <div class="formula-numbers">
+          <div class="formula-num-block">
+            <div class="formula-num-label">вес в HCDM</div>
+            <div class="formula-num-value">${t.weight.toLocaleString('ru-RU', {minimumFractionDigits: 3, maximumFractionDigits: 3})}</div>
+          </div>
+          <div class="formula-num-block">
+            <div class="formula-num-label">raw сигнал</div>
+            <div class="formula-num-value">${rawPct}</div>
+          </div>
+          <div class="formula-num-block formula-num-block--accent">
+            <div class="formula-num-label">вклад в итог</div>
+            <div class="formula-num-value">${contribPP} п.п.</div>
+          </div>
+        </div>
+        <div class="sig-bar-wrap">
+          <div class="sig-bar" style="width:${barWidth}%"></div>
+        </div>
+      </div>`;
+  }
+
+  function renderFormulaSummary(terms, total) {
+    // Дубль числа уже не нужен — оно крупно отображено в verdict-hero сверху.
+    // Возвращаем пустую строку для совместимости с вызывающим кодом.
+    return '';
   }
 </script>
 </body>

@@ -1,0 +1,49 @@
+# Не отправлять в Docker build context — экономит 1 ГБ на каждом билде.
+# Артефакты модели монтируются через volume в docker-compose.yml.
+
+# ML-артефакты (≈ 1 ГБ) — приходят через volume `./artifacts:/app/artifacts`
+artifacts/
+audit_images/
+*.db
+*.sqlite
+
+# Тесты и dev-инструменты не нужны в production-образе
+tests/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Git-метаданные
+.git/
+.gitignore
+.gitattributes
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.venv/
+venv/
+env/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.swp
+
+# Build/CI artefacts
+*.log
+.mypy_cache/
+.ruff_cache/
+build/
+dist/
+
+# Документация — не нужна в image (доступна в репо)
+# README.md  ← оставляем: используется в /docs metadata
+# MODELS.md  ← оставляем
+migrations/
+scripts/

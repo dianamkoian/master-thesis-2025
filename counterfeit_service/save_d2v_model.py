@@ -30,7 +30,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(mess
 logger = logging.getLogger(__name__)
 
 ARTIFACTS_DIR = Path(__file__).parent / "artifacts"
-DATA_DIR = Path(__file__).parent.parent / "claudiplo"
+DATA_DIR = Path(__file__).parent.parent / "data"
 SEED = 42
 
 

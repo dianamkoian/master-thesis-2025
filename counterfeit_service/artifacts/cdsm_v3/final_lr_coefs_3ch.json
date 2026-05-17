@@ -1,0 +1,39 @@
+{
+  "channels": [
+    "cdsm",
+    "rmm (Diana M2-FE+)",
+    "ftmff (Sonya Fusion)"
+  ],
+  "coefs": {
+    "cdsm": 0.49021808320228183,
+    "rmm": 0.3831590439946738,
+    "ftmff": 0.9545888032519481
+  },
+  "intercept": -1.511103637859269,
+  "scaler": {
+    "mean": [
+      0.16830944454129182,
+      0.10127997153949528,
+      0.16035020234229194
+    ],
+    "std": [
+      0.2933150231855549,
+      0.25192750936180835,
+      0.2829578455732538
+    ]
+  },
+  "best_C": 0.1,
+  "group_split": "GroupShuffleSplit(n_splits=1, test_size=0.5, random_state=42) по SellerID",
+  "metrics_full_test": {
+    "ROC": 0.9573363652544378,
+    "PR": 0.7610381604254228,
+    "R@P": 0.14301098427740686
+  },
+  "_note": "Live-CDSM v3 в 3-канальной конфигурации (без AMM). Альбинин AMM-канал недоступен из-за архитектурного ограничения её ноута (train_mode_oof не возвращает обученные модели). Эта конфигурация используется в production для новых ItemID > 220804.",
+  "_canonical_source_probas": {
+    "p_cdsm": "Глава_5_финал/artifacts/p_cdsm_v3.npy (canonical, PR_standalone=0.7136)",
+    "p_rmm": "packages/package_diana/3_probas_team_split/test_proba_diana_team.npy (M2-FE+, PR=0.7375)",
+    "p_ftmff": "packages/package_soni/3_probas_team_split/test_proba_fusion_team.npy (Fusion canonical, PR=0.7284)"
+  },
+  "created_at": "2026-05-12"
+}

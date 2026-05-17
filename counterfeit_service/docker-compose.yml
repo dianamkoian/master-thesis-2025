@@ -1,39 +1,184 @@
-version: "3.9"
+# Полная архитектура production-сервиса.
+#
+# Сервисы:
+#   counterfeit-api      — FastAPI: /predict (sync) и /predict-async (через очередь)
+#   counterfeit-worker   — Async consumer RabbitMQ, выполняет инференс
+#   rabbitmq             — Брокер сообщений с management UI на :15672
+#   postgres             — PostgreSQL 16 для хранения результатов async-задач
+#
+# Локальный запуск (dev, всё на localhost):
+#   docker compose up --build
+#   curl http://localhost:8000/health
+#
+# Production-деплой на Timeweb / любой VPS:
+#   1. Скопировать .env.example → .env, заполнить production-значения.
+#   2. Поднять reverse-proxy (caddy/nginx) с HTTPS перед counterfeit-api:8000.
+#   3. См. инструкцию DEPLOY_TIMEWEB.md.
 
 services:
-  postgres:
-    image: postgres:16-alpine
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: counterfeit-rabbitmq
     environment:
-      POSTGRES_USER: counterfeit
-      POSTGRES_PASSWORD: counterfeit
-      POSTGRES_DB: counterfeit
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-counterfeit}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-counterfeit}
+    # В dev-режиме порты пробрасываются на хост для curl/RabbitMQ UI.
+    # В production должны быть закрыты в internal-сеть — управляется через
+    # переменную EXPOSE_INTERNAL_PORTS в .env.
     ports:
-      - "5432:5432"
+      - "${RABBITMQ_AMQP_BIND:-127.0.0.1:5672}:5672"           # AMQP
+      - "${RABBITMQ_UI_BIND:-127.0.0.1:15672}:15672"           # Management UI
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-    restart: unless-stopped
+      - rabbitmq_data:/var/lib/rabbitmq
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U counterfeit"]
-      interval: 5s
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
       timeout: 5s
       retries: 5
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options: { max-size: "10m", max-file: "3" }
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: counterfeit-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-counterfeit}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-counterfeit}
+      POSTGRES_DB: ${POSTGRES_DB:-counterfeit}
+    ports:
+      - "${POSTGRES_BIND:-127.0.0.1:5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-counterfeit}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options: { max-size: "10m", max-file: "3" }
 
   counterfeit-api:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: counterfeit-api
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    # В production reverse-proxy (caddy/nginx) терминирует HTTPS и проксирует
+    # на 127.0.0.1:8000. Локально слушает на localhost для безопасности.
     ports:
-      - "8000:8000"
+      - "${API_BIND:-127.0.0.1:8000}:8000"
     volumes:
+      # Артефакты модели: catboost_model.cbm, img_scaler.pkl, feature_cols.pkl,
+      # cat_cols.pkl и опционально d2v_model.pkl. Read-only — пересборка не нужна.
       - ./artifacts:/app/artifacts:ro
+      # Кеш Hugging Face — переживает рестарты контейнера.
+      - hf_cache:/root/.cache/huggingface
+      # Audit images (см. § 7.5) — переживают рестарт; rotate по дате папкой.
+      - audit_images:/tmp/counterfeit_audit_images
     environment:
       ARTIFACTS_DIR: /app/artifacts
-      COUNTERFEIT_THRESHOLD: "0.5"
-      DATABASE_URL: postgresql+asyncpg://counterfeit:counterfeit@postgres:5432/counterfeit
+      COUNTERFEIT_THRESHOLD: "${COUNTERFEIT_THRESHOLD:-0.5}"
+      RABBITMQ_URL: "amqp://${RABBITMQ_USER:-counterfeit}:${RABBITMQ_PASSWORD:-counterfeit}@rabbitmq:5672/"
+      DATABASE_URL: "postgresql+asyncpg://${POSTGRES_USER:-counterfeit}:${POSTGRES_PASSWORD:-counterfeit}@postgres:5432/${POSTGRES_DB:-counterfeit}"
+      INFERENCE_QUEUE: "inference_queue"
+      DEAD_LETTER_QUEUE: "inference_dlq"
+      # CORS allow_origins через запятую (для production — реальный домен Timeweb).
+      CORS_ALLOWED_ORIGINS: "${CORS_ALLOWED_ORIGINS:-http://localhost:8000,http://127.0.0.1:8000}"
+      # Verdict-conditioned reasoning (§ 4.4.9.7). По умолчанию rule-based
+      # explainer (мгновенный, детерминированный). LLM-канал — opt-in через
+      # USE_LLM_REASONING=1; рекомендуется только на инстансе с GPU/MPS.
+      PREDICTOR_TYPE: "${PREDICTOR_TYPE:-reasoning_pipeline}"
+      PREDICTOR_INNER: "${PREDICTOR_INNER:-d2v_catboost}"
+      USE_LLM_REASONING: "${USE_LLM_REASONING:-0}"
+      LLM_REASONING_MODEL: "${LLM_REASONING_MODEL:-Qwen/Qwen2.5-1.5B-Instruct}"
+      LLM_REASONING_DEVICE: "${LLM_REASONING_DEVICE:-cpu}"
+      LLM_REASONING_MAX_TOKENS: "${LLM_REASONING_MAX_TOKENS:-260}"
+      HF_TOKEN: "${HF_TOKEN:-}"  # опционально для авторизованной загрузки HF
+    deploy:
+      resources:
+        limits:
+          memory: ${API_MEMORY_LIMIT:-2g}
     restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options: { max-size: "20m", max-file: "5" }
+
+  counterfeit-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    # Один replica по умолчанию. Для горизонтального масштабирования:
+    # docker compose up --scale counterfeit-worker=4
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./artifacts:/app/artifacts:ro
+      - hf_cache:/root/.cache/huggingface
+      - audit_images:/tmp/counterfeit_audit_images
+    environment:
+      ARTIFACTS_DIR: /app/artifacts
+      COUNTERFEIT_THRESHOLD: "${COUNTERFEIT_THRESHOLD:-0.5}"
+      RABBITMQ_URL: "amqp://${RABBITMQ_USER:-counterfeit}:${RABBITMQ_PASSWORD:-counterfeit}@rabbitmq:5672/"
+      DATABASE_URL: "postgresql+asyncpg://${POSTGRES_USER:-counterfeit}:${POSTGRES_PASSWORD:-counterfeit}@postgres:5432/${POSTGRES_DB:-counterfeit}"
+      INFERENCE_QUEUE: "inference_queue"
+      DEAD_LETTER_QUEUE: "inference_dlq"
+      WORKER_PREFETCH: "${WORKER_PREFETCH:-1}"
+      PREDICTOR_TYPE: "${PREDICTOR_TYPE:-reasoning_pipeline}"
+      PREDICTOR_INNER: "${PREDICTOR_INNER:-d2v_catboost}"
+      USE_LLM_REASONING: "${USE_LLM_REASONING:-0}"
+      LLM_REASONING_MODEL: "${LLM_REASONING_MODEL:-Qwen/Qwen2.5-1.5B-Instruct}"
+      LLM_REASONING_DEVICE: "${LLM_REASONING_DEVICE:-cpu}"
+      LLM_REASONING_MAX_TOKENS: "${LLM_REASONING_MAX_TOKENS:-260}"
+      HF_TOKEN: "${HF_TOKEN:-}"
+    deploy:
+      resources:
+        limits:
+          memory: ${WORKER_MEMORY_LIMIT:-2g}
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options: { max-size: "20m", max-file: "5" }
+
+  # pgAdmin — UI для просмотра БД. По умолчанию открывается на :5050.
+  # Опциональный — нужен для демо/защиты, в production можно отключить.
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: counterfeit-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@counterfeit.example.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-counterfeit}
+      PGADMIN_CONFIG_SERVER_MODE: "False"  # single-user, без auth-страницы
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+    ports:
+      - "${PGADMIN_BIND:-127.0.0.1:5050}:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+      - ./pgadmin_servers.json:/pgadmin4/servers.json:ro
+      # pgpassfile с паролем к Postgres — pgAdmin прочитает его и не будет
+      # просить пароль при первом подключении. Формат: host:port:db:user:pass.
+      - ./pgadmin_pgpass:/pgpassfile:ro
     depends_on:
       postgres:
         condition: service_healthy
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options: { max-size: "5m", max-file: "2" }
 
 volumes:
+  rabbitmq_data:
   postgres_data:
-
-    # CPU-only — no GPU resources needed for demo
+  hf_cache:
+  audit_images:
+  pgadmin_data:

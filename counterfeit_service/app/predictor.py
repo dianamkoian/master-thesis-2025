@@ -1,14 +1,22 @@
 """
-Inference pipeline for Feature Fusion CatBoost counterfeit detection model.
+Конкретная реализация `BasePredictor` для command-v1 модели сервиса
+детекции контрафакта (Feature Fusion на CatBoost с Doc2Vec и CLIP).
 
-Model expects columns in this exact order (confirmed from model.feature_names_):
-  [0:38]   tabular features (feature_cols, CommercialTypeName4 is categorical string)
-  [38:238] Doc2Vec 200-dim embeddings (d2v_0 .. d2v_199) — unscaled
-  [238:750] CLIP image embeddings scaled (img_0 .. img_511)
+Модель ожидает столбцы в этом порядке (подтверждено из `model.feature_names_`):
+  [0:38]   табличные признаки (feature_cols, CommercialTypeName4 — категориальная строка)
+  [38:238] Doc2Vec 200-мерные эмбеддинги (d2v_0 .. d2v_199), без масштабирования
+  [238:750] CLIP-эмбеддинги изображения (img_0 .. img_511), отмасштабированные
 
-Doc2Vec model (d2v_model.pkl) must be saved from the training notebook and placed
-in the artifacts/ directory. If missing, d2v_ columns are filled with zeros and
-a warning is logged — model still runs on tabular + image signal.
+Файл `d2v_model.pkl` должен лежать в `artifacts/` (см.
+`counterfeit_service/scripts/retrain_d2v_model.py` для пересохранения в формате,
+совместимом с современной numpy). При отсутствии файла d2v_-столбцы заполняются
+нулями с логированием warning — модель остаётся работоспособной только на
+табличной и визуальной модальностях.
+
+Эта реализация **deprecated в финальной headline-конфигурации работы** (§ 4.4.3,
+§ 4.4.8 фиксирует Doc2Vec как Negative Transfer 1 относительно TF-IDF SVD), но
+сохраняется как baseline-артефакт соревнования Ozon eCup 2025. Для подключения
+финальных M2-FE+ или ансамбля см. `counterfeit_service/MODELS.md`.
 """
 
 import os
@@ -23,6 +31,8 @@ import pandas as pd
 from catboost import CatBoostClassifier
 from PIL import Image
 import io
+
+from app.predictor_base import BasePredictor
 
 warnings.filterwarnings("ignore")
 logger = logging.getLogger(__name__)
@@ -40,7 +50,36 @@ IMG_COLS = [f"img_{i}" for i in range(N_IMG)]
 THRESHOLD = float(os.getenv("COUNTERFEIT_THRESHOLD", "0.5"))
 
 
-class CounterfeitPredictor:
+def _apply_legacy_numpy_pickle_compat():
+    """Восстанавливает совместимость с pickle, сохранённым в numpy <1.17,
+    где BitGenerator передавался в __bit_generator_ctor как класс, а не имя.
+    Без этого joblib.load(d2v_model.pkl) падает с ValueError на современной numpy."""
+    import numpy.random._pickle as _np_pickle
+    attr = "_bit_generator_ctor" if hasattr(_np_pickle, "_bit_generator_ctor") else "__bit_generator_ctor"
+    orig = getattr(_np_pickle, attr, None)
+    if orig is None or getattr(orig, "_legacy_patched", False):
+        return
+    def patched(bit_generator_name="MT19937"):
+        if isinstance(bit_generator_name, type):
+            bit_generator_name = bit_generator_name.__name__
+        return orig(bit_generator_name)
+    patched._legacy_patched = True
+    setattr(_np_pickle, attr, patched)
+
+
+class D2VCatBoostPredictor(BasePredictor):
+    """Command-v1 модель сервиса: Doc2Vec + CLIP + CatBoost (Feature Fusion).
+
+    См. модульный docstring для описания контракта столбцов и расположения
+    артефактов. Реализация соблюдает контракт `BasePredictor`.
+    """
+
+    name = "d2v_catboost"
+    description = (
+        "Command-v1 baseline: 38 tab + Doc2Vec(200) + CLIP(512) → CatBoost. "
+        "Deprecated в финальной headline-конфигурации (см. § 4.4.3.3)."
+    )
+
     def __init__(self):
         self.model: Optional[CatBoostClassifier] = None
         self.img_scaler = None
@@ -68,11 +107,28 @@ class CounterfeitPredictor:
         self.img_scaler = joblib.load(ARTIFACTS_DIR / "img_scaler.pkl")
         logger.info("img_scaler loaded, expects %d dims", self.img_scaler.n_features_in_)
 
-        # Doc2Vec model (optional — saved from training notebook)
+        # Doc2Vec model (optional — saved from training notebook).
+        # Graceful degradation: при несовместимости pickle с текущей numpy /
+        # gensim (`MT19937 is not a known BitGenerator module` и подобные)
+        # text-modality заполняется нулями, image и tabular модальности
+        # продолжают работать в полной мере. См. § 7.5 ВКР: «отказоустойчивость
+        # к деградации артефактов».
         d2v_path = ARTIFACTS_DIR / "d2v_model.pkl"
         if d2v_path.exists():
-            self.d2v_model = joblib.load(d2v_path)
-            logger.info("Doc2Vec model loaded")
+            _apply_legacy_numpy_pickle_compat()
+            try:
+                self.d2v_model = joblib.load(d2v_path)
+                logger.info("Doc2Vec model loaded")
+            except Exception as exc:  # noqa: BLE001
+                logger.warning(
+                    "d2v_model.pkl не загружен (%s: %s). "
+                    "Текстовая модальность будет заполнена нулями; image и "
+                    "tabular работают штатно. Чтобы восстановить: пересохранить "
+                    "артефакт через `python save_d2v_model.py --retrain` в той же "
+                    "версии numpy/gensim, что развёрнута в сервисе.",
+                    type(exc).__name__, exc,
+                )
+                self.d2v_model = None
         else:
             logger.warning(
                 "d2v_model.pkl not found in artifacts/. "
@@ -100,9 +156,18 @@ class CounterfeitPredictor:
         self._load_clip()
         image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
         inputs = self._clip_processor(images=image, return_tensors="pt")
+        # В новых версиях transformers `get_image_features` иногда возвращает
+        # неправильно-формованный тензор для batch=1 (см. baseline-bug
+        # § 7.5.2 ВКР). Явный pipeline `vision_model.pooler_output` +
+        # `visual_projection` детерминирован и даёт ровно 512-dim вектор.
         with torch.no_grad():
-            features = self._clip_model.get_image_features(**inputs)
-        embedding = features[0].numpy().astype(np.float32)  # (512,)
+            vision_outputs = self._clip_model.vision_model(pixel_values=inputs.pixel_values)
+            pooled = vision_outputs.pooler_output                      # (1, hidden_size)
+            projected = self._clip_model.visual_projection(pooled)     # (1, 512)
+        embedding = projected[0].numpy().astype(np.float32)
+        assert embedding.shape == (512,), (
+            f"CLIP-embedding contract violation: expected (512,), got {embedding.shape}"
+        )
         scaled = self.img_scaler.transform(embedding.reshape(1, -1))[0]
         return scaled  # (512,)
 
@@ -125,9 +190,11 @@ class CounterfeitPredictor:
         row = {}
         for col in self.feature_cols:
             if col in self.cat_cols:
-                row[col] = str(tab_inputs.get(col, ""))
+                val = tab_inputs.get(col)
+                row[col] = str(val) if val not in (None, "") else ""
             else:
-                row[col] = float(tab_inputs.get(col, 0.0))
+                val = tab_inputs.get(col)
+                row[col] = float(val) if val not in (None, "") else 0.0
         return pd.DataFrame([row])[self.feature_cols]
 
     def _build_fused_df(
@@ -194,3 +261,56 @@ class CounterfeitPredictor:
                 "text_signal": round(text_signal, 4),
             },
         }
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Адаптивный выбор предиктора через env `PREDICTOR_TYPE`
+#
+# Сервис задуман как pluggable: чтобы подключить новую модель, нужно
+# реализовать `BasePredictor` (см. `app/predictor_base.py`) и зарегистрировать
+# свой класс в словаре `PREDICTOR_REGISTRY` ниже. После этого выставление
+# `PREDICTOR_TYPE=<key>` в окружении выберет вашу модель без изменений
+# `main.py` или `worker.py`. Пошаговая инструкция — `MODELS.md`.
+# ─────────────────────────────────────────────────────────────────────────────
+
+from .predictor_with_reasoning import ReasoningPredictor
+from .predictor_stub import StubBorderlinePredictor
+from .predictor_cdsm import CDSMV3Predictor
+from .predictor_cdsm_headline import CDSMV3HeadlinePredictor
+from .predictor_hcdm import HCDMHeadlinePredictor
+
+PREDICTOR_REGISTRY: dict[str, type[BasePredictor]] = {
+    "hcdm_4channel": HCDMHeadlinePredictor,          # Wolpert-валидированный headline § 5.4.X / § 5.6 ВКР: HCDM — Иерархическая кросс-доменная модель (PR=0.8044, R@P=0.2068, ROC=0.9720 — итог Гл.5 ВКР)
+    "cdsm_v3_4channel": CDSMV3HeadlinePredictor,     # historical headline production-канал § 5.4.6 ВКР: frozen probas baseline_v3_4ch (C=0.1, PR=0.7579, R@P=0.2078, ROC=0.9603 — Phase 1 итог, см. § 5.4.5–5.4.6)
+    "cdsm_v3_4channel_live": CDSMV3Predictor,        # экспериментальный live-инференс через 4 раздельные модели (требует артефактов соавторов)
+    "d2v_catboost": D2VCatBoostPredictor,            # baseline для отладки и регрессионного тестирования
+    "reasoning_pipeline": ReasoningPredictor,        # § 4.4.9.7: verdict + LLM reasoning
+    "stub_borderline": StubBorderlinePredictor,      # демо-stub для проверки LLM-канала
+    # "lodo_precision_3channel": LODOPrecisionPredictor,  # TODO: production-канал автоматических действий, § 5.6.2
+    # "m2_fe_plus": M2FeaturePlusPredictor,                # TODO: standalone Дианина headline M2-FE+
+}
+
+
+def get_predictor(model_type: Optional[str] = None) -> BasePredictor:
+    """Вернуть инстанс предиктора по типу.
+
+    Источник имени:
+      1. Аргумент `model_type`, если передан явно.
+      2. Переменная окружения `PREDICTOR_TYPE`.
+      3. По умолчанию — `cdsm_v3_4channel` (headline production-канал ранжирования
+         согласно § 5.6.2 ВКР; при отсутствии артефактов соавторов выполняется
+         graceful fallback на `d2v_catboost` baseline с предупреждением в /health).
+    """
+    name = model_type or os.getenv("PREDICTOR_TYPE", "cdsm_v3_4channel")
+    if name not in PREDICTOR_REGISTRY:
+        raise ValueError(
+            f"Unknown PREDICTOR_TYPE='{name}'. Доступные: {list(PREDICTOR_REGISTRY)}. "
+            f"Зарегистрируйте свою модель в PREDICTOR_REGISTRY (см. MODELS.md)."
+        )
+    logger.info("Selected predictor: %s", name)
+    return PREDICTOR_REGISTRY[name]()
+
+
+# Обратная совместимость: `main.py` и `worker.py` импортируют `CounterfeitPredictor`.
+# Сохраняем имя как alias до окончательного перехода на `get_predictor()`.
+CounterfeitPredictor = D2VCatBoostPredictor

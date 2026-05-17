@@ -1,0 +1,99 @@
+{
+  "cdsm_version": "v3 4-channel ensemble",
+  "headline_metrics": {
+    "PR_AUC": 0.7579,
+    "R_at_P_geq_0.9": 0.2078,
+    "ROC_AUC": 0.9603,
+    "_source": "Глава_5_финал/artifacts/domain_lodo_full.json baseline_v3_4ch.metrics"
+  },
+  "multi_seed_robustness": {
+    "PR_mean": 0.7608,
+    "PR_std": 0.0022,
+    "RaP_mean": 0.2123,
+    "RaP_std": 0.005,
+    "ROC_mean": 0.9606,
+    "ROC_std": 0.0003,
+    "_source": "Глава_5_финал/artifacts/multi_seed_lite.json"
+  },
+  "contributors": {
+    "cdsm_channel": "D. Mkoian (Diana) — 3-mode CatBoost + meta-LR + sample weights, feature-mix synthesis из 4 доменов",
+    "rmm_channel": "D. Mkoian (Diana) — M2-FE+ headline, 636-dim feature space (см. § 4.4.3.2 ВКР)",
+    "ftmff_channel": "S. Krasovskaya (Sonya) — Fusion CatBoost, 92-dim (см. § 4.2 ВКР)",
+    "amm_channel": "A. Bakhtiarova (Albina) — MMD-Thinker v4, 3-mode + meta-LR (см. § 4.3 ВКР)"
+  },
+  "shared_preprocessors": {
+    "tfidf_vectorizer.pkl": {
+      "description": "TF-IDF + TruncatedSVD-50 (общекомандный baseline)",
+      "md5": "84988af8f2c8f8c674938df7da7ce7d1",
+      "size_bytes": 2408766
+    },
+    "img_scaler.pkl": {
+      "description": "StandardScaler для raw-512 CLIP (RMM-канал)",
+      "md5": "53ad9af7a364feb5de829f5365458caa",
+      "size_bytes": 12903
+    }
+  },
+  "auxiliary_data": {
+    "category_median.json": {
+      "description": "медианные цены по CommercialTypeName4 (для FADAML Group C: price_ratio, price_too_low, price_too_high)",
+      "n_categories": 634
+    },
+    "brand_stats.parquet": {
+      "description": "brand-агрегаты для M2-FE+ Group №2 (brand_n_items, brand_n_sellers, brand_mean_price, brand_std_price, brand_mean_problem)",
+      "n_brands": 4066
+    }
+  },
+  "submodels_required": {
+    "cdsm_mode1.cbm": "Дианин CatBoost Mode 1 (Quick, 44 признака); обучается ноутом Глава_5_финал/notebooks/08_cross_domain_synthesis_v2.ipynb после доработки save_model",
+    "cdsm_mode2.cbm": "Дианин CatBoost Mode 2 (Semantic, 94 признака)",
+    "cdsm_mode3.cbm": "Дианин CatBoost Mode 3 (Deep, 149 признаков)",
+    "cdsm_meta_lr.pkl": "sklearn LogisticRegression (C=0.5, class_weight=balanced) на 9-мерном meta-vector",
+    "rmm_catboost.cbm": "Дианина M2-FE+ headline, обучается scripts/m2_fe_plus.py после доработки save_model",
+    "ftmff_catboost.cbm": "Сонин Fusion, обучается через 03_multimodal_colab.ipynb (cell 8, RUN_FUSION=True)",
+    "amm_thinker.pkl": "Альбинин MMD-Thinker v4, обучается packages/package_albina/2_notebooks/safe_ozon_v4_mmd__1_.ipynb",
+    "e5_pca.pkl": "Сонин PCA-25 поверх multilingual-e5-small (обучается в 03_multimodal_colab.ipynb cell 4)",
+    "clip_pca.pkl": "Сонин PCA-25 поверх CLIP ViT-B/32 (обучается в 03_multimodal_colab.ipynb cell 4)"
+  },
+  "final_lr_coefs": {
+    "coefs": {
+      "cdsm": 0.3648333499652643,
+      "rmm": 0.10403735967437405,
+      "ftmff": 0.5521679600972051,
+      "amm": 0.8400986971497838
+    },
+    "intercept": -1.5449468523751495,
+    "scaler": {
+      "mean": [
+        0.16830944454129182,
+        0.10127997153949528,
+        0.16035020234229194,
+        0.13678662452128298
+      ],
+      "std": [
+        0.2933150231855549,
+        0.25192750936180835,
+        0.2829578455732538,
+        0.26267698743757617
+      ]
+    },
+    "best_C": 0.1,
+    "channel_order": [
+      "cdsm",
+      "rmm (Diana M2-FE+)",
+      "ftmff (Sonya Fusion)",
+      "amm (Albina MMD-Thinker v4)"
+    ],
+    "_reproduction": {
+      "random_state": 42,
+      "group_split": "GroupShuffleSplit(test_size=0.5) по SellerID",
+      "metafit_size": 33568,
+      "metaeval_size": 24842,
+      "full_test_PR": 0.7575743447927639,
+      "full_test_RaP": 0.2061167348696963,
+      "full_test_ROC": 0.960289173159989,
+      "_note": "эти числа должны быть близки к headline 0.7579 / 0.2078 / 0.9603"
+    }
+  },
+  "created_at": "2026-05-12T12:53:13.975904",
+  "created_by": "Diana Mkoian (через CDSM v3 production-pipeline)"
+}

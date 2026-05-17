@@ -1,0 +1,40 @@
+{
+  "coefs": {
+    "cdsm": 0.3648333499652643,
+    "rmm": 0.10403735967437405,
+    "ftmff": 0.5521679600972051,
+    "amm": 0.8400986971497838
+  },
+  "intercept": -1.5449468523751495,
+  "scaler": {
+    "mean": [
+      0.16830944454129182,
+      0.10127997153949528,
+      0.16035020234229194,
+      0.13678662452128298
+    ],
+    "std": [
+      0.2933150231855549,
+      0.25192750936180835,
+      0.2829578455732538,
+      0.26267698743757617
+    ]
+  },
+  "best_C": 0.1,
+  "channel_order": [
+    "cdsm",
+    "rmm (Diana M2-FE+)",
+    "ftmff (Sonya Fusion)",
+    "amm (Albina MMD-Thinker v4)"
+  ],
+  "_reproduction": {
+    "random_state": 42,
+    "group_split": "GroupShuffleSplit(test_size=0.5) по SellerID",
+    "metafit_size": 33568,
+    "metaeval_size": 24842,
+    "full_test_PR": 0.7575743447927639,
+    "full_test_RaP": 0.2061167348696963,
+    "full_test_ROC": 0.960289173159989,
+    "_note": "эти числа должны быть близки к headline 0.7579 / 0.2078 / 0.9603"
+  }
+}

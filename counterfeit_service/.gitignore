@@ -1,7 +1,17 @@
-# Artifacts — большие файлы моделей не коммитим в git
+# Artifacts — большие бинарные модели не коммитим в git (см. artifacts/MODELS_DOWNLOAD.md)
 artifacts/d2v_model.pkl
-artifacts/*.cbm
-artifacts/*.pkl
+artifacts/d2v_model.pkl.legacy_backup
+artifacts/cdsm_v3/amm_thinker.pkl
+artifacts/cdsm_v3/ftmff_catboost.cbm
+artifacts/cdsm_v3/rmm_catboost.cbm
+artifacts/cdsm_v3/rmm_catboost_typosquat.cbm
+artifacts/cdsm_v3/_archive_degraded_reproduction/
+artifacts/cdsm_v3/_archive_my_reproduction/
+
+# Secrets / локальные данные
+.env
+*.db
+pgadmin_pgpass
 
 # Python
 __pycache__/
