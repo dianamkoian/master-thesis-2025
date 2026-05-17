@@ -83,8 +83,8 @@ counterfeit_service/
 ## Артефакты моделей
 
 Файлы моделей не хранятся в репозитории из-за большого размера.
-Скачать с Яндекс Диска: https://disk.yandex.ru/d/aw6epg3MNkQ9vw 
-Скачать с Гугл Диска: https://drive.google.com/drive/folders/1OhX74NztRlqOMhH3g0hJvisxA5cwb4mV?usp=share_link
+[Скачать с Гугл Диска](https://drive.google.com/drive/folders/1FCPi6nSqWrSHM1um87Mp92PrQt-3ocnb?usp=share_link)
+[Скачать с Яндекс Диска](https://disk.yandex.ru/d/aw6epg3MNkQ9vw)(альтернатива)
 
 | Файл | Описание |
 |---|---|
