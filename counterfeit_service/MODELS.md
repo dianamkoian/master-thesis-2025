@@ -18,9 +18,7 @@ PREDICTOR_TYPE=m2_fe_plus docker compose up
 ```
 
 Доступные ключи смотри в словаре `PREDICTOR_REGISTRY` в `app/predictor.py`.
-Значение по умолчанию — `d2v_catboost` (текущий baseline соревнования
-Ozon eCup 2025; в финальной headline-конфигурации ВКР deprecated, см.
-§ 3.4.3.3 и § 3.4.8 Negative Transfer 1).
+Значение по умолчанию — `d2v_catboost` 
 
 ## Как подключить новую модель
 
@@ -84,8 +82,7 @@ PREDICTOR_REGISTRY = {
 
 ### Шаг 3. Положить артефакты в `artifacts/`
 
-Каждая реализация сама знает, какие файлы ей нужны. Хорошая практика —
-завести подпапку `artifacts/<predictor_name>/` и грузить относительно неё:
+Каждая реализация сама знает, какие файлы ей нужны.
 
 ```
 counterfeit_service/artifacts/
@@ -111,7 +108,7 @@ PREDICTOR_TYPE=m2_fe_plus docker compose up
 
 В логах `/health` появится секция `predictor: m2_fe_plus` с описанием.
 
-## Reasoning pipeline (§ 3.4.9.7)
+## Reasoning pipeline 
 
 Ключ `reasoning_pipeline` — wrapper, добавляющий канал verdict-conditioned
 reasoning поверх любого зарегистрированного primary predictor'а. Реализован
@@ -124,7 +121,7 @@ reasoning поверх любого зарегистрированного prima
 - **LLM** (`app/llm_explainer.py`, Qwen2.5-1.5B-Instruct, активация через
   `USE_LLM_REASONING=1`) — для деплоев с MPS/CUDA; на CPU латентность 15–30 с.
 
-Архитектурный мотив. Эмпирически (§ 3.4.9.4) Qwen2.5-1.5B как Stage 2
+Архитектурный мотив. Эмпирически Qwen2.5-1.5B как Stage 2
 вердикт-моделью даёт отрицательный перенос по `proba` (ROC ≈ 0,52); тем не
 менее, текстовый reasoning сохраняет качество. В production-конфигурации
 по умолчанию используется rule-based explainer ради детерминированности и
@@ -192,21 +189,3 @@ ORDER BY created_at DESC;
 Индекс `idx_predictions_async_reasoning_mode` создаётся миграцией
 `migrations/001_add_reasoning_columns.sql`; для свежей БД колонки и индекс
 поднимаются автоматически из ORM-метаданных при первом старте.
-
-## Текущее состояние
-
-| Ключ                            | Класс                       | Файл                                  | Статус        |
-|---------------------------------|-----------------------------|---------------------------------------|---------------|
-| `d2v_catboost`                  | `D2VCatBoostPredictor`      | `app/predictor.py`                    | Реализован    |
-| `reasoning_pipeline`            | `ReasoningPredictor`        | `app/predictor_with_reasoning.py`     | Реализован    |
-| `m2_fe_plus`                    | `M2FeaturePlusPredictor`    | (не реализован)                       | TODO          |
-| `m2_fe_plus_mainline_ensemble`  | `EnsemblePredictor`         | (не реализован)                       | TODO          |
-| `r_at_p_optimal_v2`             | `EnsemblePredictor`         | (не реализован)                       | TODO          |
-
-Чтобы реализовать TODO-предикторы, нужно сохранить артефакты из
-соответствующих обучающих скриптов в `Диана_ВКР_финал/scripts/`
-(например, `m2_fe_plus_individual_v2.py` сохраняет proba и `feature_names`,
-но не CatBoost-модель и не FE-pipeline целиком — это нужно дописать перед
-интеграцией в сервис). После реализации `m2_fe_plus` `reasoning_pipeline`
-автоматически сможет использовать его как inner predictor через
-`PREDICTOR_INNER=m2_fe_plus`.
